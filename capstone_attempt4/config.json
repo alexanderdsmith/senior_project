@@ -1,0 +1,15 @@
+{
+  "google": {
+    "clientID": "975031939815-hl22h43g25mvd01mn82knvc76dcstn1v.apps.googleusercontent.com",
+    "clientSecret": "psVukeRAWMsG2YguTCpoxpPQ"
+  },
+  "encryption": {
+    "secret": "SECRET",
+    "expiration": "24h"
+  },
+  "mongodb": {
+    "dbURI": "mongodb://asmithslu:pass@ds111638.mlab.com:11638/conceptmaps"
+  },
+  "admins": ["alexanderdsmith", "khanim", "conlonej"],
+  "URL": "http://localhost:8080"
+}

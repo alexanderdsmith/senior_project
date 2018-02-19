@@ -1,0 +1,71 @@
+*** This description was last updated February 12, 2018 ***
+***      Alexander D. Smith Saint Louis University      ***
+***  In collaboration with Emmett Conlon and Imad Khan  ***
+
+
+How to use this application on the developer side:
+
+Front end elements are contained in the surface level public folder, utilizing angular v1.6.8 and jQuery v3.3.1
+
+Back end elements are contained in surface level app folder
+
+server.js is the starting point for the application
+
+//////////////////////////////// HOW TO START ////////////////////////////////
+
+To initialize a cloned copy of this repository, begin by running npm install. This will install all of the dependencies
+found in package.json
+
+Once cloned and installed, edit the surface level file config.json with the specifications required by your database,
+authentication keys and configuration, etc. Run nodemon start. This command will go into package.json, look for the
+start dependency which states that the starting point for this application is server.js. Using node start also works,
+but you will need to restart the server every time you update your back end application.
+
+To stop a running application, press Ctrl + C on Windows/Linux or Control + C on Mac.
+
+After this, the server will attempt to start. Notice any errors in the terminal console that you started the server in.
+If there are any errors, the application will crash and the first line of the verbose output will tell you what line of
+your server file the application crashed. If the app does crash, there is likely an issue with the keys provided
+in config.json, your database is not running correctly, or you do not have an internet connection (if utilizing a remote
+database).
+
+//////////////////////////////// HOW TO CODE  ////////////////////////////////
+
+This project is based on a core understanding of the MEAN Stack, and it is recommended that at least one member of the
+development team is a Full Stack developer. This application utilizes a single language stack, so aside from HTML and
+CSS, all development is in JavaScript. I would recommend utilizing the Code Academy tutorials relating to web
+development, then start to test out tutorials online following the MEAN Stack and REST API (here is a link to a great
+YouTube series: https://www.youtube.com/watch?v=-gd73iczlS8&list=PL3vQyqzqjZ637sWpKvniMCxdqZhnMJC1d)
+--
+
+Database/Back-end: MongoDB v3.6.2
+ - Models are automatically created by the server. The schemas for model saving can be seen in the /app/models
+ subdirectory.
+ - When .save() is called on a model and the database server is running and ready to accept such commands, the model
+ will be saved based on the model's schema described by the code in the models folder
+ - Schema functions are required for data encryption only. If you want to encrypt your user data, the schema module for
+ the authentication method will be required. See the 'bcrypt' functions in the admin.js, teacher.js, and student.js
+ files for an understanding of how to do this.
+
+API/Middleware: ExpressJS v4.15.5 & NodeJS v9.4.0
+ - server.js contains all initialization for the app server. Currently, a user port (8080) is used for domain binding.
+ All files that are called are in the surface level directory /app or in node_modules. The configuration for the server
+ dependencies can be found in package.json. The front end is set to view only files in the surface level directory
+ /public, and the /app/routes folder contains api.js, which controls all back end route intelligence to control the
+ front end client communication.
+ - See the very clear documentation in server.js and related /app files for more details on how this works.
+
+Interface/Front-end: AngularJS v1.6.8
+ - All components are in /public. When the angular app is processed in an html file, it will display its components
+ based on interaction between the back-end (server) and front-end (JavaScripts) of the app. All front-end logic is
+ contained in /public/app
+ - Initialization occurs when the file public/app/views/index.html is posted to the web page from a back-end call
+ located in an early function of /app/routes/api.js.
+ - Front-end routes utilize the angular-route module (in /public/assets) in /public/app/routes.js to move around the
+ user-space, handle front-end authentication requests, and build a control flow for the app.
+
+Development IDE:        IntelliJ IDEA Ultimate
+Local host information: Host - 127.0.0.1, Port - 8080
+Test server for Mongo:  Use mLab for a simple testing database
+Research base:          All research involved brute force Google searches. To spare new users time, we included all
+                        articles and papers used to research under /documentation/articles
