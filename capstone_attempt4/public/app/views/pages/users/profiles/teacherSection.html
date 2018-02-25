@@ -2,6 +2,7 @@
     <h1>Class Home Page</h1>
 </div>
 
+<div ng-controller="userActionCtrl">
 <div class="col-md-8">
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Current Assignments</strong></div>
@@ -9,17 +10,17 @@
             <tr>
                 <td><strong>Assignment</strong></td>
                 <td><strong>Due Date</strong></td>
-                <td></td>
             </tr>
-            <tr>
-                <td><a>Example</a></td>
-                <td>Feb. 22, 9AM</td>
-                <td><button type="button" class="btn btn-primary">Edit Grade</button></td>
-            </tr>
-            <tr>
-                <td><button type="button" class="btn btn-success">Add Assignment</button></td>
+            <tr ng-repeat="assignment in currentAssignments">
+                <td><a>{{assignment.name}}</a></td>
+                <td>{{assignment.dueDate}}</td>
             </tr>
         </table>
+        <form ng-submit="addAssignment()">
+            <input class="form-control" type="text" placeholder="Assignment Name" name="name" ng-model="currentAssignments.name" ng-required="true" />
+            <input class="form-control" type="text" placeholder="Due Date" name="dueDate" ng-model="currentAssignments.dueDate" ng-required="true" />
+            <input class="form-control" type="submit" value="Add Assignment"/>
+        </form>
     </div>
 </div>
 
@@ -27,13 +28,14 @@
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Class Announcements</strong></div>
         <table class="table table-bordered">
-            <tr>
-                <td>Example</td>
-            </tr>
-            <tr>
-                <td><button type="button" class="btn btn-success">Add Announcements</button></td>
+            <tr ng-repeat="announcement in announcements">
+                <td>{{announcement.text}}</td>
             </tr>
         </table>
+        <form ng-submit="addAnnouncement()">
+            <input class="form-control" type="text" placeholder="Announcement" name="text" ng-model="announcements.text" ng-required="true" />
+            <input class="form-control" type="submit" value="Add Announcement"/>
+        </form>
     </div>
 </div>
 
@@ -47,12 +49,15 @@
                 <td><strong>Grade</strong></td>
                 <td></td>
             </tr>
-            <tr>
-                <td><a>Example</a></td>
-                <td>Feb. 22, 9AM</td>
-                <td>95%</td>
-                <td><button type="button" class="btn btn-primary">Edit Grade</button></td>
+            <tr ng-repeat="assignment in pastAssignments">
+                <td><a>{{assignment.name}}</a></td>
+                <td>{{assignment.dueDate}}</td>
+                <td ng-show="assignment.isGraded">{{assignment.grade}}</td>
+                <td ng-show="!assignment.isGraded">No Grade Yet</td>
+                <td ng-show="assignment.isGraded"><button type="button" class="btn btn-primary">Edit Grade</button></td>
+                <td ng-show="!assignment.isGraded"><button type="button" class="btn btn-primary">Add Grade</button></td>
             </tr>
         </table>
     </div>
+</div>
 </div>

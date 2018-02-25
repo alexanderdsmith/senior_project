@@ -57,3 +57,4 @@ angular.module('mainController', ['authServices'])
         }, 2000)
     };
 });
+

@@ -1,4 +1,9 @@
 <div class="page-header">
     <h1>Home Page</h1>
-    <h3 ng-show="main.isLoggedIn">Hello {{ main.username }}</h3>
+    <h3>Welcome {{ main.username }}!</h3>
 </div>
+
+<!-- Will have ng-show for either teacher or student when this database is fully set up -->
+<a href="/student"><button type="button" class="btn btn-primary" href="/student">Go to Your Student Home</button></a>
+<a href="/teacher"><button type="button" class="btn btn-success" href="/teacher">Go to Your Teacher Home</button></a>
+

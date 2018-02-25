@@ -2,18 +2,22 @@
     <h1>{{ main.username}}'s Profile</h1>
 </div>
 
-<div class="panel panel-info">
+<div ng-controller="userActionCtrl">
+<div class="col-md-8">
+  <div class="panel panel-info">
     <div class="panel-heading" style="text-align: center;"><strong>Your Classes</strong></div>
-    <table class="table table-bordered">
+     <table class="table table-bordered">
         <tr>
             <td><strong>Class Name</strong></td>
             <td><strong>Instructor</strong></td>
             <td><strong>Time</strong></td>
         </tr>
-        <tr>
-            <td><a href="/studentSection">Intro Biology</a></td>
-            <td>Elena Bray-Speth</td>
-            <td>10AM</td>
-        </tr>
-    </table>
+          <tr ng-repeat="section in sections">
+              <td><a href="/studentSection"> {{ section.name }}</a></td>
+              <td> {{ section.instructor }} </td>
+              <td> {{ section.time }} </td>
+          </tr>
+     </table>
+  </div>
+</div>
 </div>

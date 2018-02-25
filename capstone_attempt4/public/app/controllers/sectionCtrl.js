@@ -1,3 +1,5 @@
-angular.module('sectionController',['sectionServices'])
+angular.module('sectionController',['authServices'])
 
-.controller()
+.controller('sectionCtrl', [$scope, function($scope) {
+
+}]);

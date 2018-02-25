@@ -2,18 +2,20 @@
     <h1>{{ main.username}}'s Profile</h1>
 </div>
 
+<div class="col-md-8">
 <div class="panel panel-info">
-    <div class="panel-heading" style="text-align: center;"><strong>User Profile</strong></div>
-    <table class="table">
+    <div class="panel-heading" style="text-align: center;"><strong>Your Classes</strong></div>
+    <table class="table table-bordered">
         <tr>
-            <td><strong>Username</strong></td>
-            <td><strong>Email Address</strong></td>
-            <td><strong>Password</strong></td>
+            <td><strong>Class Name</strong></td>
+            <td><strong>Instructor</strong></td>
+            <td><strong>Time</strong></td>
         </tr>
         <tr>
-            <td>{{ main.username }}</td>
-            <td>{{ main.email }}</td>
-            <td>*******************</td>
+            <td><a href="/student">Intro Biology</a></td>
+            <td>Elena Bray-Speth</td>
+            <td>10AM</td>
         </tr>
     </table>
+</div>
 </div>

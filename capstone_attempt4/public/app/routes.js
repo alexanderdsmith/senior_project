@@ -17,6 +17,18 @@ var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvide
     }).when('/profile', {
         templateUrl: 'app/views/pages/users/profile.html',
         authenticated: true
+    }).when('/student', {
+        templateUrl: 'app/views/pages/users/profiles/student.html',
+        authenticated: true
+    }).when('/teacher', {
+        templateUrl: 'app/views/pages/users/profiles/teacher.html',
+        authenticated: true
+    }).when('/studentSection', {
+        templateUrl: 'app/views/pages/users/profiles/studentSection.html',
+        authenticated: true
+    }).when('/teacherSection', {
+        templateUrl: 'app/views/pages/users/profiles/teacherSection.html',
+        authenticated: true
     }).when('/google/:token', {
         templateUrl: 'app/views/pages/users/social/social.html',
         controller: 'googleStrategyCtrl',
