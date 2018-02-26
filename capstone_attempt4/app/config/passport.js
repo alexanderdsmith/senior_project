@@ -1,5 +1,5 @@
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var User           = require('../models/student.js');
+var User           = require('../models/abstract_user.js');
 var session        = require('express-session');
 var jwt            = require('jsonwebtoken');
 

@@ -1,21 +1,20 @@
-var Student = require('../models/student');
-var Teacher = require('../models/teacher');
-var jwt     = require('jsonwebtoken');
+var AbstractUser = require('../models/abstract_user');
+var jwt          = require('jsonwebtoken');
 
 module.exports = function(router, keys) {
 
     // user registration
     router.post('/users', function(req, res) {
-        var student = new Student();
-        student.username = req.body.username;
+        var user = new AbstractUser();
+        user.username = req.body.username;
         console.log(req.body.username);
-        student.password = req.body.password;
-        student.email    = req.body.email;
+        user.password = req.body.password;
+        user.email    = req.body.email;
         if(req.body.username === null || req.body.username === '' || req.body.password === null || req.body.password === '' || req.body.email === null || req.body.email === '') {
             res.json({ success: false, message: 'Ensure username, password, and email are provided' });
 
         } else {
-            student.save(function(err) {
+            user.save(function(err) {
                 if(err) {
                     res.json({ success: false, message: 'Username or email already exists!' });
                 } else {
@@ -26,7 +25,7 @@ module.exports = function(router, keys) {
     });
 
     router.post('/authenticate', function(req, res) {
-        Student.findOne({ username: req.body.username }).select('email username password').exec(function(err, user) {
+        AbstractUser.findOne({ username: req.body.username }).select('email username password').exec(function(err, user) {
             if(err) throw err;
             if(!user) {
                 res.json({ success: false, message: 'Could not find user!' });
