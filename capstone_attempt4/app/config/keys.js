@@ -1,3 +1,5 @@
+// TODO: add config.json to .gitignore...
+
 var Admin = require('../models/admin');
 var AuthList = require('../models/auth_list');
 var config = require('../../config.json');
