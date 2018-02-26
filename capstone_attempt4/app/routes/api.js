@@ -1,4 +1,8 @@
 var AbstractUser = require('../models/abstract_user');
+var Admin        = require('../models/admin');
+var AuthList     = require('../models/auth_list');
+var Student      = require('../models/student');
+var Teacher      = require('../models/teacher');
 var jwt          = require('jsonwebtoken');
 
 module.exports = function(router, keys) {
@@ -14,13 +18,48 @@ module.exports = function(router, keys) {
             res.json({ success: false, message: 'Ensure username, password, and email are provided' });
 
         } else {
-            user.save(function(err) {
-                if(err) {
-                    res.json({ success: false, message: 'Username or email already exists!' });
-                } else {
-                    res.json({ success: true, message: 'User successfully created!' });
+            AuthList.findOne({ username: user.username }).select('email username password').exec(function(err, user) {
+                if(err) throw err;
+                if(!user) {
+                    res.json({ success: false, message: 'User has not been authorized' });
+                } else if(user && (user.usertype === 'student' || user.usertype === '' || user.usertype === null)) {
+                    var student = new Student();
+                    student.username = user.username;
+                    student.password = user.password;
+                    student.email    = user.email;
+                    student.save(function(err) {
+                        if(err) {
+                            res.json({ success: false, message: 'Username or email already exists!' });
+                        } else {
+                            res.json({ success: true, message: 'Student account successfully created!' });
+                        }
+                    });
+                } else if(user && user.usertype === 'teacher') {
+                    var teacher = new Teacher();
+                    teacher.username = user.username;
+                    teacher.password = user.password;
+                    teacher.email    = user.email;
+                    teacher.save(function(err) {
+                        if(err) {
+                            res.json({ success: false, message: 'Username or email already exists!' });
+                        } else {
+                            res.json({ success: true, message: 'Teacher account successfully created!' });
+                        }
+                    });
+                } else if(user && user.usertype === 'admin') {
+                    var admin = new Admin();
+                    admin.username = user.username;
+                    admin.password = user.password;
+                    admin.email    = user.email;
+                    admin.save(function(err) {
+                        if(err) {
+                            res.json({ success: false, message: 'Username or email already exists!' });
+                        } else {
+                            res.json({ success: true, message: 'Admin account successfully created!' });
+                        }
+                    });
                 }
-            })
+            });
         }
     });
 

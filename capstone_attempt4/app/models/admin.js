@@ -1,44 +1,9 @@
+var extendSchema = require('mongoose-extend-schema');
 var mongoose = require('mongoose');
+var AbstractUser = require('./abstract_user.js');
 var bcrypt = require('bcrypt');
-var Schema = mongoose.Schema;
 
-var AdminSchema = new Schema({
-    username: {
-        type: String,
-        lowercase: true,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        lowercase: true,
-        required: true,
-        unique: true
-    },
-    authList: [{
-        userType: {
-            type: String,
-            lowercase: true,
-            required: false
-        },
-        username: {
-            type: String,
-            lowercase: true,
-            required: true,
-            unique: true
-        },
-        email: {
-            type: String,
-            required: true,
-            lowercase: true,
-            unique: true
-        }
-    }]
-});
+var AdminSchema = extendSchema(AbstractUser);
 
 AdminSchema.pre('save', function(next) {
     var admin = this;
@@ -49,9 +14,5 @@ AdminSchema.pre('save', function(next) {
         next();
     });
 });
-
-AdminSchema.methods.comparePassword = function() {
-    return bcrypt.compareSync(password, this.password);
-};
 
 module.exports = mongoose.model('Admin', AdminSchema);

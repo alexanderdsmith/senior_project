@@ -1,25 +1,9 @@
 var mongoose = require('mongoose');
+var extendSchema = require('mongoose-extend-schema');
+var AbstractUser = require('./abstract_user');
 var bcrypt = require('bcrypt');
-var Schema = mongoose.Schema;
 
-var StudentSchema = new Schema({
-    username : {
-        type      : String,
-        lowercase : true,
-        required  : true,
-        unique    : true
-    },
-    password : {
-        type      : String,
-        required  : true
-    },
-    email    : {
-        type      : String,
-        required  : true,
-        lowercase : true,
-        unique    : true
-    }
-});
+var StudentSchema = extendSchema(AbstractUser);
 
 StudentSchema.pre('save', function(next) {
     var student = this;
@@ -30,9 +14,5 @@ StudentSchema.pre('save', function(next) {
         next();
     });
 });
-
-StudentSchema.methods.comparePassword = function(password) {
-    return bcrypt.compareSync(password, this.password);
-};
 
 module.exports = mongoose.model('Student', StudentSchema);
