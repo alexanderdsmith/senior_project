@@ -25,14 +25,16 @@ angular.module('authServices', [])
         AuthToken.setToken();
     };
 
+    // Auth.getUser()
     authFactory.getUser = function() {
         if(AuthToken.getToken()) {
-            return $http.post('/api/currUser', null);
+            return $http.post('/api/currUser', AuthToken.getToken());
         } else {
             $q.reject({ message: 'User has no token!' });
         }
     };
 
+    // Auth.google(token)
     authFactory.google = function(token) {
         AuthToken.setToken(token);
     };
@@ -43,7 +45,7 @@ angular.module('authServices', [])
 .factory('AuthToken', function($window) {
     var authTokenFactory = {};
 
-    // Auth.setToken(token)
+    // AuthToken.setToken(token)
     authTokenFactory.setToken = function(token) {
         if (token) {
             $window.localStorage.setItem('token', token);
@@ -52,7 +54,7 @@ angular.module('authServices', [])
         }
     };
 
-    // Auth.getToken()
+    // AuthToken.getToken()
     authTokenFactory.getToken = function() {
         return $window.localStorage.getItem('token');
     };
@@ -63,6 +65,7 @@ angular.module('authServices', [])
 .factory('AuthInterceptors', function(AuthToken) {
     var authInterceptorFactory = {};
 
+    // AuthInterceptors.request(config)
     authInterceptorFactory.request = function(config) {
         var token = AuthToken.getToken();
         if(token) {

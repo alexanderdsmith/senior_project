@@ -5,9 +5,9 @@ angular.module('mainController', ['authServices'])
 
     app.loadme = false;
 
+    // Allows routes to be cloaked while loading, and
     $rootScope.$on('$routeChangeStart', function() {
         if(Auth.isLoggedIn()) {
-
             app.isLoggedIn = true;
             Auth.getUser().then(function(data) {
                 console.log(data);
