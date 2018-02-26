@@ -30,7 +30,6 @@ angular.module('authServices', [])
         if(AuthToken.getToken()) {
             return $http.post('/api/currUser', null);
         } else {
-            console.log('you fucked up!');
             $q.reject({ message: 'User has no token!' });
         }
     };
