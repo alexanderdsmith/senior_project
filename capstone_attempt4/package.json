@@ -12,7 +12,6 @@
     "debug": "~2.6.9",
     "express": "^4.15.5",
     "express-session": "^1.15.6",
-    "jade": "~1.11.0",
     "jsonwebtoken": "^8.1.1",
     "mongoose": "^5.0.4",
     "mongoose-extend-schema": "^1.0.0",
@@ -20,7 +19,6 @@
     "nodemon": "^1.15.1",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",
-    "passport-google-oauth20": "^1.0.0",
     "serve-favicon": "~2.4.5"
   }
 }

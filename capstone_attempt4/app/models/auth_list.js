@@ -15,8 +15,9 @@ var AuthListSchema = new Schema({
 });
 
 AuthListSchema.methods.createList = function(list) {
-    this.authlist.concat(list);
-    console.log('list creation successful');
+    for(var i = 0; i < list.length; i++) {
+        this.authlist.push(list[i]);
+    }
     this.save();
 };
 
