@@ -20,7 +20,11 @@ module.exports = function(app, passport, keys) {
     }));
 
     passport.serializeUser(function(user, done) {
-        token = jwt.sign({ username: user.username, email: user.email }, secret, { expiresIn: keys.encryption.expiration });
+        token = jwt.sign({
+            username  : user.username,
+            email     : user.email,
+            usertypes : user.usertypes
+        }, secret, { expiresIn: keys.encryption.expiration });
         done(null, user.id);
     });
 
@@ -35,13 +39,9 @@ module.exports = function(app, passport, keys) {
         clientSecret : keys.google.clientSecret,
         callbackURL  : keys.google.callbackURL
     }, function(accessToken, refreshToken, profile, done) {
-        AbstractUser.findOne({ email: profile.emails[0].value }).select('email username password').exec(function(err, user) {
+        AbstractUser.findOne({ email: profile.emails[0].value }).exec(function(err, user) {
             console.log(profile);
             if(err) done(err);
-
-            if(!user) {
-
-            }
 
             if(user && user !== null) {
                 done(null, user);

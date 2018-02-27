@@ -19,6 +19,10 @@ var AbstractUserSchema = new Schema({
         lowercase : true,
         unique    : true
     },
+    usertypes : [{
+        type: String,
+        enum: ['admin','student','teacher']
+    }],
     _admin   : {
         type : Schema.Types.ObjectId,
         ref  : 'Admin'

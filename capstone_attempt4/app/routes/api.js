@@ -11,23 +11,19 @@ module.exports = function(router, keys) {
     router.post('/users', function(req, res) {
         var user = new AbstractUser();
         user.username = req.body.username;
-        console.log(req.body.username);
         user.password = req.body.password;
         user.email    = req.body.email;
         if(req.body.username === null || req.body.username === '' || req.body.password === null || req.body.password === '' || req.body.email === null || req.body.email === '') {
             res.json({ success: false, message: 'Ensure username, password, and email are provided' });
-
         } else {
-            AuthList.findOne({ username: user.username }).select('email username password').exec(function(err, user) {
+            AuthList.findOne({ authorized: user.username }).exec(function(err, list) {
                 if(err) throw err;
-                if(!user) {
+                if(list.authorized.indexOf(user.username) === -1) {
                     res.json({ success: false, message: 'User has not been authorized' });
-                } else if(user && (user.usertype === 'student' || user.usertype === '' || user.usertype === null)) {
-                    var student = new Student();
-                    student.username = user.username;
-                    student.password = user.password;
-                    student.email    = user.email;
-                    user._student    = student;
+                }
+                if(list.usertype === 'student' || list.usertype === '' || list.usertype === null) {
+                    user._student = new Student();
+                    user.usertypes.push('student');
                     user.save(function(err) {
                         if(err) {
                             res.json({ success: false, message: 'Username or email already exists!' });
@@ -35,12 +31,10 @@ module.exports = function(router, keys) {
                             res.json({ success: true, message: 'Student account successfully created!' });
                         }
                     });
-                } else if(user && user.usertype === 'teacher') {
-                    var teacher = new Teacher();
-                    teacher.username = user.username;
-                    teacher.password = user.password;
-                    teacher.email    = user.email;
-                    user._teacher    = teacher;
+                }
+                if(list.usertype === 'teacher') {
+                    user._teacher = new Teacher();
+                    user.usertypes.push('teacher');
                     user.save(function(err) {
                         if(err) {
                             res.json({ success: false, message: 'Username or email already exists!' });
@@ -48,12 +42,10 @@ module.exports = function(router, keys) {
                             res.json({ success: true, message: 'Teacher account successfully created!' });
                         }
                     });
-                } else if(user && user.usertype === 'admin') {
-                    var admin = new Admin();
-                    admin.username = user.username;
-                    admin.password = user.password;
-                    admin.email    = user.email;
-                    user._admin    = admin;
+                }
+                if(list.usertype === 'admin') {
+                    user._admin = new Admin();
+                    user.usertypes.push('admin');
                     user.save(function(err) {
                         if(err) {
                             res.json({ success: false, message: 'Username or email already exists!' });
@@ -67,7 +59,7 @@ module.exports = function(router, keys) {
     });
 
     router.post('/authenticate', function(req, res) {
-        AbstractUser.findOne({ username: req.body.username }).select('email username password').exec(function(err, user) {
+        AbstractUser.findOne({ username: req.body.username }).exec(function(err, user) {
             if(err) throw err;
             if(!user) {
                 res.json({ success: false, message: 'Could not find user!' });
@@ -77,7 +69,11 @@ module.exports = function(router, keys) {
                     if (!validPassword) {
                         res.json({success: false, message: 'Incorrect password!'});
                     } else {
-                        var token = jwt.sign({ username: user.username, email: user.email }, keys.encryption.secret, { expiresIn: keys.encryption.expiration });
+                        var token = jwt.sign({
+                            username  : user.username,
+                            email     : user.email,
+                            usertypes : user.usertypes
+                        }, keys.encryption.secret, { expiresIn: keys.encryption.expiration });
                         res.json({success: true, message: 'User authenticated', token: token });
                     }
                 } else {
@@ -100,12 +96,42 @@ module.exports = function(router, keys) {
                 }
             })
         } else {
-            res.json({ success: false, message: 'no token provided' });
+            res.json({ success: false, message: 'No token provided' });
         }
     });
 
     router.post('/currUser', function(req, res) {
         res.send(req.decoded);
+    });
+
+    router.post('/isAdmin', function(req, res) {
+        AbstractUser.findOne({ username: req.decoded.body.username }).select(['_admin']).exec(function(err, user) {
+            if(user._admin !== null) {
+                res.send(true);
+            } else {
+                res.send(false);
+            }
+        });
+    });
+
+    router.post('/isStudent', function(req, res) {
+        AbstractUser.findOne({ username: req.body.username }).select(['_student']).exec(function(err, user) {
+            if(user._admin !== null) {
+                res.send(true);
+            } else {
+                res.send(false);
+            }
+        });
+    });
+
+    router.post('/isTeacher', function(req, res) {
+        AbstractUser.findOne({ username: req.body.username }).select(['_teacher']).exec(function(err, user) {
+            if(user._teacher !== null) {
+                res.send(true);
+            } else {
+                res.send(false);
+            }
+        });
     });
 
     return router;

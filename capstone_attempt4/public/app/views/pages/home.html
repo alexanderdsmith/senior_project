@@ -1,7 +1,7 @@
 <div class="page-header">
     <h1>Home Page</h1>
-    <h3>Welcome {{ main.username }}!</h3>
+    <h3 ng-show="main.isLoggedIn">Welcome back {{ main.username }}!</h3>
+    <div ng-repeat="profile in main.usertypes">
+        <button type="button" class="btn btn-primary" ng-href="/{{ profile }}">Go to {{ profile }} profile</button>
+    </div>
 </div>
-
-<a href="/student"><button type="button" class="btn btn-primary" href="/student">Go to Your Student Home</button></a>
-<a href="/teacher"><button type="button" class="btn btn-success" href="/teacher">Go to Your Teacher Home</button></a>

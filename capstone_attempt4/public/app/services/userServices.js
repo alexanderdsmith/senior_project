@@ -1,6 +1,6 @@
 angular.module('userServices', [])
 
-.factory('User', function($http) {
+.factory('User', function($http, Auth) {
     var userFactory = {};
 
     // User.create(regData)

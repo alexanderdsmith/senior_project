@@ -2,6 +2,25 @@
 <h1>Log In</h1>
 </div>
 
+<div class="jumbotron text-center" ng-show="main.loading">
+    <span class="glyphicon glyphicon-repeat spinner"></span>
+    <p>Loading...</p>
+</div>
+
+<div class="row show-hide-message" ng-show="main.successMessage">
+    <div class="alert alert-success">{{ main.successMessage }}</div>
+</div>
+
+<div class="row show-hide-message" ng-show="main.errorMessage">
+    <div class="alert alert-danger">{{ main.errorMessage }}</div>
+</div>
+
+<div class="row show-hide-message" ng-show="google.errorMessage">
+    <div class="alert alert-danger">{{ google.errorMessage }}</div>
+</div>
+
+<br>
+
 <form ng-submit="main.doLogin(loginData);">
     <!-- username -->
     <label>Username:</label>
@@ -12,28 +31,8 @@
     <input class="form-control" type="password" name="password" placeholder="password" ng-model="main.loginData.password" />
     <br>
     <button class="btn btn-primary" type="submit">Log In</button>&nbsp
-    <button type="button" class="btn btn-success" ng-click="main.google()">Google</button>
+    <button type="button" class="btn btn-success" ng-click="main.google()">Google</button>&nbsp
+    <button type="button" class="btn btn-warning" href="/register">Register</button>
 </form>
 
 <br>
-
-<div class="jumbotron text-center" ng-show="main.loading">
-    <span class="glyphicon glyphicon-repeat spinner"></span>
-    <p>Loading...</p>
-</div>
-
-<br>
-
-<div class="row show-hide-message" ng-show="main.successMessage">
-    <div class="alert alert-success">{{ main.successMessage }}</div>
-</div>
-
-<br>
-
-<div class="row show-hide-message" ng-show="main.errorMessage">
-    <div class="alert alert-danger">{{ main.errorMessage }}</div>
-</div>
-
-<div class="row show-hide-message" ng-show="google.errorMessage">
-    <div class="alert alert-danger">{{ google.errorMessage }}</div>
-</div>

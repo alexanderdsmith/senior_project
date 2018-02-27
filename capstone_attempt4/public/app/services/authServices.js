@@ -30,9 +30,20 @@ angular.module('authServices', [])
         if(AuthToken.getToken()) {
             return $http.post('/api/currUser', null);
         } else {
-            $q.reject({ message: 'User has no token!' });
+            $q.reject({ message: 'User token expired!' });
         }
     };
+
+    // Auth.isAdmin()
+    authFactory.isAdmin = function() {
+        if(AuthToken.getToken()) {
+            return $http.post('/api/isAdmin', null);
+        } else {
+            $q.reject({ message: 'User token expired!' });
+        }
+    };
+
+
 
     // Auth.google(token)
     authFactory.google = function(token) {

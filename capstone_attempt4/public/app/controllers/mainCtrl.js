@@ -5,13 +5,14 @@ angular.module('mainController', ['authServices'])
 
     app.loadme = false;
 
-    // Allows routes to be cloaked while loading, and
+    // Allows routes to be cloaked while loading
     $rootScope.$on('$routeChangeStart', function() {
         if(Auth.isLoggedIn()) {
             app.isLoggedIn = true;
             Auth.getUser().then(function(data) {
                 app.username = data.data.username;
                 app.email = data.data.email;
+                app.usertypes = data.data.usertypes;
                 app.loadme = true;
             });
         } else {
@@ -49,10 +50,7 @@ angular.module('mainController', ['authServices'])
 
     this.logout = function() {
         Auth.logout();
-        $location.path('/logout');
-        $timeout(function() {
-            $location.path('/');
-        }, 2000)
+        $location.path('/');
     };
 });
 

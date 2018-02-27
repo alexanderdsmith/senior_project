@@ -1,6 +1,5 @@
 // TODO: add config.json to .gitignore...
 
-var Admin = require('../models/admin');
 var AuthList = require('../models/auth_list');
 var config = require('../../config.json');
 var isBroken = false;
@@ -15,12 +14,12 @@ if(isBroken) {
     module.exports = 'Please check configuration!';
 } else {
     js_config.google.callbackURL = js_config.URL + '/auth/google/callback';
-    AuthList.findOne({ usertype: 'admin' }).select('authlist usertype').exec(function(err, list) {
+    AuthList.findOne({ usertype: 'admin' }).select('authorized usertype').exec(function(err, list) {
         if(err) throw err;
         if(!list) {
             console.log('no list exists, so make one!');
             var alist = new AuthList();
-            alist.authlist = [];
+            alist.authorized = [];
             alist.usertype = 'admin';
             alist.createList(js_config.admins);
         }
