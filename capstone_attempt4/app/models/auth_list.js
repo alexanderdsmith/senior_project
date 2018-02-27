@@ -10,7 +10,10 @@ var AuthListSchema = new Schema({
         type: String,
         required: true,
         lowercase: true,
-        unique: true
+        unique: true,
+        default: 'student',
+        // can add new types here
+        enum: ['admin', 'student', 'teacher']
     }
 });
 
@@ -26,11 +29,10 @@ AuthListSchema.methods.updateList = function(list_additions) {
     // Admin list updates on restart
     // TODO: do not add repeats to the list
     for(var i = 0; i < list_additions.length; i++) {
-        if(this.authlist.indexOf(list_additions[i]) === -1) {
+        if (this.authlist.indexOf(list_additions[i]) === -1) {
             this.authlist.push(list_additions[i]);
         }
     }
-    console.log(this.authlist);
     this.save();
 };
 

@@ -18,6 +18,18 @@ var AbstractUserSchema = new Schema({
         required  : true,
         lowercase : true,
         unique    : true
+    },
+    _admin   : {
+        type : Schema.Types.ObjectId,
+        ref  : 'Admin'
+    },
+    _student : {
+        type : Schema.Types.ObjectId,
+        ref  : 'Student'
+    },
+    _teacher : {
+        type : Schema.Types.ObjectId,
+        ref  : 'Teacher'
     }
 });
 

@@ -1,16 +1,18 @@
 angular.module('documentControllers', ['documentServices'])
 
 .controller('DocumentCtrl', ['$scope', 'documents', 'document', 'confirmFunc'],
- function($scope, documents, document, confirmFunc){
- 	$scope.document = document;
- 	$scope.elements = document.graph.elements;
- 	$scope.undoStack = document.graph.undoStack;
+ function(documents, document, confirmFunc){
+	var app = this;
+
+ 	app.document = document;
+ 	app.elements = document.graph.elements;
+ 	app.undoStack = document.graph.undoStack;
  	//SKIPPING scope.isLoggedIn = auth.isLoggedIn for now
- 	$scope.isTeacher = auth.accountType() == "teacher";//might need ===
- 	$scope.isReadonly = $scope.document.status != 'unsubmitted';
+ 	app.isTeacher = auth.accountType() === "teacher";
+ 	app.isReadonly = this.document.status !== 'unsubmitted';
 
  	//Updates the grade for the document
- 	$scope.updateGrade = function() {
+ 	this.updateGrade = function() {
  		var newGrade = prompt("Enter a Grade", "");
  		if(newGrade === '' || isNaN(newGrade)) {
  			alert("Invalid grade.");
@@ -26,7 +28,7 @@ angular.module('documentControllers', ['documentServices'])
  	//Warning about unsaved work
 
 
- }
+ };
 
 /*
 //DELETE LATER,
