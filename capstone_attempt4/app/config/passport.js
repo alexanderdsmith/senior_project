@@ -1,5 +1,6 @@
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var User           = require('../models/abstract_user.js');
+var AbstractUser   = require('../models/abstract_user.js');
+var AuthList       = require('../models/auth_list');
 var session        = require('express-session');
 var jwt            = require('jsonwebtoken');
 
@@ -10,10 +11,12 @@ module.exports = function(app, passport, keys) {
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(session({
-        secret: secret,
-        resave: false,
-        saveUninitialized: true,
-        cookie: { secure: false }
+        secret            : secret,
+        resave            : false,
+        saveUninitialized : true,
+        cookie            : {
+            secure: false
+        }
     }));
 
     passport.serializeUser(function(user, done) {
@@ -22,19 +25,23 @@ module.exports = function(app, passport, keys) {
     });
 
     passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
+        AbstractUser.findById(id, function(err, user) {
             done(err, user);
         });
     });
 
     passport.use(new GoogleStrategy({
-        clientID: keys.google.clientID,
-        clientSecret: keys.google.clientSecret,
-        callbackURL: keys.google.callbackURL
+        clientID     : keys.google.clientID,
+        clientSecret : keys.google.clientSecret,
+        callbackURL  : keys.google.callbackURL
     }, function(accessToken, refreshToken, profile, done) {
-        User.findOne({ email: profile.emails[0].value }).select('email username password').exec(function(err, user) {
+        AbstractUser.findOne({ email: profile.emails[0].value }).select('email username password').exec(function(err, user) {
             console.log(profile);
             if(err) done(err);
+
+            if(!user) {
+
+            }
 
             if(user && user !== null) {
                 done(null, user);

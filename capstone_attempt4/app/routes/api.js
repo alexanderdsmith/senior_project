@@ -27,7 +27,8 @@ module.exports = function(router, keys) {
                     student.username = user.username;
                     student.password = user.password;
                     student.email    = user.email;
-                    student.save(function(err) {
+                    user._student    = student;
+                    user.save(function(err) {
                         if(err) {
                             res.json({ success: false, message: 'Username or email already exists!' });
                         } else {
@@ -39,7 +40,8 @@ module.exports = function(router, keys) {
                     teacher.username = user.username;
                     teacher.password = user.password;
                     teacher.email    = user.email;
-                    teacher.save(function(err) {
+                    user._teacher    = teacher;
+                    user.save(function(err) {
                         if(err) {
                             res.json({ success: false, message: 'Username or email already exists!' });
                         } else {
@@ -51,7 +53,8 @@ module.exports = function(router, keys) {
                     admin.username = user.username;
                     admin.password = user.password;
                     admin.email    = user.email;
-                    admin.save(function(err) {
+                    user._admin    = admin;
+                    user.save(function(err) {
                         if(err) {
                             res.json({ success: false, message: 'Username or email already exists!' });
                         } else {

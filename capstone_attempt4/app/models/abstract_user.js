@@ -33,6 +33,16 @@ var AbstractUserSchema = new Schema({
     }
 });
 
+AbstractUserSchema.pre('save', function(next) {
+    var user = this;
+
+    bcrypt.hash(user.password, 10, function(err, hash) {
+        if(err) return next(err);
+        user.password = hash;
+        next();
+    });
+});
+
 AbstractUserSchema.methods.comparePassword = function(password) {
     return bcrypt.compareSync(password, this.password);
 };

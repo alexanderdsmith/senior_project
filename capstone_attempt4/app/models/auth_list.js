@@ -17,6 +17,7 @@ var AuthListSchema = new Schema({
     }
 });
 
+// AuthList.createList(list); will initialize the list (will run once per server)
 AuthListSchema.methods.createList = function(list) {
     for(var i = 0; i < list.length; i++) {
         this.authlist.push(list[i]);
@@ -27,7 +28,6 @@ AuthListSchema.methods.createList = function(list) {
 // AuthList.updateList(list_additions); will update the authenticated users list
 AuthListSchema.methods.updateList = function(list_additions) {
     // Admin list updates on restart
-    // TODO: do not add repeats to the list
     for(var i = 0; i < list_additions.length; i++) {
         if (this.authlist.indexOf(list_additions[i]) === -1) {
             this.authlist.push(list_additions[i]);
