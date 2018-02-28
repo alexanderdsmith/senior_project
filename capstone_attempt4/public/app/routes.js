@@ -17,6 +17,11 @@ var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvide
     }).when('/profile', {
         templateUrl: 'app/views/pages/users/profile.html',
         authenticated: true
+    }).when('/admin', {
+        templateUrl: 'app/views/pages/users/profiles/admin.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile',
+        authenticated: true
     }).when('/student', {
         templateUrl: 'app/views/pages/users/profiles/student.html',
         authenticated: true

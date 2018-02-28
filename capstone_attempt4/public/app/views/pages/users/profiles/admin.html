@@ -1,4 +1,10 @@
-<div ng-controller="profileCtrl as profile">
-    <input type="file" file-model="authlistupload"/>
-    <button ng-click="uploadFile()">Upload</button>
+<div class="page-header">
+    <h1>Admin Profile</h1>
 </div>
+
+<br>
+
+<form ng-submit="profile.uploadFile(authcsv);">
+    <input type="file" name="authlist" accept=".csv" csv-model="authcsv"/>
+    <button class="btn btn-primary" type="submit">Upload</button>
+</form>

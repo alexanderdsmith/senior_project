@@ -2,6 +2,19 @@
     <h1>Registration</h1>
 </div>
 
+<div class="jumbotron text-center" ng-show="register.loading">
+    <span class="glyphicon glyphicon-repeat spinner"></span>
+    <p>Loading...</p>
+</div>
+
+<div class="row show-hide-message" ng-show="register.successMessage">
+    <div class="alert alert-success">{{ register.successMessage }}</div>
+</div>
+
+<div class="row show-hide-message" ng-show="register.errorMessage">
+    <div class="alert alert-danger">{{ register.errorMessage }}</div>
+</div>
+
 <form ng-submit="register.registerUser(regData);">
     <!-- email -->
     <label>Email:</label>
@@ -19,20 +32,3 @@
 </form>
 
 <br>
-
-<div class="jumbotron text-center" ng-show="register.loading">
-    <span class="glyphicon glyphicon-repeat spinner"></span>
-    <p>Loading...</p>
-</div>
-
-<br>
-
-<div class="row show-hide-message" ng-show="register.successMessage">
-    <div class="alert alert-success">{{ register.successMessage }}</div>
-</div>
-
-<br>
-
-<div class="row show-hide-message" ng-show="register.errorMessage">
-    <div class="alert alert-danger">{{ register.errorMessage }}</div>
-</div>

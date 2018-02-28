@@ -104,34 +104,8 @@ module.exports = function(router, keys) {
         res.send(req.decoded);
     });
 
-    router.post('/isAdmin', function(req, res) {
-        AbstractUser.findOne({ username: req.decoded.body.username }).select(['_admin']).exec(function(err, user) {
-            if(user._admin !== null) {
-                res.send(true);
-            } else {
-                res.send(false);
-            }
-        });
-    });
-
-    router.post('/isStudent', function(req, res) {
-        AbstractUser.findOne({ username: req.body.username }).select(['_student']).exec(function(err, user) {
-            if(user._admin !== null) {
-                res.send(true);
-            } else {
-                res.send(false);
-            }
-        });
-    });
-
-    router.post('/isTeacher', function(req, res) {
-        AbstractUser.findOne({ username: req.body.username }).select(['_teacher']).exec(function(err, user) {
-            if(user._teacher !== null) {
-                res.send(true);
-            } else {
-                res.send(false);
-            }
-        });
+    router.post('/uploadAuthList', function(req, res) {
+        console.log(req);
     });
 
     return router;

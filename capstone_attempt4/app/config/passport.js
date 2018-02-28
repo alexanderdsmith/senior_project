@@ -1,6 +1,5 @@
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var AbstractUser   = require('../models/abstract_user.js');
-var AuthList       = require('../models/auth_list');
 var session        = require('express-session');
 var jwt            = require('jsonwebtoken');
 
@@ -40,7 +39,6 @@ module.exports = function(app, passport, keys) {
         callbackURL  : keys.google.callbackURL
     }, function(accessToken, refreshToken, profile, done) {
         AbstractUser.findOne({ email: profile.emails[0].value }).exec(function(err, user) {
-            console.log(profile);
             if(err) done(err);
 
             if(user && user !== null) {
