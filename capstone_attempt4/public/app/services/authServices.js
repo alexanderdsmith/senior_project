@@ -34,17 +34,6 @@ angular.module('authServices', [])
         }
     };
 
-    // Auth.isAdmin()
-    authFactory.isAdmin = function() {
-        if(AuthToken.getToken()) {
-            return $http.post('/api/isAdmin', null);
-        } else {
-            $q.reject({ message: 'User token expired!' });
-        }
-    };
-
-
-
     // Auth.google(token)
     authFactory.google = function(token) {
         AuthToken.setToken(token);

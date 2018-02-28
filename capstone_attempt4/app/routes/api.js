@@ -4,6 +4,7 @@ var AuthList     = require('../models/auth_list');
 var Student      = require('../models/student');
 var Teacher      = require('../models/teacher');
 var jwt          = require('jsonwebtoken');
+var Papa         = require('papaparse');
 
 module.exports = function(router, keys) {
 
@@ -95,8 +96,8 @@ module.exports = function(router, keys) {
                     next();
                 }
             })
-        } else {
-            res.json({ success: false, message: 'No token provided' });
+        } else if(!token) {
+            res.json({success: false, message: 'No token provided'});
         }
     });
 
@@ -105,7 +106,23 @@ module.exports = function(router, keys) {
     });
 
     router.post('/uploadAuthList', function(req, res) {
-        console.log(req);
+        if(req.body.csv !== null && req.body.csv !== '') {
+            var csv = Papa.parse(req.body.csv, {
+                delimiter: ',',
+                header: true
+            });
+            for(var i = 0; i < csv.data.length; i++) {
+                AuthList.findOne({ usertype: csv.data[i].Type }).exec(function(err, list) {
+                    if(err) throw err;
+                    if(!list) {
+
+                    }
+                });
+            }
+            res.json({ success: true, message: 'CSV file successfully uploaded!' });
+        } else {
+            res.json({ success: false, message: 'CSV file was not correctly formatted!' });
+        }
     });
 
     return router;

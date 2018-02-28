@@ -29,6 +29,9 @@
         <script src="app/controllers/mainCtrl.js"></script>
         <script src="app/controllers/profileCtrl.js"></script>
 
+        <!-- Angular Directives -->
+        <script src="app/directives/fileDirectives.js"></script>
+
         <!-- Angular Services -->
         <script src="app/services/userServices.js"></script>
         <script src="app/services/authServices.js"></script>
@@ -48,6 +51,7 @@
                     <li class="active"><a href="/">Home</a></li>
                     <li><a ng-show="!main.isLoggedIn" href="/login">Login</a></li>
                     <li><a ng-show="!main.isLoggedIn" href="/register">Register</a></li>
+                    <li ng-repeat="profile in main.usertypes"><a ng-show="main.isLoggedIn" ng-href="/{{ profile }}">{{ profile }} home</a></li>
                     <li><a ng-show="main.isLoggedIn" href="/logout" ng-click="main.logout();">Log out</a></li>
                 </ul>
             </div>

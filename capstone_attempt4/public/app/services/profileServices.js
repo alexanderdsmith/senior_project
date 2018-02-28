@@ -3,11 +3,11 @@ angular.module('profileServices', [])
 .factory('Profile', function($http) {
     var profileFactory = {};
 
-    profileFactory.sendFile = function(file) {
-        var fd = new FormData();
-        fd.append('file', file);
-        console.log(fd);
-        return $http.post('/api/uploadAuthList', fd);
+    // Profile.sendFile(csv); will send csv to express
+    profileFactory.passFile = function(data) {
+        return $http.post('/api/uploadAuthList', data).then(function(data) {
+            console.log(data.data.message);
+        });
     };
 
     return profileFactory;

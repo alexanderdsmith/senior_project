@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var Schema   = mongoose.Schema;
 
 var AuthListSchema = new Schema({
     authorized : [{ type: String }],
-    usertype : {
+    usertype   : {
         type      : String,
         required  : true,
         lowercase : true,
