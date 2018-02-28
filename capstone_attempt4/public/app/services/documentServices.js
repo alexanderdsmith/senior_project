@@ -1,4 +1,4 @@
-angular.module('documentServices', [])
+angular.module('documentServices', ['ngRoute'])
 
 .factory('documents', 'Auth', function($http, AuthToken) {
     var o = {
@@ -12,7 +12,7 @@ angular.module('documentServices', [])
         return $http.get('/api/student/documents', {
             headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
         }).success(function(data){
-            angular.copy(data, o.documents);
+            angular.copy(data, o.documents); //copying data to o.documents
         });
     };
 
@@ -49,7 +49,7 @@ angular.module('documentServices', [])
                 headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
             });
 
-            $state.go($state.current, {}, {reload: true}); //reload the page
+            $route.reload(); //$state.go($state.current, {}, {reload: true}); //reload the page
             return deletedDocument;
         });
     };
@@ -62,8 +62,7 @@ angular.module('documentServices', [])
         }).success(function(document) {
             o.documents.push(document);
 
-            $state.go($state.current, {}, {reload: true}); // reload the page
-            //how to reload the page with HTML5 mode
+            $route.reload(); //$state.go($state.current, {}, {reload: true}); // reload the page
 
             return document;
         });
@@ -75,7 +74,7 @@ angular.module('documentServices', [])
         return $http.put('/api/student/documents/' + document._id + '/title', dataToSend, {
             headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
         }).success(function(returnedData) {
-        $state.go($state.current, {}, {reload: true}); // reload the page
+        $route.reload(); //$state.go($state.current, {}, {reload: true}); // reload the page
     });
     };
 
@@ -85,7 +84,7 @@ angular.module('documentServices', [])
         return $http.put('/api/teacher/assignments/' + document.submittedTo + '/submission/grade', dataToSend, {
             headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
         }).success(function(returnedData) {
-        $state.go($state.current, {}, {reload: true}); // reload the page
+        $route.reload(); //$state.go($state.current, {}, {reload: true}); // reload the page
         return returnedData;
     });
     };

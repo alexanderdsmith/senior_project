@@ -7,7 +7,7 @@ angular.module('documentControllers', ['documentServices'])
  	app.document = document;
  	app.elements = document.graph.elements;
  	app.undoStack = document.graph.undoStack;
- 	//SKIPPING app.isLoggedIn = Auth.isLoggedIn() for now
+ 	app.isLoggedIn = Auth.isLoggedIn();
  	app.isTeacher = Auth.accountType() === "teacher";
  	app.isReadonly = this.document.status !== 'unsubmitted';
 
