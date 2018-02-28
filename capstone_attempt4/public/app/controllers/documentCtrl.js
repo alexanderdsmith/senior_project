@@ -1,14 +1,14 @@
 angular.module('documentControllers', ['documentServices'])
 
-.controller('DocumentCtrl', ['$scope', 'documents', 'document', 'confirmFunc'],
- function(documents, document, confirmFunc){
+.controller('DocumentCtrl', ['documents', 'document', 'confirmFunc', 'Auth'],
+ function(documents, document, confirmFunc, Auth){
 	var app = this;
 
  	app.document = document;
  	app.elements = document.graph.elements;
  	app.undoStack = document.graph.undoStack;
- 	//SKIPPING scope.isLoggedIn = auth.isLoggedIn for now
- 	app.isTeacher = auth.accountType() === "teacher";
+ 	//SKIPPING app.isLoggedIn = Auth.isLoggedIn() for now
+ 	app.isTeacher = Auth.accountType() === "teacher";
  	app.isReadonly = this.document.status !== 'unsubmitted';
 
  	//Updates the grade for the document
@@ -25,52 +25,24 @@ angular.module('documentControllers', ['documentServices'])
  		documents.updateGrade(document, newGrade);
  	};
 
- 	//Warning about unsaved work
+ 	//Warning about unsaved work on back button
+    app.$on('$locationChangeStart', function(event) {
+        if (!this.biographObj.dirty) { return; }
+        if (!confirm("Are you sure you want to leave this page? All unsaved changes will be lost.")) {
+            event.preventDefault();
+        }
+    });
 
 
- };
+    //loading cytoscape, getting dirty bit from it
+    documents.loadCytoScape(document, this.isReadonly, function(dirty){
+        if(dirty){
+            window.addEventListener("beforeunload", confirmFunc);
+        }
+        else {
+            window.removeEventListener("beforeunload", confirmFunc);
+        }
+        this.biographObj.dirty = dirty;
+    });
 
-/*
-//DELETE LATER,
-//from userCtrl file
-//
-.controller('localStrategyCtrl', function($location, $timeout, User) {
-
-    var app = this;
-
-    this.registerUser = function(regData) {
-        app.loading = true;
-        app.errorMessage = false;
-        User.create(this.regData).then(function(data) {
-            if(data.data.success === true) {
-                // success message
-                app.loading = false;
-                app.successMessage = data.data.message + ' Redirecting...';
-                $timeout(function() {
-                    $location.path('/');
-                }, 2000);
-            } else {
-                // error message
-                app.loading = false;
-                app.errorMessage = data.data.message;
-            }
-        });
-    }
-})
-
-.controller('googleStrategyCtrl', function($routeParams, Auth, $location, $window) {
-
-    var app = this;
-
-    app.errorMessage = false;
-
-    if($window.location.pathname === '/google-error') {
-        app.errorMessage = 'Google account not registered';
-    } else {
-        Auth.google($routeParams.token);
-        $location.path('/');
-    }
 });
-
-*/
-
