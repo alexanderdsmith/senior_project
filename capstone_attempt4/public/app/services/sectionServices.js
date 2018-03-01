@@ -1,3 +1,0 @@
-angular.module('sectionServices', [])
-
-.factory();
