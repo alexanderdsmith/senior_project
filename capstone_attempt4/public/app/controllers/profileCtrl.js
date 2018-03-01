@@ -27,10 +27,9 @@ angular.module('profileController', ['authServices', 'profileServices'])
             }
         });
     };
-<<<<<<< HEAD
-});
-=======
-
+    /***************************/
+    /****** EMMETT'S CODE ******/
+    /***************************/
     this.getSections = function() {
         Profile.pullSections().then(function(data) {
             app.sections = data.data.sections;
@@ -56,7 +55,7 @@ angular.module('profileController', ['authServices', 'profileServices'])
     this.addSection = function() {
         app.sections.push({
             name: app.sections.name,
-            time: app.sections.time,
+            time: app.sections.time
         });
 
         app.sections.name = "";
@@ -89,5 +88,3 @@ angular.module('profileController', ['authServices', 'profileServices'])
         text: 'Hello'
     }];
 });
-
->>>>>>> 01bcda613ab677288c769c838fac04f00371a9c7
