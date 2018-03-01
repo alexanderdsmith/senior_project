@@ -1,13 +1,13 @@
 angular.module('documentControllers', ['documentServices'])
 
-.controller('DocumentCtrl', ['documents', 'document', 'confirmFunc', 'Auth'],
- function(documents, document, confirmFunc, Auth){
+.controller('DocumentCtrl', ['documents', 'document', 'confirmFunc', 'Auth', '$window'],
+ function(documents, document, confirmFunc, Auth, $window){
 	var app = this;
 
  	app.document = document;
  	app.elements = document.graph.elements;
  	app.undoStack = document.graph.undoStack;
- 	//SKIPPING app.isLoggedIn = Auth.isLoggedIn() for now
+ 	app.isLoggedIn = Auth.isLoggedIn();
  	app.isTeacher = Auth.accountType() === "teacher";
  	app.isReadonly = this.document.status !== 'unsubmitted';
 
@@ -37,10 +37,10 @@ angular.module('documentControllers', ['documentServices'])
     //loading cytoscape, getting dirty bit from it
     documents.loadCytoScape(document, this.isReadonly, function(dirty){
         if(dirty){
-            window.addEventListener("beforeunload", confirmFunc);
+            $window.addEventListener("beforeunload", confirmFunc);
         }
         else {
-            window.removeEventListener("beforeunload", confirmFunc);
+            $window.removeEventListener("beforeunload", confirmFunc);
         }
         this.biographObj.dirty = dirty;
     });
