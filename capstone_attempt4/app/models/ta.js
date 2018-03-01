@@ -3,6 +3,11 @@ var Schema       = mongoose.Schema;
 var extendSchema = require('mongoose-extend-schema');
 var AbstractUser = require('./abstract_user');
 
-var TaSchema = extendSchema(AbstractUser, {});
+var TaSchema = extendSchema(AbstractUser, {
+    _courses : [{
+        type : Schema.Types.ObjectId,
+        ref  : 'Course'
+    }]
+});
 
 module.exports = mongoose.model('Ta', TaSchema);

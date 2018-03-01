@@ -8,9 +8,9 @@ var StudentSchema = extendSchema(AbstractUser, {
         type : Schema.Types.ObjectId,
         ref  : 'Document'
     }],
-    _sections  : [{
+    _courses  : [{
         type : Schema.Types.ObjectId,
-        ref  : 'Section'
+        ref  : 'Course'
     }]
 });
 

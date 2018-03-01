@@ -13,7 +13,6 @@ angular.module('mainController', ['authServices'])
                 app.username = data.data.username;
                 app.email = data.data.email;
                 app.usertypes = data.data.usertypes;
-                console.log(data.data.usertypes);
                 app.loadme = true;
             });
         } else {
@@ -37,7 +36,7 @@ angular.module('mainController', ['authServices'])
                 app.loading = false;
                 app.successMessage = data.data.message + ' Redirecting...';
                 $timeout(function() {
-                    $location.path('/about');
+                    $location.path('/');
                     app.loginData = {};
                     app.successMessage = false;
                 }, 2000);

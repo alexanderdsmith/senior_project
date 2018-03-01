@@ -1,8 +1,6 @@
 var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', {
         templateUrl: 'app/views/pages/home.html'
-    }).when('/about', {
-        templateUrl: 'app/views/pages/about.html'
     }).when('/register', {
         templateUrl: 'app/views/pages/users/register.html',
         controller: 'localStrategyCtrl',
@@ -24,9 +22,13 @@ var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvide
         authenticated: true
     }).when('/student', {
         templateUrl: 'app/views/pages/users/profiles/student.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile',
         authenticated: true
     }).when('/teacher', {
         templateUrl: 'app/views/pages/users/profiles/teacher.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile',
         authenticated: true
     }).when('/studentSection', {
         templateUrl: 'app/views/pages/users/profiles/studentSection.html',

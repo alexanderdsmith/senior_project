@@ -1,8 +1,17 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-var AssignmentSchema = new mongoose.Schema({
+var AssignmentSchema = new Schema({
     title: String,
     description: String,
+    dueDate : {
+        type: Date,
+        required: true
+    },
+    timestamp: {
+        type: Date,
+        default: Date.now
+    },
     teachers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Teacher'
@@ -17,15 +26,17 @@ var AssignmentSchema = new mongoose.Schema({
     }]
 });
 
-// Assignment.updateTitle(title, cb);
-AssignmentSchema.methods.updateTitle = function(title, cb) {
+/****************************/
+/***** Old Assn Methods *****/
+/****************************/
+AssignmentSchema.methods.updateTitle = function(title) {
     this.title = title;
-    this.save(cb);
+    this.save();
 };
 
-AssignmentSchema.methods.updateDescription = function(description, cb) {
+AssignmentSchema.methods.updateDescription = function(description) {
     this.description = description;
-    this.save(cb);
+    this.save();
 };
 
 mongoose.model('Assignment', AssignmentSchema);

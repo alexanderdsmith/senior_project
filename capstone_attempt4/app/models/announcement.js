@@ -8,6 +8,14 @@ var AnnouncementSchema = new Schema({
     _teacher: {
         type: Schema.Types.ObjectId,
         ref: 'Teacher'
+    },
+    _ta: {
+        type: Schema.Types.ObjectId,
+        ref: 'Ta'
+    },
+    _course: {
+        type: Schema.Types.ObjectId,
+        ref: 'Course'
     }
 });
 

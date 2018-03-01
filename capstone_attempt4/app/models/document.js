@@ -5,6 +5,10 @@ var DocumentSchema = new mongoose.Schema({
         type    : String,
         default : 'untitled'
     },
+    timestamp   : {
+        type : Date,
+        default : Date.now
+    },
     grade       : Number,
     status      : {
         type    : String,
@@ -12,12 +16,12 @@ var DocumentSchema = new mongoose.Schema({
         enum    : ['unsubmitted', 'submitted', 'returned']
     },
     submittedTo : {
-        type    : mongoose.Schema.Types.ObjectId,
-        ref     : 'Assignment'
+        type : mongoose.Schema.Types.ObjectId,
+        ref  : 'Assignment'
     },
     _student    : {
-        type    : mongoose.Schema.Types.ObjectId,
-        ref     : 'Student'
+        type : mongoose.Schema.Types.ObjectId,
+        ref  : 'Student'
     },
     graph       : {
         elements  : [String],
@@ -25,30 +29,33 @@ var DocumentSchema = new mongoose.Schema({
     }
 });
 
-DocumentSchema.methods.updateGraph = function(data, cb) {
+/****************************/
+/***** Old Docs Methods *****/
+/****************************/
+DocumentSchema.methods.updateGraph = function(data) {
     this.graph.elements = data.elements;
     this.graph.undoStack = data.undoStack;
-    this.save(cb);
+    this.save();
 };
 
-DocumentSchema.methods.updateStatus = function(status, cb) {
+DocumentSchema.methods.updateStatus = function(status) {
     this.status = status;
-    this.save(cb);
+    this.save();
 };
 
-DocumentSchema.methods.updateSubmittedTo = function(assignmentId, cb) {
+DocumentSchema.methods.updateSubmittedTo = function(assignmentId) {
     this.submittedTo = assignmentId;
-    this.save(cb);
+    this.save();
 };
 
-DocumentSchema.methods.updateTitle = function(title, cb) {
+DocumentSchema.methods.updateTitle = function(title) {
     this.title = title;
-    this.save(cb);
+    this.save();
 };
 
-DocumentSchema.methods.updateGrade = function(grade, cb) {
+DocumentSchema.methods.updateGrade = function(grade) {
     this.grade = grade;
-    this.save(cb);
+    this.save();
 };
 
 mongoose.model('Document', DocumentSchema);
