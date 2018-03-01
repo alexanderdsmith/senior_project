@@ -4,7 +4,19 @@ angular.module('profileController', ['profileServices'])
     var app = this;
 
     this.uploadFile = function(csv) {
-        var data = { csv: csv };
-        Profile.passFile(data);
+        var file = { csv: csv };
+        Profile.passFile(file).then(function(data) {
+            if(data.data.success === true) {
+                app.successMessage = data.data.message;
+            } else {
+                app.errorMessage = data.data.message;
+            }
+        });
     };
+
+    this.getSections = function() {
+        Profile.pullSections().then(function(data) {
+            app.sections = data.data.sections;
+        });
+    }
 });

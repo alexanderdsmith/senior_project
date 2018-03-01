@@ -1,8 +1,14 @@
 <div class="page-header">
-    <h1>Admin Profile</h1>
+    <h1>Admin {{ main.username }}'s Profile</h1>
 </div>
 
-<br>
+<div class="row show-hide-message" ng-show="profile.successMessage">
+    <div class="alert alert-success">{{ profile.successMessage }}</div>
+</div>
+
+<div class="row show-hide-message" ng-show="profile.errorMessage">
+    <div class="alert alert-danger">{{ profile.errorMessage }}</div>
+</div>
 
 <form ng-submit="profile.uploadFile(authcsv)">
     <h3>Upload Users List</h3>

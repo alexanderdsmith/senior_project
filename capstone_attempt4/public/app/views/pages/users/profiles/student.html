@@ -1,21 +1,19 @@
 <div class="page-header">
-    <h1>{{ main.username}}'s Profile</h1>
+    <h1>Student {{ main.username }}'s Profile</h1>
 </div>
 
-<div class="col-md-8">
-  <div class="panel panel-info">
-    <div class="panel-heading" style="text-align: center;"><strong>Your Classes</strong></div>
-     <table class="table table-bordered">
-        <tr>
-            <td><strong>Class Name</strong></td>
-            <td><strong>Instructor</strong></td>
-            <td><strong>Time</strong></td>
-        </tr>
-          <tr ng-repeat="section in sections">
-              <td><a href="/studentSection"> {{ section.name }}</a></td>
-              <td> {{ section.instructor }} </td>
-              <td> {{ section.time }} </td>
-          </tr>
-     </table>
-  </div>
+<div class="center-block">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Your Classes</strong></div>
+        <table class="table table-bordered">
+            <tr>
+                <td><strong>Course Name</strong></td>
+                <td><strong>Instructor</strong></td>
+            </tr>
+            <tr ng-repeat="course in profile.getCourses()">
+                <td><a href="/studentSection">{{ course.name }}</a></td>
+                <td>{{ course._teacher.name }}</td>
+            </tr>
+        </table>
+    </div>
 </div>

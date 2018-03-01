@@ -210,5 +210,12 @@ module.exports = function(router, keys) {
         }
     });
 
+    /****************************/
+    /****** SEND  SECTIONS ******/
+    /****************************/
+    router.post('/sections', function(req, res) {
+
+    });
+
     return router;
 };
