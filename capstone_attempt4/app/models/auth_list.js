@@ -30,6 +30,8 @@ AuthListSchema.methods.createList = function(list) {
 // AuthList.updateList(list_additions); will update the authenticated users list
 AuthListSchema.methods.updateList = function(list_additions) {
     // Admin list updates on restart
+    var thistype = this.usertype;
+
     for(var i = 0; i < list_additions.length; i++) {
         if (this.authorized.indexOf(list_additions[i]) === -1) {
             this.authorized.push(list_additions[i]);
@@ -37,7 +39,7 @@ AuthListSchema.methods.updateList = function(list_additions) {
             AbstractUser.findOne({ username: list_additions[i] }).exec(function(err, user) {
                 if(err) throw err;
                 if(user) {
-                    switch(this.usertype) {
+                    switch(thistype) {
                         case 'admin': {
                             user._admin = new Admin();
                             user.usertypes.push('admin');
