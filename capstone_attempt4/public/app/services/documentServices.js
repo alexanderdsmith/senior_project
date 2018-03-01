@@ -715,12 +715,8 @@ angular.module('documentServices', ['ngRoute'])
 
                 // HANDLE DIRTY BIT
                 setDirty();
-<<<<<<< HEAD
-    };
-=======
             }
         }
->>>>>>> 3d6a67a66d138a9a1e25438d740782158c6e3d60
 
         /***** DELETE SELECTED *****/
         function deleteSelected() {
