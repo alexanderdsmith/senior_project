@@ -74,8 +74,8 @@ angular.module('documentServices', ['ngRoute'])
         return $http.put('/api/student/documents/' + document._id + '/title', dataToSend, {
             headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
         }).success(function(returnedData) {
-        $route.reload(); //$state.go($state.current, {}, {reload: true}); // reload the page
-    });
+            $route.reload(); //$state.go($state.current, {}, {reload: true}); // reload the page
+        });
     };
 
     // Updates the grade of single submitted document to the teacher's assignment
@@ -102,7 +102,7 @@ angular.module('documentServices', ['ngRoute'])
 
     // Loads the graphing page. This is where all of the CytoScape JS logic goes
     o.loadCytoScape = function(docArg, readOnly, setDirtyBit) {
-        var cy = cytoscape({
+        cy = cytoscape({
             container: document.getElementById('cy'),
             wheelSensitivity: .2,
             zoom: 1.5,

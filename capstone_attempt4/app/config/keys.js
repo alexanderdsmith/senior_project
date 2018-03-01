@@ -17,13 +17,12 @@ if(isBroken) {
     AuthList.findOne({ usertype: 'admin' }).select('authorized usertype').exec(function(err, list) {
         if(err) throw err;
         if(!list) {
-            console.log('no list exists, so make one!');
+            console.log('no list exists, so make one for: ' + 'admin');
             var alist = new AuthList();
             alist.authorized = [];
             alist.usertype = 'admin';
             alist.createList(js_config.admins);
-        }
-        else if(list) {
+        } else if(list) {
             list.updateList(js_config.admins);
         }
     });

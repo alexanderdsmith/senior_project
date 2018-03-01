@@ -8,7 +8,9 @@ var Papa         = require('papaparse');
 
 module.exports = function(router, keys) {
 
-    // user registration
+    /***************************/
+    /**** USER REGISTRATION ****/
+    /***************************/
     router.post('/users', function(req, res) {
         var user = new AbstractUser();
         user.username = req.body.username;
@@ -59,6 +61,9 @@ module.exports = function(router, keys) {
         }
     });
 
+    /***************************/
+    /**** AUTHENTICATE USER ****/
+    /***************************/
     router.post('/authenticate', function(req, res) {
         AbstractUser.findOne({ username: req.body.username }).exec(function(err, user) {
             if(err) throw err;
@@ -84,6 +89,47 @@ module.exports = function(router, keys) {
         })
     });
 
+    /***************************/
+    /****** CURRENT  USER ******/
+    /***************************/
+    router.post('/currUser', function(req, res) {
+        res.send(req.decoded);
+    });
+
+    /***************************/
+    /*** CSV AUTHLIST UPLOAD ***/
+    /***************************/
+    router.post('/uploadAuthList', function(req, res) {
+        if(req.body.csv !== null && req.body.csv !== '') {
+            var csv = Papa.parse(req.body.csv, {
+                delimiter: ',',
+                header: true
+            });
+            for(var i = 0; i < csv.data.length; i++) {
+                AuthList.findOne({usertype: csv.data[i].Type}).exec(function (err, list) {
+                    if (err) throw err;
+                    if (!list) {
+                        console.log('no list exists, so make one for: ' + csv.data[i].Type);
+                        var alist = new AuthList();
+                        alist.authorized = [];
+                        alist.usertype = csv.data[i].type;
+                        alist.createList(csv.data[i].Username);
+                    } else if(list) {
+                        list.updateList([csv.data[i].Username]);
+                    } else {
+                        res.json({ success: false, message: 'CSV file is not correctly formatted!' });
+                    }
+                });
+            }
+            res.json({ success: true, message: 'CSV file successfully uploaded!' });
+        } else {
+            res.json({ success: false, message: 'CSV file was not correctly formatted!' });
+        }
+    });
+
+    /***************************/
+    /***** ROUTER METHODS ******/
+    /***************************/
     router.use(function(req, res, next) {
         var token = req.body.token || req.body.query || req.headers['x-access-token'];
 
@@ -98,30 +144,6 @@ module.exports = function(router, keys) {
             })
         } else if(!token) {
             res.json({success: false, message: 'No token provided'});
-        }
-    });
-
-    router.post('/currUser', function(req, res) {
-        res.send(req.decoded);
-    });
-
-    router.post('/uploadAuthList', function(req, res) {
-        if(req.body.csv !== null && req.body.csv !== '') {
-            var csv = Papa.parse(req.body.csv, {
-                delimiter: ',',
-                header: true
-            });
-            for(var i = 0; i < csv.data.length; i++) {
-                AuthList.findOne({ usertype: csv.data[i].Type }).exec(function(err, list) {
-                    if(err) throw err;
-                    if(!list) {
-
-                    }
-                });
-            }
-            res.json({ success: true, message: 'CSV file successfully uploaded!' });
-        } else {
-            res.json({ success: false, message: 'CSV file was not correctly formatted!' });
         }
     });
 
