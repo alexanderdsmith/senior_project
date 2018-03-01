@@ -211,10 +211,21 @@ module.exports = function(router, keys) {
     });
 
     /****************************/
-    /****** SEND  SECTIONS ******/
+    /****** SEND USER DATA ******/
     /****************************/
-    router.post('/sections', function(req, res) {
+    router.post('/student_courses', function(req, res) {
+        var user_data = {};
+        AbstractUser.findOne({ username: req.body.user_info.user }).exec(function(err, user) {
+            if(err) throw err;
+            if('student' in user.usertypes) {
+                Student.findOneById(user._student).exec(function(err, student) {
 
+                });
+            }
+
+        });
+
+        res.json({ message: 'horray!' });
     });
 
     return router;

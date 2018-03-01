@@ -10,10 +10,8 @@
                 <td><strong>Course Name</strong></td>
                 <td><strong>Instructor</strong></td>
             </tr>
-            <tr ng-repeat="course in profile.getCourses()">
-                <td><a href="/studentSection">{{ course.name }}</a></td>
-                <td>{{ course._teacher.name }}</td>
-            </tr>
         </table>
     </div>
 </div>
+
+<p ng-init="profile.getStudentCourses(main.username)"></p>

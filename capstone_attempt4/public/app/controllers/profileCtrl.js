@@ -1,7 +1,21 @@
-angular.module('profileController', ['profileServices'])
+angular.module('profileController', ['authServices', 'profileServices'])
 
-.controller('profileCtrl', function(Profile) {
+.controller('profileCtrl', function(Profile, Auth, $rootScope) {
     var app = this;
+
+    this.getStudentCourses = function() {
+        var promise = Auth.getUser().then(function(data) {
+            return { user: data.data.username };
+        });
+
+        promise.then(function() {
+            console.log();
+            Profile.getStudentInfo({ user_info: promise.$$state.value }).then(function (dataMessage) {
+                // User Information
+                console.log(dataMessage);
+            });
+        });
+    };
 
     this.uploadFile = function(csv) {
         var file = { csv: csv };
@@ -13,10 +27,4 @@ angular.module('profileController', ['profileServices'])
             }
         });
     };
-
-    this.getSections = function() {
-        Profile.pullSections().then(function(data) {
-            app.sections = data.data.sections;
-        });
-    }
 });

@@ -1,6 +1,6 @@
 angular.module('profileServices', [])
 
-.factory('Profile', function($http, Auth) {
+.factory('Profile', function($http) {
     var profileFactory = {};
 
     // Profile.sendFile(csv); will send csv to express
@@ -10,10 +10,11 @@ angular.module('profileServices', [])
         });
     };
 
-    profileFactory.pullSections = function() {
-        return $http.post('/api/sections', { user: Auth.getUser() }).then(function(data) {
+    profileFactory.getStudentInfo = function(user_info) {
+        console.log(user_info);
+        return $http.post('/api/student_courses', user_info).then(function(data) {
             return data;
-        })
+        });
     };
 
     return profileFactory;

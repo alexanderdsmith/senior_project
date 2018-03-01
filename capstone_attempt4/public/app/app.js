@@ -1,8 +1,11 @@
 angular.module('conceptmapsApp', ['appRoutes',
+    //controllers
     'userControllers',
     'mainController',
     'profileController',
+    //directives
     'fileDirectives',
+    // services
     'profileServices',
     'userServices',
     'authServices',
