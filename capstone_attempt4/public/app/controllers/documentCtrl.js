@@ -4,6 +4,8 @@ angular.module('documentControllers', ['documentServices'])
  function(documents, document, confirmFunc, Auth, $window){
 	var app = this;
 
+    app.biographObj = {dirty: false}; //used for the graphing page
+
  	app.document = document;
  	app.elements = document.graph.elements;
  	app.undoStack = document.graph.undoStack;
