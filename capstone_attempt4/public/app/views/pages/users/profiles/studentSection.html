@@ -11,7 +11,7 @@
                 <td><strong>Due Date</strong></td>
                 <td></td>
             </tr>
-            <tr ng-repeat="assignment in currentAssignments">
+            <tr ng-repeat="assignment in profile.currentAssignments">
                 <td><a>{{assignment.name}}</a></td>
                 <td>{{assignment.dueDate}}</td>
                 <td ng-show="!assignment.isSubmitted"><button type="button" class="btn btn-primary">Submit</button></td>
@@ -24,7 +24,7 @@
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Class Announcements</strong></div>
         <table class="table table-bordered">
-            <tr ng-repeat="announcement in announcements">
+            <tr ng-repeat="announcement in profile.announcements">
                 <td>{{announcement.text}}</td>
             </tr>
         </table>
@@ -40,7 +40,7 @@
                 <td><strong>Due Date</strong></td>
                 <td><strong>Grade</strong></td>
             </tr>
-            <tr ng-repeat="assignment in pastAssignments">
+            <tr ng-repeat="assignment in profile.pastAssignments">
                 <td><a>{{assignment.name}}</a></td>
                 <td>{{assignment.dueDate}}</td>
                 <td ng-show="assignment.isGraded">{{assignment.grade}}</td>

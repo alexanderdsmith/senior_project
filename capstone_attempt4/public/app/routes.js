@@ -37,9 +37,13 @@ var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvide
         authenticated: true
     }).when('/studentSection', {
         templateUrl: 'app/views/pages/users/profiles/studentSection.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile',
         authenticated: true
     }).when('/teacherSection', {
         templateUrl: 'app/views/pages/users/profiles/teacherSection.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile',
         authenticated: true
     }).when('/google/:token', {
         templateUrl: 'app/views/pages/users/social/social.html',
