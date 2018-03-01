@@ -748,7 +748,6 @@ angular.module('documentServices', [])
 
                 // HANDLE DIRTY BIT
                 setDirty();
-    }
     };
 
     return o;
