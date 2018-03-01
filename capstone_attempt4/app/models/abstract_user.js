@@ -31,6 +31,10 @@ var AbstractUserSchema = new Schema({
         type : Schema.Types.ObjectId,
         ref  : 'Student'
     },
+    _ta      : {
+        type : Schema.Types.ObjectId,
+        ref  : 'Ta'
+    },
     _teacher : {
         type : Schema.Types.ObjectId,
         ref  : 'Teacher'

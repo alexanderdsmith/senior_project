@@ -14,6 +14,8 @@ if(isBroken) {
     module.exports = 'Please check configuration!';
 } else {
     js_config.google.callbackURL = js_config.URL + '/auth/google/callback';
+
+    // Create lists and populate admin list with the appropriate admin rights
     AuthList.findOne({ usertype: 'admin' }).select('authorized usertype').exec(function(err, list) {
         if(err) throw err;
         if(!list) {
@@ -24,6 +26,48 @@ if(isBroken) {
             alist.createList(js_config.admins);
         } else if(list) {
             list.updateList(js_config.admins);
+        }
+    });
+    AuthList.findOne({ usertype: 'student'} ).exec(function(err, list) {
+        if(err) throw err;
+        if(!list) {
+            var alist = new AuthList();
+            alist.authorized = [];
+            alist.usertype = 'student';
+            alist.save(function (err) {
+                if (err) throw err;
+                else {
+                    console.log('student list created!');
+                }
+            });
+        }
+    });
+    AuthList.findOne({ usertype: 'ta'} ).exec(function(err, list) {
+        if(err) throw err;
+        if(!list) {
+            var alist = new AuthList();
+            alist.authorized = [];
+            alist.usertype = 'ta';
+            alist.save(function (err) {
+                if (err) throw err;
+                else {
+                    console.log('ta list created!');
+                }
+            });
+        }
+    });
+    AuthList.findOne({ usertype: 'teacher'} ).exec(function(err, list) {
+        if(err) throw err;
+        if(!list) {
+            var alist = new AuthList();
+            alist.authorized = [];
+            alist.usertype = 'teacher';
+            alist.save(function (err) {
+                if (err) throw err;
+                else {
+                    console.log('teacher list created!');
+                }
+            });
         }
     });
 }

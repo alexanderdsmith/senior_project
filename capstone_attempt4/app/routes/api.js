@@ -2,6 +2,7 @@ var AbstractUser = require('../models/abstract_user');
 var Admin        = require('../models/admin');
 var AuthList     = require('../models/auth_list');
 var Student      = require('../models/student');
+var Ta           = require('../models/ta');
 var Teacher      = require('../models/teacher');
 var jwt          = require('jsonwebtoken');
 var Papa         = require('papaparse');
@@ -34,6 +35,17 @@ module.exports = function(router, keys) {
                             res.json({ success: true, message: 'Student account successfully created!' });
                         }
                     });
+                }
+                if(list.usertype === 'ta') {
+                    user._ta = new Ta();
+                    user.usertypes.push('ta');
+                    user.save(function(err) {
+                        if(err) {
+                            res.json({ success: false, message: 'Username or email already exist!' });
+                        } else {
+                            res.json({ success: true, message: 'TA account successfully created!' });
+                        }
+                    })
                 }
                 if(list.usertype === 'teacher') {
                     user._teacher = new Teacher();
@@ -90,44 +102,6 @@ module.exports = function(router, keys) {
     });
 
     /***************************/
-    /****** CURRENT  USER ******/
-    /***************************/
-    router.post('/currUser', function(req, res) {
-        res.send(req.decoded);
-    });
-
-    /***************************/
-    /*** CSV AUTHLIST UPLOAD ***/
-    /***************************/
-    router.post('/uploadAuthList', function(req, res) {
-        if(req.body.csv !== null && req.body.csv !== '') {
-            var csv = Papa.parse(req.body.csv, {
-                delimiter: ',',
-                header: true
-            });
-            for(var i = 0; i < csv.data.length; i++) {
-                AuthList.findOne({usertype: csv.data[i].Type}).exec(function (err, list) {
-                    if (err) throw err;
-                    if (!list) {
-                        console.log('no list exists, so make one for: ' + csv.data[i].Type);
-                        var alist = new AuthList();
-                        alist.authorized = [];
-                        alist.usertype = csv.data[i].type;
-                        alist.createList(csv.data[i].Username);
-                    } else if(list) {
-                        list.updateList([csv.data[i].Username]);
-                    } else {
-                        res.json({ success: false, message: 'CSV file is not correctly formatted!' });
-                    }
-                });
-            }
-            res.json({ success: true, message: 'CSV file successfully uploaded!' });
-        } else {
-            res.json({ success: false, message: 'CSV file was not correctly formatted!' });
-        }
-    });
-
-    /***************************/
     /***** ROUTER METHODS ******/
     /***************************/
     router.use(function(req, res, next) {
@@ -144,6 +118,95 @@ module.exports = function(router, keys) {
             })
         } else if(!token) {
             res.json({success: false, message: 'No token provided'});
+        }
+    });
+
+    /***************************/
+    /****** CURRENT  USER ******/
+    /***************************/
+    router.post('/currUser', function(req, res) {
+        res.send(req.decoded);
+    });
+
+    /***************************/
+    /*** CSV AUTHLIST UPLOAD ***/
+    /***************************/
+    router.post('/uploadAuthList', function(req, res) {
+        if(req.body.csv !== null && req.body.csv !== '') {
+            var csv = Papa.parse(req.body.csv, {
+                delimiter: ',',
+                header: true
+            });
+
+            var adminlist   = [];
+            var studentlist = [];
+            var talist      = [];
+            var teacherlist = [];
+
+            for(var i = 0; i < csv.data.length; i++) {
+                switch(csv.data[i].Type) {
+                    case 'admin': {
+                        adminlist.push(csv.data[i].Username);
+                        break;
+                    }
+                    case 'student' || '' || null : {
+                        studentlist.push(csv.data[i].Username);
+                        break;
+                    }
+                    case 'ta' : {
+                        talist.push(csv.data[i].Username);
+                        break;
+                    }
+                    case 'teacher' : {
+                        teacherlist.push(csv.data[i].Username);
+                        break;
+                    }
+                    default: {
+                        console.log(csv.data[i].Username + ' was unable to be authenticated!');
+                    }
+                }
+            }
+
+            AuthList.findOne({ usertype: 'admin' }).exec(function (err, list) {
+                if (err) throw err;
+                if(list) {
+                    list.updateList(adminlist);
+                } else {
+                    res.json({ success: false, message: 'CSV file is not correctly formatted!' });
+                }
+            });
+
+            AuthList.findOne({ usertype: 'student' }).exec(function (err, list) {
+                if (err) throw err;
+                if(list) {
+                    list.updateList(studentlist);
+                } else {
+                    res.json({ success: false, message: 'CSV file is not correctly formatted!' });
+                }
+            });
+
+            AuthList.findOne({ usertype: 'ta' }).exec(function (err, list) {
+                if (err) throw err;
+                if(list) {
+                    list.updateList(talist);
+                } else {
+                    res.json({ success: false, message: 'CSV file is not correctly formatted!' });
+                }
+            });
+
+            AuthList.findOne({ usertype: 'teacher' }).exec(function (err, list) {
+                if (err) throw err;
+                if(list) {
+                    list.updateList(teacherlist);
+                } else {
+                    res.json({ success: false, message: 'CSV file is not correctly formatted!' });
+                }
+            });
+
+            res.json({ success: true, message: 'CSV file successfully uploaded!' });
+
+        } else {
+            res.json({ success: false, message: 'CSV file was not correctly formatted!' });
         }
     });
 
