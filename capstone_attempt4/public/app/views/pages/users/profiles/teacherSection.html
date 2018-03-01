@@ -2,7 +2,6 @@
     <h1>Class Home Page</h1>
 </div>
 
-<div ng-controller="userActionCtrl">
 <div class="col-md-8">
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Current Assignments</strong></div>
@@ -11,14 +10,14 @@
                 <td><strong>Assignment</strong></td>
                 <td><strong>Due Date</strong></td>
             </tr>
-            <tr ng-repeat="assignment in currentAssignments">
+            <tr ng-repeat="assignment in profile.currentAssignments">
                 <td><a>{{assignment.name}}</a></td>
                 <td>{{assignment.dueDate}}</td>
             </tr>
         </table>
-        <form ng-submit="addAssignment()">
-            <input class="form-control" type="text" placeholder="Assignment Name" name="name" ng-model="currentAssignments.name" ng-required="true" />
-            <input class="form-control" type="text" placeholder="Due Date" name="dueDate" ng-model="currentAssignments.dueDate" ng-required="true" />
+        <form ng-submit="profile.addAssignment()">
+            <input class="form-control" type="text" placeholder="Assignment Name" name="name" ng-model="profile.currentAssignments.name" ng-required="true" />
+            <input class="form-control" type="text" placeholder="Due Date" name="dueDate" ng-model="profile.currentAssignments.dueDate" ng-required="true" />
             <input class="form-control" type="submit" value="Add Assignment"/>
         </form>
     </div>
@@ -28,12 +27,12 @@
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Class Announcements</strong></div>
         <table class="table table-bordered">
-            <tr ng-repeat="announcement in announcements">
+            <tr ng-repeat="announcement in profile.announcements">
                 <td>{{announcement.text}}</td>
             </tr>
         </table>
-        <form ng-submit="addAnnouncement()">
-            <input class="form-control" type="text" placeholder="Announcement" name="text" ng-model="announcements.text" ng-required="true" />
+        <form ng-submit="profile.addAnnouncement()">
+            <input class="form-control" type="text" placeholder="Announcement" name="text" ng-model="profile.announcements.text" ng-required="true" />
             <input class="form-control" type="submit" value="Add Announcement"/>
         </form>
     </div>
@@ -49,7 +48,7 @@
                 <td><strong>Grade</strong></td>
                 <td></td>
             </tr>
-            <tr ng-repeat="assignment in pastAssignments">
+            <tr ng-repeat="assignment in profile.pastAssignments">
                 <td><a>{{assignment.name}}</a></td>
                 <td>{{assignment.dueDate}}</td>
                 <td ng-show="assignment.isGraded">{{assignment.grade}}</td>
@@ -59,5 +58,4 @@
             </tr>
         </table>
     </div>
-</div>
 </div>
