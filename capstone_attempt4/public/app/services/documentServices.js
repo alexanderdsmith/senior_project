@@ -44,7 +44,7 @@ angular.module('documentServices', ['ngRoute'])
             o.documents.splice(o.documents.findIndex(function(doc){
                 doc._id = deletedDocument._id;
             }), 1);//splice (remove) 1 document
-            var dataToSend = {student: Auth.currentEmail(), /* TODO Not sure about auth.currentEmail() here*/, documentId: document._id};
+            var dataToSend = {student: Auth.currentEmail() /* TODO Not sure about auth.currentEmail() here*/, documentId: document._id};
             $http.put('/api/student/documents/remove', dataToSend, {
                 headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
             });
