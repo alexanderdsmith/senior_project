@@ -284,9 +284,7 @@ module.exports = function(router, keys) {
                                     });
                                 }
                             }
-                            return course_list;
-                        }).then(function(titles) {
-
+                            profile_payload.student_profile.course_list.push(course);
                         });
                         Document.find({}).exec(function(err, documents) {
                             if(err) throw err;

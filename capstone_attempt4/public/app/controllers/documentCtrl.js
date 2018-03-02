@@ -10,7 +10,11 @@ angular.module('documentControllers', ['documentServices'])
  	app.elements = document.graph.elements;
  	app.undoStack = document.graph.undoStack;
  	app.isLoggedIn = Auth.isLoggedIn();
- 	app.isTeacher = Auth.accountType() === "teacher";
+ 	Auth.getUser().then(function(data) {
+ 		app.isStudent = data.usertypes.indexOf('student') !== -1;
+ 		app.isTa      = data.usertypes.indexOf('ta')      !== -1;
+ 		app.isTeacher = data.usertypes.indexOf('teacher') !== -1;
+	});
  	app.isReadonly = this.document.status !== 'unsubmitted';
 
  	//Updates the grade for the document
