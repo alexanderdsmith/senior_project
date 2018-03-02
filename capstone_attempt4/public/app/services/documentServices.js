@@ -102,7 +102,7 @@ angular.module('documentServices', ['ngRoute'])
 
     // Loads the graphing page. This is where all of the CytoScape JS logic goes
     o.loadCytoScape = function(docArg, readOnly, setDirtyBit) {
-        cy = cytoscape({
+        var cy = cytoscape({
             container: document.getElementById('cy'),
             wheelSensitivity: .2,
             zoom: 1.5,
