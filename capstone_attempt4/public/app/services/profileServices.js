@@ -12,7 +12,7 @@ angular.module('profileServices', [])
 
     profileFactory.getStudentInfo = function(user_info) {
         console.log(user_info);
-        return $http.post('/api/student_courses', user_info).then(function(data) {
+        return $http.post('/api/profileData', user_info).then(function(data) {
             return data;
         });
     };

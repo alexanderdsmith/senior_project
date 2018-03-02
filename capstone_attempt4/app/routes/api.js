@@ -1,11 +1,15 @@
 var AbstractUser = require('../models/abstract_user');
 var Admin        = require('../models/admin');
 var AuthList     = require('../models/auth_list');
+var Course       = require('../models/course');
+var Document     = require('../models/document');
 var Student      = require('../models/student');
 var Ta           = require('../models/ta');
 var Teacher      = require('../models/teacher');
 var jwt          = require('jsonwebtoken');
+var mongoose     = require('mongoose');
 var Papa         = require('papaparse');
+mongoose.Promise = require('bluebird');
 
 module.exports = function(router, keys) {
 
@@ -26,7 +30,10 @@ module.exports = function(router, keys) {
                     res.json({ success: false, message: 'User has not been authorized' });
                 }
                 if(list.usertype === 'student' || list.usertype === '' || list.usertype === null) {
-                    user._student = new Student();
+                    user._student = new Student({
+                        _courses: [],
+                        _documents: []
+                    });
                     user.usertypes.push('student');
                     user.save(function(err) {
                         if(err) {
@@ -37,7 +44,9 @@ module.exports = function(router, keys) {
                     });
                 }
                 if(list.usertype === 'ta') {
-                    user._ta = new Ta();
+                    user._ta = new Ta({
+                        _courses: []
+                    });
                     user.usertypes.push('ta');
                     user.save(function(err) {
                         if(err) {
@@ -48,7 +57,9 @@ module.exports = function(router, keys) {
                     })
                 }
                 if(list.usertype === 'teacher') {
-                    user._teacher = new Teacher();
+                    user._teacher = new Teacher({
+                        _courses: []
+                    });
                     user.usertypes.push('teacher');
                     user.save(function(err) {
                         if(err) {
@@ -59,7 +70,7 @@ module.exports = function(router, keys) {
                     });
                 }
                 if(list.usertype === 'admin') {
-                    user._admin = new Admin();
+                    user._admin = new Admin({});
                     user.usertypes.push('admin');
                     user.save(function(err) {
                         if(err) {
@@ -212,20 +223,86 @@ module.exports = function(router, keys) {
 
     /****************************/
     /****** SEND USER DATA ******/
+    /****** JSONIFIES DATA ******/
     /****************************/
-    router.post('/student_courses', function(req, res) {
-        var user_data = {};
+    router.post('/profileData', function(req, res) {
+        // payload format
+        var profile_payload = {
+            admin_profile: {},
+            student_profile: {
+                course_list: [{
+                    title: String,
+                    teacher_list: [String]
+                }]
+            },
+            ta_profile: {
+                course_list: [{
+                    title: String,
+                    teacher_list: [String]
+                }]
+            },
+            teacher_profile: {
+                course_list: [{
+                    title: String,
+                    teacher_list: [String]
+                }]
+            }
+        };
         AbstractUser.findOne({ username: req.body.user_info.user }).exec(function(err, user) {
             if(err) throw err;
-            if('student' in user.usertypes) {
-                Student.findOneById(user._student).exec(function(err, student) {
+            if(user.usertypes.indexOf('student') !== -1) {
+                // user's student profile information
+                Student.findById(user._student).exec(function(err, student) {
+                    if(err) throw err;
+                    if(student) {
+                        Course.find({}).exec(function(err, courses) {
+                            var course_list = [{
+                                title: String,
+                                teacher_list: [String]
+                            }];
+                            var course = {
+                                title: String,
+                                teacher_list: [String]
+                            };
+                            if(err) throw err;
+                            if(courses.length > 0) {
 
+                                for(var i = 0; i < courses.length; i++) {
+                                    course.title = courses[i].title;
+
+                                    // get user's section teachers
+                                    Teacher.find({}).exec(function(err, teachers) {
+                                        var teacherlist = [];
+
+                                        teachers.forEach(function() {
+                                            teacherlist.push(teachers.username);
+                                        });
+
+                                        return Promise.all(teacherlist);
+                                    }).then(function(instructors) {
+                                        course.teacherlist = instructors;
+                                    });
+                                }
+                            }
+                            return course_list;
+                        }).then(function(titles) {
+
+                        });
+                        Document.find({}).exec(function(err, documents) {
+                            if(err) throw err;
+                            if(documents.length> 0) {
+
+                            }
+                        })
+                    }
                 });
             }
+            if(user.usertypes.indexOf('teacher') !== -1) {
 
+            }
         });
 
-        res.json({ message: 'horray!' });
+        res.send(profile_payload);
     });
 
     return router;
