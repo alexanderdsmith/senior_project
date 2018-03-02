@@ -1,6 +1,6 @@
 angular.module('documentServices', ['ngRoute'])
 
-.factory('documents', 'Auth', function($http, AuthToken) {
+.factory('documents', 'Auth', function($http, $route, AuthToken) {
     var o = {
         documents: []
     };
