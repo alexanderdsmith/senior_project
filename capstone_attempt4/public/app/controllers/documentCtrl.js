@@ -4,6 +4,14 @@ angular.module('documentControllers', ['documentServices'])
  function(documents, document, confirmFunc, Auth, $window){
 	var app = this;
 
+    //This function is added to an event listener to be called when attempting to leave the document graphing page
+    var confirmFunc = function (e) {
+        var confirmationMessage = "All unsaved changes will be lost.";
+
+        (e || $window.event).returnValue = confirmationMessage;
+        return confirmationMessage;
+    }
+
     app.biographObj = {dirty: false}; //used for the graphing page
 
  	app.document = document;
