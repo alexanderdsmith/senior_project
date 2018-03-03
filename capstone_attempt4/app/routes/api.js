@@ -50,11 +50,11 @@ module.exports = function(router, keys) {
                     user.usertypes.push('ta');
                     user.save(function(err) {
                         if(err) {
-                            res.json({ success: false, message: 'Username or email already exist!' });
+                            res.json({ success: false, message: 'Username or email already exists!' });
                         } else {
                             res.json({ success: true, message: 'TA account successfully created!' });
                         }
-                    })
+                    });
                 }
                 if(list.usertype === 'teacher') {
                     user._teacher = new Teacher({
@@ -86,6 +86,7 @@ module.exports = function(router, keys) {
 
     /***************************/
     /**** AUTHENTICATE USER ****/
+    /** UPDATES USER ON LOGIN **/
     /***************************/
     router.post('/authenticate', function(req, res) {
         AbstractUser.findOne({ username: req.body.username }).exec(function(err, user) {
@@ -104,6 +105,12 @@ module.exports = function(router, keys) {
                             usertypes : user.usertypes
                         }, keys.encryption.secret, { expiresIn: keys.encryption.expiration });
                         res.json({success: true, message: 'User authenticated', token: token });
+
+                        // when user is authenticated, begin user updates!
+                        if((user.usertypes.indexOf('student') !== -1) && user._student === null)
+                        {
+                            var student = new Student();
+                        }
                     }
                 } else {
                     res.json({success: false, message: 'No password provided.'});
@@ -160,7 +167,7 @@ module.exports = function(router, keys) {
                         adminlist.push(csv.data[i].Username);
                         break;
                     }
-                    case 'student' || '' || null : {
+                    case 'student' || '' || null: {
                         studentlist.push(csv.data[i].Username);
                         break;
                     }
@@ -222,11 +229,45 @@ module.exports = function(router, keys) {
     });
 
     /****************************/
-    /****** SEND USER DATA ******/
+    /* ON ROUTE CHANGE & RELOAD */
+    /****** UPDATE PROFILE ******/
     /****** JSONIFIES DATA ******/
     /****************************/
+
+    // TODO: FINISH POPULATION TREE & UPDATE REQUESTS
     router.post('/profileData', function(req, res) {
-        // payload format
+
+        /** UPDATE USERS BEFORE PAYLOAD **/
+        AbstractUser.findOne({ username: req.body.user_info.user }).populate('_admin _student _ta _teacher').exec(function(err, user) {
+            console.log(user);
+            if(err) throw err;
+            if((user.usertypes.indexOf('admin') === -1 ) && (user._admin === null)) {
+                user._admin = new Admin();
+                user.save();
+            }
+            if((user.usertypes.indexOf('student') === -1) && (user._student === null)) {
+                user._student = new Student({
+                    _courses: [],
+                    _documents: []
+                });
+                user.save();
+            }
+            if((user.usertypes.indexOf('ta') === -1) && (user._ta === null)) {
+                user._ta = new Ta({
+                    _courses: []
+                });
+                user.save();
+            }
+            if((user.usertypes.indexOf('ta') === -1) && (user._teacher === null)) {
+                user._teacher = new Teacher({
+                    _courses: []
+                });
+                user.save();
+            }
+        });
+
+
+        /** SEND PAYLOAD **/
         var profile_payload = {
             admin_profile: {},
             student_profile: {
@@ -248,6 +289,20 @@ module.exports = function(router, keys) {
                 }]
             }
         };
+
+        AbstractUser.findOne({ username: req.body.user_info.user }).populate({
+            path: '_student',
+            populate: {
+                path: '_courses'
+            }
+        }).exec(function(err, user) {
+            console.log(user);
+        });
+
+        res.send(profile_payload);
+
+        /******
+         * TESTING!!!! DOES NOT CURRENTLY WORK (need to use .populate() on findOne()!!)
         AbstractUser.findOne({ username: req.body.user_info.user }).exec(function(err, user) {
             if(err) throw err;
             if(user.usertypes.indexOf('student') !== -1) {
@@ -301,6 +356,8 @@ module.exports = function(router, keys) {
         });
 
         res.send(profile_payload);
+
+         ********/
     });
 
     return router;

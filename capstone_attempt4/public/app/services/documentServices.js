@@ -129,8 +129,7 @@ angular.module('documentServices', ['ngRoute'])
                     'text-outline-width': 2.5,
                     "text-outline-color": "#f4f8ff"
                 }
-            }
-            ],
+            }],
 
             elements: []
         });
