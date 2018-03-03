@@ -1,4 +1,4 @@
-angular.module('documentServices', ['ngRoute'])
+angular.module('documentServices', [])
 
 .factory('documents', 'Auth', function($http, $route, AuthToken) {
     var o = {
