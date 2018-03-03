@@ -1,4 +1,4 @@
-angular.module('documentServices', ['ngRoute'])
+angular.module('documentServices', [])
 
 .factory('documents', 'Auth', function($http, $route, AuthToken) {
     var o = {
@@ -10,7 +10,7 @@ angular.module('documentServices', ['ngRoute'])
     //Getting all students documents
     o.getAll = function(){
         return $http.get('/api/student/documents', {
-            headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
+            headers: {Authorization: 'Bearer '+AuthToken.getToken()}
         }).success(function(data){
             angular.copy(data, o.documents); //copying data to o.documents
         });
@@ -19,7 +19,7 @@ angular.module('documentServices', ['ngRoute'])
     //Gets a single one of the student's documents
     o.getDocument = function(id){
         return $http.get('/api/student/documents/' + id, {
-            headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
+            headers: {Authorization: 'Bearer '+AuthToken.getToken()}
         }).then(function(res){
             return res.data;
         });
@@ -29,7 +29,7 @@ angular.module('documentServices', ['ngRoute'])
     //Gets a single submitted document to teacher's assignment
     o.getDocumentForTeacher = function(id) {
         return $http.get('/api/student/documents/submissions/' + id, {
-            headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
+            headers: {Authorization: 'Bearer '+AuthToken.getToken()}
         }).then(function(res){
             return res.data;
         });
@@ -39,14 +39,14 @@ angular.module('documentServices', ['ngRoute'])
     //Deletes a document and removes from student's list of documents
     o.deleteDocument = function(document) {
         return $http.delete('/api/student/documents/' + document._id, {
-            headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
+            headers: {Authorization: 'Bearer '+AuthToken.getToken()}
         }).success(function(deletedDocument){
             o.documents.splice(o.documents.findIndex(function(doc){
                 doc._id = deletedDocument._id;
             }), 1);//splice (remove) 1 document
             var dataToSend = {student: Auth.currentEmail() /* TODO Not sure about auth.currentEmail() here*/, documentId: document._id};
             $http.put('/api/student/documents/remove', dataToSend, {
-                headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
+                headers: {Authorization: 'Bearer '+AuthToken.getToken()}
             });
 
             $route.reload(); //$state.go($state.current, {}, {reload: true}); //reload the page
@@ -58,7 +58,7 @@ angular.module('documentServices', ['ngRoute'])
     o.addDocument = function(newDocTitle, graphData) {
         var dataToSend = { title: newDocTitle, graph: graphData };
         return $http.post('/api/student/documents', dataToSend, {
-            headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
+            headers: {Authorization: 'Bearer '+AuthToken.getToken()}
         }).success(function(document) {
             o.documents.push(document);
 
@@ -72,7 +72,7 @@ angular.module('documentServices', ['ngRoute'])
     o.renameDocument = function(document, newTitle) {
         var dataToSend = { title: newTitle };
         return $http.put('/api/student/documents/' + document._id + '/title', dataToSend, {
-            headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
+            headers: {Authorization: 'Bearer '+AuthToken.getToken()}
         }).success(function(returnedData) {
             $route.reload(); //$state.go($state.current, {}, {reload: true}); // reload the page
         });
@@ -82,7 +82,7 @@ angular.module('documentServices', ['ngRoute'])
     o.updateGrade = function(document, grade) {
         var dataToSend = { document: document._id, grade: grade };
         return $http.put('/api/teacher/assignments/' + document.submittedTo + '/submission/grade', dataToSend, {
-            headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
+            headers: {Authorization: 'Bearer '+AuthToken.getToken()}
         }).success(function(returnedData) {
         $route.reload(); //$state.go($state.current, {}, {reload: true}); // reload the page
         return returnedData;
@@ -92,7 +92,7 @@ angular.module('documentServices', ['ngRoute'])
     // Saves changes to a specific graph
     o.updateGraph = function(document, data) {
         return $http.put('/api/student/documents/' + document._id + '/graph', data, {
-            headers: {Authorization: 'Bearer '+ AuthToken.getToken()}
+            headers: {Authorization: 'Bearer '+AuthToken.getToken()}
         }).success(function(returnedData) {
             document.graph.elements = returnedData.elements;
             document.graph.undoStack = returnedData.undoStack;
