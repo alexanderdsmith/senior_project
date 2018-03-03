@@ -1,0 +1,24 @@
+<div>
+    <style>
+        #cy {
+            width: 100%;
+            height: 80%;
+            top: 50px;
+            left: 0px;
+            background: #f4f8ff;
+        }
+        #toolbar {
+            width: 100%;
+            height: 3%;
+            bottom: 0px;
+            left: 0px;
+        }
+    </style>
+    <span><center><h3>{{document.title}}{{ isReadonly ? ' (Readonly)' : '' }}</h3></center></span>
+    <div id="cy"></div>
+    <br/>
+    <div id="toolbar"></div>
+    <br/>
+    <h4>Current Grade: {{document.grade}}&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" ng-click="updateGrade()" class="btn btn-primary" ng-show="isTeacher">Update Grade</button></h4>
+
+</div>
