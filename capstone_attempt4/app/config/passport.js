@@ -1,5 +1,5 @@
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var User           = require('../models/student.js');
+var AbstractUser   = require('../models/abstract_user.js');
 var session        = require('express-session');
 var jwt            = require('jsonwebtoken');
 
@@ -10,30 +10,35 @@ module.exports = function(app, passport, keys) {
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(session({
-        secret: secret,
-        resave: false,
-        saveUninitialized: true,
-        cookie: { secure: false }
+        secret            : secret,
+        resave            : false,
+        saveUninitialized : true,
+        cookie            : {
+            secure: false
+        }
     }));
 
     passport.serializeUser(function(user, done) {
-        token = jwt.sign({ username: user.username, email: user.email }, secret, { expiresIn: keys.encryption.expiration });
+        token = jwt.sign({
+            username  : user.username,
+            email     : user.email,
+            usertypes : user.usertypes
+        }, secret, { expiresIn: keys.encryption.expiration });
         done(null, user.id);
     });
 
     passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
+        AbstractUser.findById(id, function(err, user) {
             done(err, user);
         });
     });
 
     passport.use(new GoogleStrategy({
-        clientID: keys.google.clientID,
-        clientSecret: keys.google.clientSecret,
-        callbackURL: keys.google.callbackURL
+        clientID     : keys.google.clientID,
+        clientSecret : keys.google.clientSecret,
+        callbackURL  : keys.google.callbackURL
     }, function(accessToken, refreshToken, profile, done) {
-        User.findOne({ email: profile.emails[0].value }).select('email username password').exec(function(err, user) {
-            console.log(profile);
+        AbstractUser.findOne({ email: profile.emails[0].value }).exec(function(err, user) {
             if(err) done(err);
 
             if(user && user !== null) {

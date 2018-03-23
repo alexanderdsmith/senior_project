@@ -1,0 +1,61 @@
+<div class="page-header">
+    <h1>Class Home Page</h1>
+</div>
+
+<div class="col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Current Assignments</strong></div>
+        <table class="table table-bordered">
+            <tr>
+                <td><strong>Assignment</strong></td>
+                <td><strong>Due Date</strong></td>
+            </tr>
+            <tr ng-repeat="assignment in main.dataPayload.teacher_profile.course_list.assignment_list">
+                <td><a>{{assignment.title}}</a></td>
+                <td>{{assignment.description}}</td>
+            </tr>
+        </table>
+        <form ng-submit="profile.addAssignment(name, description)">
+            <input class="form-control" type="text" placeholder="Assignment Name" ng-model="name" ng-required="true" />
+            <input class="form-control" type="text" placeholder="Description" ng-model="description" ng-required="true" />
+            <input class="form-control" type="submit" value="Add Assignment"/>
+        </form>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Class Announcements</strong></div>
+        <table class="table table-bordered">
+            <tr ng-repeat="announcement in main.dataPayload.teacher_profile.course_list.announcement_list">
+                <td>{{announcement.text}}</td>
+            </tr>
+        </table>
+        <form ng-submit="profile.addAnnouncement()">
+            <input class="form-control" type="text" placeholder="Announcement" name="text" ng-model="profile.announcements.text" ng-required="true" />
+            <input class="form-control" type="submit" value="Add Announcement"/>
+        </form>
+    </div>
+</div>
+
+<div class="col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Past Assignments</strong></div>
+        <table class="table table-bordered">
+            <tr>
+                <td><strong>Assignment</strong></td>
+                <td><strong>Due Date</strong></td>
+                <!--<td><strong>Grade</strong></td>-->
+                <!--<td></td>-->
+            </tr>
+            <tr ng-repeat="assignment in profile.pastAssignments">
+                <td><a>{{assignment.name}}</a></td>
+                <td>{{assignment.dueDate}}</td>
+                <!--<td ng-show="assignment.isGraded">{{assignment.grade}}</td>
+                <td ng-show="!assignment.isGraded">No Grade Yet</td>
+               <!-- <td ng-show="assignment.isGraded"><button type="button" class="btn btn-primary">Edit Grade</button></td>
+                <td ng-show="!assignment.isGraded"><button type="button" class="btn btn-primary">Add Grade</button></td>-->
+            </tr>
+        </table>
+    </div>
+</div>

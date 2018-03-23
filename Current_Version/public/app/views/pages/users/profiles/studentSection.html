@@ -1,0 +1,51 @@
+<div class="page-header">
+    <h1>Class Home Page</h1>
+</div>
+
+<div class="col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Current Assignments</strong></div>
+        <table class="table table-bordered">
+            <tr>
+                <td><strong>Assignment</strong></td>
+                <td><strong>Due Date</strong></td>
+                <!--<td></td>-->
+            </tr>
+            <tr ng-repeat="assignment in main.dataPayload.student_profile.course_list.assignment_list">
+                <td><a>{{assignment.name}}</a></td>
+                <td>{{assignment.description}}</td>
+               <!-- <td ng-show="!assignment.isSubmitted"><button type="button" class="btn btn-primary">Submit</button></td> -->
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Class Announcements</strong></div>
+        <table class="table table-bordered">
+            <tr ng-repeat="announcement in profile.announcements">
+                <td>{{announcement.text}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Past Assignments</strong></div>
+        <table class="table table-bordered">
+            <tr>
+                <td><strong>Assignment</strong></td>
+                <td><strong>Due Date</strong></td>
+                <td><strong>Grade</strong></td>
+            </tr>
+            <tr ng-repeat="assignment in profile.pastAssignments">
+                <td><a>{{assignment.name}}</a></td>
+                <td>{{assignment.dueDate}}</td>
+                <td ng-show="assignment.isGraded">{{assignment.grade}}</td>
+                <td ng-show="!assignment.isGraded">No Grade Yet</td>
+            </tr>
+        </table>
+    </div>
+</div>

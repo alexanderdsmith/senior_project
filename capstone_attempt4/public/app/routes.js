@@ -1,8 +1,6 @@
 var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', {
         templateUrl: 'app/views/pages/home.html'
-    }).when('/about', {
-        templateUrl: 'app/views/pages/about.html'
     }).when('/register', {
         templateUrl: 'app/views/pages/users/register.html',
         controller: 'localStrategyCtrl',
@@ -16,6 +14,41 @@ var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvide
         authenticated: true
     }).when('/profile', {
         templateUrl: 'app/views/pages/users/profile.html',
+        authenticated: true
+    }).when('/admin', {
+        templateUrl: 'app/views/pages/users/profiles/admin.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile',
+        authenticated: true
+    }).when('/student', {
+        templateUrl: 'app/views/pages/users/profiles/student.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile',
+        authenticated: true
+    }).when('/ta', {
+        templateUrl: 'app/views/pages/users/profiles/ta.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile',
+        authenticated: true
+    }).when('/teacher', {
+        templateUrl: 'app/views/pages/users/profiles/teacher.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile',
+        authenticated: true
+    }).when('/studentSection', {
+        templateUrl: 'app/views/pages/users/profiles/studentSection.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile',
+        authenticated: true
+    }).when('/teacherSection', {
+        templateUrl: 'app/views/pages/users/profiles/teacherSection.html',
+        controller: 'profileCtrl',
+        controllerAs: 'profile',
+        authenticated: true
+    }).when('/documents', {
+        templateUrl: 'app/views/pages/users/profiles/document.html',
+        controller: 'documentCtrl',
+        controllerAs: 'profile',
         authenticated: true
     }).when('/google/:token', {
         templateUrl: 'app/views/pages/users/social/social.html',

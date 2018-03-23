@@ -5,18 +5,18 @@ angular.module('mainController', ['authServices'])
 
     app.loadme = false;
 
+    // Updates user parameters on reload
     $rootScope.$on('$routeChangeStart', function() {
         if(Auth.isLoggedIn()) {
-
             app.isLoggedIn = true;
             Auth.getUser().then(function(data) {
-                console.log(data);
+                // User Information
                 app.username = data.data.username;
                 app.email = data.data.email;
+                app.usertypes = data.data.usertypes;
                 app.loadme = true;
             });
         } else {
-
             app.isLoggedIn = false;
             app.username = '';
             app.loadme = true;
@@ -37,7 +37,7 @@ angular.module('mainController', ['authServices'])
                 app.loading = false;
                 app.successMessage = data.data.message + ' Redirecting...';
                 $timeout(function() {
-                    $location.path('/about');
+                    $location.path('/');
                     app.loginData = {};
                     app.successMessage = false;
                 }, 2000);
@@ -51,9 +51,7 @@ angular.module('mainController', ['authServices'])
 
     this.logout = function() {
         Auth.logout();
-        $location.path('/logout');
-        $timeout(function() {
-            $location.path('/');
-        }, 2000)
+        $location.path('/');
     };
 });
+
