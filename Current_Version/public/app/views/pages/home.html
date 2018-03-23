@@ -1,0 +1,11 @@
+<!-- Controller: profileCtrl -->
+
+<div class="page-header">
+    <h1>Home Page</h1>
+    <h3 ng-show="main.isLoggedIn">Welcome back {{ main.username }}!</h3>
+</div>
+
+<div ng-show="main.isLoggedIn" ng-repeat="profile in main.usertypes">
+    <br>
+    <a ng-href="/{{ profile }}"><button type="button" class="btn btn-primary">Go to {{ profile }} profile</button></a>
+</div>

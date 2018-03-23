@@ -1,5 +1,6 @@
 var AbstractUser = require('../models/abstract_user');
 var Admin        = require('../models/admin');
+var Assignment   = require('../models/assignment');
 var AuthList     = require('../models/auth_list');
 var Course       = require('../models/course');
 var Document     = require('../models/document');
@@ -24,61 +25,21 @@ module.exports = function(router, keys) {
         if(req.body.username === null || req.body.username === '' || req.body.password === null || req.body.password === '' || req.body.email === null || req.body.email === '') {
             res.json({ success: false, message: 'Ensure username, password, and email are provided' });
         } else {
-            AuthList.findOne({ authorized: user.username }).exec(function(err, list) {
+            AuthList.findOne({ usertype: 'admin' }).exec(function(err, list) {
                 if(err) throw err;
-                if(list.authorized.indexOf(user.username) === -1) {
-                    res.json({ success: false, message: 'User has not been authorized' });
+                if(list.authorized.indexOf(user.username) !== -1) {
+                    user.usertypes = ['admin'];
+                    var admin = new Admin();
+                    admin.save();
+                    user._admin = admin;
                 }
-                if(list.usertype === 'student' || list.usertype === '' || list.usertype === null) {
-                    user._student = new Student({
-                        _courses: [],
-                        _documents: []
-                    });
-                    user.usertypes.push('student');
-                    user.save(function(err) {
-                        if(err) {
-                            res.json({ success: false, message: 'Username or email already exists!' });
-                        } else {
-                            res.json({ success: true, message: 'Student account successfully created!' });
-                        }
-                    });
-                }
-                if(list.usertype === 'ta') {
-                    user._ta = new Ta({
-                        _courses: []
-                    });
-                    user.usertypes.push('ta');
-                    user.save(function(err) {
-                        if(err) {
-                            res.json({ success: false, message: 'Username or email already exists!' });
-                        } else {
-                            res.json({ success: true, message: 'TA account successfully created!' });
-                        }
-                    });
-                }
-                if(list.usertype === 'teacher') {
-                    user._teacher = new Teacher({
-                        _courses: []
-                    });
-                    user.usertypes.push('teacher');
-                    user.save(function(err) {
-                        if(err) {
-                            res.json({ success: false, message: 'Username or email already exists!' });
-                        } else {
-                            res.json({ success: true, message: 'Teacher account successfully created!' });
-                        }
-                    });
-                }
-                if(list.usertype === 'admin') {
-                    user._admin = new Admin({});
-                    user.usertypes.push('admin');
-                    user.save(function(err) {
-                        if(err) {
-                            res.json({ success: false, message: 'Username or email already exists!' });
-                        } else {
-                            res.json({ success: true, message: 'Admin account successfully created!' });
-                        }
-                    });
+            });
+            user.save(function(err) {
+                console.log(user);
+                if(err) {
+                    res.json({ success: false, message: 'Username or Email already exists!' });
+                } else {
+                    res.json({ success: true, message: 'Account successfully created!' });
                 }
             });
         }
@@ -104,13 +65,16 @@ module.exports = function(router, keys) {
                             email     : user.email,
                             usertypes : user.usertypes
                         }, keys.encryption.secret, { expiresIn: keys.encryption.expiration });
-                        res.json({success: true, message: 'User authenticated', token: token });
 
-                        // when user is authenticated, begin user updates!
-                        if((user.usertypes.indexOf('student') !== -1) && user._student === null)
-                        {
-                            var student = new Student();
+                        // TODO: when user is authenticated, begin user updates!
+                        if((user.usertypes.indexOf('student') !== -1) && user._student === null) {
+                            user._student = new Student({
+                                _courses: [],
+                                _documents: []
+                            });
                         }
+
+                        res.json({success: true, message: 'User authenticated', token: token });
                     }
                 } else {
                     res.json({success: false, message: 'No password provided.'});
@@ -149,18 +113,21 @@ module.exports = function(router, keys) {
     /***************************/
     /*** CSV AUTHLIST UPLOAD ***/
     /***************************/
-    router.post('/uploadAuthList', function(req, res) {
-        if(req.body.csv !== null && req.body.csv !== '') {
+    router.post('/uploadCourse', function(req, res) {
+        if(req.body.csv !== null && req.body.csv !== '' && typeof(req.body.csv) !== 'undefined') {
             var csv = Papa.parse(req.body.csv, {
                 delimiter: ',',
                 header: true
             });
+
+            var course = new Course();
 
             var adminlist   = [];
             var studentlist = [];
             var talist      = [];
             var teacherlist = [];
 
+            /** build authorized users lists **/
             for(var i = 0; i < csv.data.length; i++) {
                 switch(csv.data[i].Type) {
                     case 'admin': {
@@ -224,56 +191,42 @@ module.exports = function(router, keys) {
             res.json({ success: true, message: 'CSV file successfully uploaded!' });
 
         } else {
-            res.json({ success: false, message: 'CSV file was not correctly formatted!' });
+            res.json({ success: false, message: 'Please select a CSV File!' });
         }
+    });
+
+    router.post('/addAssignment', function(req, res) {
+        var assignment = new Assignment();
+        assignment.title = req.body.title;
+        assignment.description = req.body.description;
+        assignment.dueDate = 'Today';
+        res.send(assignment);
     });
 
     /****************************/
     /* ON ROUTE CHANGE & RELOAD */
     /****** UPDATE PROFILE ******/
-    /****** JSONIFIES DATA ******/
+    /***** 'JSONIFIES' DATA *****/
     /****************************/
 
     // TODO: FINISH POPULATION TREE & UPDATE REQUESTS
-    router.post('/profileData', function(req, res) {
+    router.get('/profileData', function(req, res) {
 
-        /** UPDATE USERS BEFORE PAYLOAD **/
-        AbstractUser.findOne({ username: req.body.user_info.user }).populate('_admin _student _ta _teacher').exec(function(err, user) {
-            console.log(user);
-            if(err) throw err;
-            if((user.usertypes.indexOf('admin') === -1 ) && (user._admin === null)) {
-                user._admin = new Admin();
-                user.save();
-            }
-            if((user.usertypes.indexOf('student') === -1) && (user._student === null)) {
-                user._student = new Student({
-                    _courses: [],
-                    _documents: []
-                });
-                user.save();
-            }
-            if((user.usertypes.indexOf('ta') === -1) && (user._ta === null)) {
-                user._ta = new Ta({
-                    _courses: []
-                });
-                user.save();
-            }
-            if((user.usertypes.indexOf('teacher') === -1) && (user._teacher === null)) {
-                user._teacher = new Teacher({
-                    _courses: []
-                });
-                user.save();
-            }
-        });
-
-
-        /** SEND PAYLOAD **/
+        /** SEND PAYLOAD (Structure for payload) **/
         var profile_payload = {
+            user: {
+                username: req.decoded.username,
+                email: req.decoded.email,
+                usertypes: req.decoded.usertypes
+            },
             admin_profile: {},
             student_profile: {
                 course_list: [{
                     title: String,
                     teacher_list: [String]
+                }],
+                documents_list: [{
+                    title: String
                 }]
             },
             ta_profile: {
@@ -285,79 +238,104 @@ module.exports = function(router, keys) {
             teacher_profile: {
                 course_list: [{
                     title: String,
+                    assignment_list: [{
+                        title: String,
+                        description: String
+                    }],
                     teacher_list: [String]
                 }]
             }
         };
 
-        AbstractUser.findOne({ username: req.body.user_info.user }).populate({
+        /** UPDATE USERS BEFORE PAYLOAD **/
+        AbstractUser.findOne({ username: req.decoded.username }).populate({
+            path: '_admin'
+        }).populate({
             path: '_student',
+            populate: [{
+                path: '_courses',
+                populate: [{
+                    path: '_teachers'
+                }, {
+                    path: '_assignments'
+                }, {
+                    path: '_announcements'
+                }]
+            }, {
+                path: '_documents'
+            }]
+        }).populate({
+            path: '_ta',
             populate: {
                 path: '_courses'
             }
+        }).populate({
+            path: '_teacher',
+            populate: { path: '_courses' }
         }).exec(function(err, user) {
-            console.log(user);
-        });
-
-        res.send(profile_payload);
-
-        /******
-         * TESTING!!!! DOES NOT CURRENTLY WORK (need to use .populate() on findOne()!!)
-        AbstractUser.findOne({ username: req.body.user_info.user }).exec(function(err, user) {
             if(err) throw err;
-            if(user.usertypes.indexOf('student') !== -1) {
-                // user's student profile information
-                Student.findById(user._student).exec(function(err, student) {
-                    if(err) throw err;
-                    if(student) {
-                        Course.find({}).exec(function(err, courses) {
-                            var course_list = [{
-                                title: String,
-                                teacher_list: [String]
-                            }];
-                            var course = {
-                                title: String,
-                                teacher_list: [String]
-                            };
-                            if(err) throw err;
-                            if(courses.length > 0) {
-
-                                for(var i = 0; i < courses.length; i++) {
-                                    course.title = courses[i].title;
-
-                                    // get user's section teachers
-                                    Teacher.find({}).exec(function(err, teachers) {
-                                        var teacherlist = [];
-
-                                        teachers.forEach(function() {
-                                            teacherlist.push(teachers.username);
-                                        });
-
-                                        return Promise.all(teacherlist);
-                                    }).then(function(instructors) {
-                                        course.teacherlist = instructors;
-                                    });
-                                }
-                            }
-                            profile_payload.student_profile.course_list.push(course);
-                        });
-                        Document.find({}).exec(function(err, documents) {
-                            if(err) throw err;
-                            if(documents.length> 0) {
-
-                            }
-                        })
-                    }
-                });
+            if((user.usertypes.indexOf('admin') !== -1 ) && (user._admin === null)) {
+                var admin = new Admin();
+                admin.save();
+                user._admin = admin;
+                user.usertypes.push('admin');
+                user.save();
             }
-            if(user.usertypes.indexOf('teacher') !== -1) {
+            if((user.usertypes.indexOf('student') !== -1) && (user._student === null)) {
+                var student = new Student({
+                    _courses: [],
+                    _documents: []
+                });
+                student.save();
+                user._student = student;
+                user.usertypes.push('student');
+                user.save();
+            }
+            if((user.usertypes.indexOf('ta') !== -1) && (user._ta === null)) {
+                var ta = new Ta({
+                    _courses: []
+                });
+                ta.save();
+                user._ta = ta;
+                user.usertypes.push('ta');
+                user.save();
+            }
+            if((user.usertypes.indexOf('teacher') !== -1) && (user._teacher === null)) {
+                var teacher = new Teacher({
+                    _courses: []
+                });
+                teacher.save();
+                user._teacher = teacher;
+                user.usertypes.push('teacher');
+                user.save();
+            }
+        });
 
+        /** BUILD PAYLOAD **/
+        AbstractUser.findOne({
+            username: req.decoded.username
+        }).populate({
+            path: '_admin'
+        }).populate({
+            path: '_student',
+            populate: [{ path: '_courses' }, { path: '_documents' }]
+        }).populate({
+            path: '_ta',
+            populate: { path: '_courses' }
+        }).populate({
+            path: '_teacher',
+            populate: { path: '_courses' }
+        }).exec(function(err, user) {
+            if(err) throw err;
+            if(user) {
+                console.log(user);
+                profile_payload.user.username = user.username;
+                profile_payload.user.name = user.givenname;
+                profile_payload.user.email = user.email;
             }
         });
 
         res.send(profile_payload);
-
-         ********/
     });
 
     return router;

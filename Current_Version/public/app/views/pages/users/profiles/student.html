@@ -1,0 +1,19 @@
+<div class="page-header">
+    <h1>Student {{ main.username }}'s Profile</h1>
+</div>
+
+<div class="center-block">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Your Classes</strong></div>
+        <table class="table table-bordered">
+            <tr>
+                <td><strong>Course Name</strong></td>
+                <td><strong>Instructor</strong></td>
+            </tr>
+            <tr ng-repeat="course in main.dataPayload.student_profile.course_list">
+                <td>{{course.title}}</td>
+                <td>{{course.teacher_list}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
