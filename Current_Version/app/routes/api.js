@@ -248,7 +248,7 @@ module.exports = function(router, keys) {
         };
 
         /** UPDATE USERS BEFORE PAYLOAD **/
-        AbstractUser.findOne({ username: req.decoded.username }).populate({
+        /**AbstractUser.findOne({ username: req.decoded.username }).populate({
             path: '_admin'
         }).populate({
             path: '_student',
@@ -309,7 +309,7 @@ module.exports = function(router, keys) {
                 user.usertypes.push('teacher');
                 user.save();
             }
-        });
+        });**/
 
         /** BUILD PAYLOAD **/
         AbstractUser.findOne({
