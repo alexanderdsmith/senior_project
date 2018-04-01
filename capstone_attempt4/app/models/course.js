@@ -12,6 +12,10 @@ var CourseSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Student'
     }],
+    tas: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Ta'
+    }],
     assignments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Assignment'
