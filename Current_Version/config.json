@@ -8,7 +8,7 @@
     "expiration": "24h"
   },
   "mongodb": {
-    "dbURI": "mongodb://asmithslu:pass@ds155278.mlab.com:55278/concept-maps"
+    "dbURI": "mongodb://testuser:mS6sMvmG@cpst-db1.mcs.slu.edu:27017/capstone"
   },
   "admins": ["alexanderdsmith", "khanim", "conlonej"],
   "URL": "http://localhost:8080"
