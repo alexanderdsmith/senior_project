@@ -1,3 +1,4 @@
 capstone_attempt4/node_modules
 *.DS_Store
+.idea/workspace.xml
 Current_Version/config.json
