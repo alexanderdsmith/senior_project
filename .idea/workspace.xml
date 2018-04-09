@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="808a175e-6a37-4420-99c7-223abe48464f" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/Current_Version/app/models/auth_list.js" afterPath="$PROJECT_DIR$/Current_Version/app/models/auth_list.js" />
-      <change beforePath="$PROJECT_DIR$/Current_Version/app/models/course.js" afterPath="$PROJECT_DIR$/Current_Version/app/models/course.js" />
       <change beforePath="$PROJECT_DIR$/Current_Version/app/routes/api.js" afterPath="$PROJECT_DIR$/Current_Version/app/routes/api.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,11 +13,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="abstract_user.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Current_Version/app/models/abstract_user.js">
+      <file leaf-file-name="passport.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Current_Version/app/config/passport.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="25" lean-forward="false" selection-start-line="19" selection-start-column="25" selection-end-line="19" selection-end-column="25" />
+            <state relative-caret-position="37">
+              <caret line="27" column="7" lean-forward="true" selection-start-line="27" selection-start-column="7" selection-end-line="27" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="api.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Current_Version/app/routes/api.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="322">
+              <caret line="351" column="78" lean-forward="false" selection-start-line="351" selection-start-column="78" selection-end-line="351" selection-end-column="78" />
               <folding />
             </state>
           </provider>
@@ -37,11 +45,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="api.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Current_Version/app/routes/api.js">
+      <file leaf-file-name="auth_list.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Current_Version/app/models/auth_list.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-790">
-              <caret line="116" column="34" lean-forward="false" selection-start-line="116" selection-start-column="34" selection-end-line="116" selection-end-column="34" />
+            <state relative-caret-position="1358">
+              <caret line="194" column="19" lean-forward="true" selection-start-line="194" selection-start-column="19" selection-end-line="194" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -398,15 +406,16 @@
       <workItem from="1521825081204" duration="1159000" />
       <workItem from="1522625757881" duration="9517000" />
       <workItem from="1522897817659" duration="6718000" />
-      <workItem from="1523244357092" duration="3733000" />
+      <workItem from="1523244357092" duration="7569000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="21127000" />
+    <option name="totallyTimeSpent" value="24963000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -417,7 +426,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2482353" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2482353" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -655,23 +664,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Current_Version/app/models/abstract_user.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="25" lean-forward="false" selection-start-line="19" selection-start-column="25" selection-end-line="19" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Current_Version/app/config/keys.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Current_Version/app/config/passport.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -701,14 +694,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="12" column="53" lean-forward="false" selection-start-line="12" selection-start-column="53" selection-end-line="12" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Current_Version/app/models/auth_list.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2571">
-          <caret line="194" column="19" lean-forward="true" selection-start-line="194" selection-start-column="19" selection-end-line="194" selection-end-column="19" />
           <folding />
         </state>
       </provider>
@@ -753,6 +738,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Current_Version/app/models/user.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Current_Version/app/models/course.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -761,10 +754,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Current_Version/app/models/auth_list.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1358">
+          <caret line="194" column="19" lean-forward="true" selection-start-line="194" selection-start-column="19" selection-end-line="194" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Current_Version/app/models/abstract_user.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="6" lean-forward="false" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Current_Version/app/config/passport.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="37">
+          <caret line="27" column="7" lean-forward="true" selection-start-line="27" selection-start-column="7" selection-end-line="27" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Current_Version/app/routes/api.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-790">
-          <caret line="116" column="34" lean-forward="false" selection-start-line="116" selection-start-column="34" selection-end-line="116" selection-end-column="34" />
+        <state relative-caret-position="322">
+          <caret line="351" column="78" lean-forward="false" selection-start-line="351" selection-start-column="78" selection-end-line="351" selection-end-column="78" />
           <folding />
         </state>
       </provider>

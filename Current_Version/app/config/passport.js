@@ -42,6 +42,10 @@ module.exports = function(app, passport, keys) {
         AbstractUser.findOne({ email: profile.emails[0].value }).exec(function(err, user) {
             if(err) done(err);
             if(user && user !== null) {
+                if(user.givenname === '' || user.givenname === null) {
+                    user.givenname = profile.displayName;
+                    user.save();
+                }
                 done(null, user);
             } else {
                 done(err);

@@ -220,36 +220,37 @@ module.exports = function(router, keys) {
                 email: req.decoded.email,
                 usertypes: req.decoded.usertypes
             },
-            admin_profile: {},
+            admin_profile: {
+                id: mongoose.Schema.ObjectId
+            },
             student_profile: {
+                id: mongoose.Schema.ObjectId,
                 course_list: [{
-                    title: String,
-                    teacher_list: [String]
+                    id: mongoose.Schema.ObjectId,
+                    title: String
                 }],
                 documents_list: [{
+                    id: mongoose.Schema.ObjectId,
                     title: String
                 }]
             },
             ta_profile: {
+                id: mongoose.Schema.ObjectId,
                 course_list: [{
-                    title: String,
-                    teacher_list: [String]
+                    id: mongoose.Schema.ObjectId,
+                    title: String
                 }]
             },
             teacher_profile: {
                 course_list: [{
-                    title: String,
-                    assignment_list: [{
-                        title: String,
-                        description: String
-                    }],
-                    teacher_list: [String]
+                    id: mongoose.Schema.ObjectId,
+                    title: String
                 }]
             }
         };
 
         /** UPDATE USERS BEFORE PAYLOAD **/
-        /**AbstractUser.findOne({ username: req.decoded.username }).populate({
+        AbstractUser.findOne({ username: req.decoded.username }).populate({
             path: '_admin'
         }).populate({
             path: '_student',
@@ -310,7 +311,7 @@ module.exports = function(router, keys) {
                 user.usertypes.push('teacher');
                 user.save();
             }
-        });**/
+        });
 
         /** BUILD PAYLOAD **/
         AbstractUser.findOne({
@@ -333,6 +334,38 @@ module.exports = function(router, keys) {
                 profile_payload.user.username = user.username;
                 profile_payload.user.name = user.givenname;
                 profile_payload.user.email = user.email;
+
+                profile_payload.admin_profile.id = user._admin._id;
+
+                profile_payload.student_profile.id = user._student._id;
+                user._student._courses.forEach(function(course) {
+                    profile_payload.student_profile.course_list.append({
+                        id: course._id,
+                        title: course.title
+                    });
+                });
+                user._student._documents.forEach(function(document) {
+                    profile_payload.student_profile.documents_list.append({
+                        id: document._id,
+                        title: document.title
+                    })
+                });
+
+                profile_payload.ta_profile.id = user._ta._id;
+                user._ta._courses.forEach(function(course) {
+                    profile_payload.ta_profile.course_list.append({
+                        id: course._id,
+                        title: course.title
+                    });
+                });
+
+                profile_payload.teacher_profile.id = user._teacher._id;
+                user._teacher._courses.forEach(function(course) {
+                    profile_payload.teacher_profile.course_list.append({
+                        id: course._id,
+                        title: course.title
+                    });
+                });
             }
         });
 
