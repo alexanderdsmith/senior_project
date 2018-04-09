@@ -1,6 +1,7 @@
 var mongoose     = require('mongoose');
 var AbstractUser = require('./abstract_user');
 var Admin        = require('./admin');
+var Course       = require('./course');
 var Student      = require('./student');
 var Ta           = require('./ta');
 var Teacher      = require('./teacher');

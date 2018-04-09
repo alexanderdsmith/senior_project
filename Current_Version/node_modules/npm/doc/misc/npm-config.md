@@ -284,6 +284,9 @@ This is a list of CIDR address to be used when configuring limited access tokens
 If false, never shows colors.  If `"always"` then always shows colors.
 If true, then only prints color codes for tty file descriptors.
 
+This option can also be changed using the environment: colors are
+disabled when the environment variable `NO_COLOR` is set to any value.
+
 ### depth
 
 * Default: Infinity
@@ -672,6 +675,13 @@ impact how lifecycle scripts are called.
 
 The node version to use when checking a package's `engines` map.
 
+### no-proxy
+
+* Default: null
+* Type: String or Array
+
+A comma-separated string or an array of domain extensions that a proxy should not be used for.
+
 ### offline
 
 * Default: false
@@ -742,7 +752,7 @@ This option is an alias for `--shrinkwrap`.
 * Default: false
 * Type: Boolean
 
-If set to true, it will update only the `package-json`,
+If set to true, it will update only the `package-lock.json`,
 instead of checking `node_modules` and downloading dependencies.
 
 ### parseable
@@ -839,7 +849,7 @@ Remove failed installs.
 
 ### save
 
-* Default: false
+* Default: true
 * Type: Boolean
 
 Save installed packages to a package.json file as dependencies.
