@@ -1,6 +1,7 @@
 var AbstractUser = require('../models/abstract_user');
 var Admin        = require('../models/admin');
 var Assignment   = require('../models/assignment');
+var Announcement = require('../models/announcement');
 var AuthList     = require('../models/auth_list');
 var Course       = require('../models/course');
 var Document     = require('../models/document');
@@ -35,7 +36,6 @@ module.exports = function(router, keys) {
                 }
             });
             user.save(function(err) {
-                console.log(user);
                 if(err) {
                     res.json({ success: false, message: 'Username or Email already exists!' });
                 } else {
@@ -114,14 +114,21 @@ module.exports = function(router, keys) {
     /*** CSV AUTHLIST UPLOAD ***/
     /***************************/
     router.post('/uploadCourse', function(req, res) {
-        console.log(req.body.title);
-        if(req.body.csv !== null && req.body.csv !== '' && typeof(req.body.csv) !== 'undefined' && 0 === 1) {
-            var csv = Papa.parse(req.body.data.csv, {
+        if(req.body.csv !== null && req.body.csv !== '' && typeof(req.body.csv) !== 'undefined') {
+            var csv = Papa.parse(req.body.csv, {
                 delimiter: ',',
                 header: true
             });
-            if (!req.body.title)
-            var course = new Course({title: req.body.data.title});
+            var course = new Course({
+                title: req.body.title,
+                _students: [],
+                _tas: [],
+                _teachers: [],
+                _announcements: [],
+                _assignments: []
+            });
+            course.save();
+            console.log(course._id);
 
             var adminlist   = [];
             var studentlist = [];
@@ -148,7 +155,7 @@ module.exports = function(router, keys) {
                         break;
                     }
                     default: {
-                        console.log(csv.data[i].Username + ' was unable to be authenticated!');
+                        console.log(csv.data[i].Username + ' was not correctly formatted!\n' + csv.data[i].Type + ' is not a valid type.');
                     }
                 }
             }
@@ -156,7 +163,7 @@ module.exports = function(router, keys) {
             AuthList.findOne({ usertype: 'admin' }).exec(function (err, list) {
                 if (err) throw err;
                 if(list) {
-                    list.updateList(adminlist, course);
+                    list.updateList(adminlist, course._id);
                 } else {
                     res.json({ success: false, message: 'CSV file is not correctly formatted!' });
                 }
@@ -165,7 +172,7 @@ module.exports = function(router, keys) {
             AuthList.findOne({ usertype: 'student' }).exec(function (err, list) {
                 if (err) throw err;
                 if(list) {
-                    list.updateList(studentlist, course);
+                    list.updateList(studentlist, course._id);
                 } else {
                     res.json({ success: false, message: 'CSV file is not correctly formatted!' });
                 }
@@ -174,7 +181,7 @@ module.exports = function(router, keys) {
             AuthList.findOne({ usertype: 'ta' }).exec(function (err, list) {
                 if (err) throw err;
                 if(list) {
-                    list.updateList(talist, course);
+                    list.updateList(talist, course._id);
                 } else {
                     res.json({ success: false, message: 'CSV file is not correctly formatted!' });
                 }
@@ -183,7 +190,7 @@ module.exports = function(router, keys) {
             AuthList.findOne({ usertype: 'teacher' }).exec(function (err, list) {
                 if (err) throw err;
                 if(list) {
-                    list.updateList(teacherlist, course);
+                    list.updateList(teacherlist, course._id);
                 } else {
                     res.json({ success: false, message: 'CSV file is not correctly formatted!' });
                 }
@@ -225,37 +232,31 @@ module.exports = function(router, keys) {
             },
             student_profile: {
                 id: mongoose.Schema.ObjectId,
-                course_list: [{
-                    id: mongoose.Schema.ObjectId,
-                    title: String
-                }],
-                documents_list: [{
-                    id: mongoose.Schema.ObjectId,
-                    title: String
-                }]
+                course_list: [],
+                documents_list: []
             },
             ta_profile: {
                 id: mongoose.Schema.ObjectId,
-                course_list: [{
-                    id: mongoose.Schema.ObjectId,
-                    title: String
-                }]
+                course_list: []
             },
             teacher_profile: {
-                course_list: [{
-                    id: mongoose.Schema.ObjectId,
-                    title: String
-                }]
+                course_list: []
             }
         };
 
+        // TODO:
         /** UPDATE USERS BEFORE PAYLOAD **/
-        AbstractUser.findOne({ username: req.decoded.username }).populate({
-            path: '_admin'
+        /*AbstractUser.findOne({
+            username: req.decoded.username
         }).populate({
+            path: '_admin',
+            model: 'Admin'
+        }, {
             path: '_student',
+            model: 'Student',
             populate: [{
                 path: '_courses',
+                model: 'Course',
                 populate: [{
                     path: '_teachers'
                 }, {
@@ -266,14 +267,16 @@ module.exports = function(router, keys) {
             }, {
                 path: '_documents'
             }]
-        }).populate({
+        }, {
             path: '_ta',
             populate: {
                 path: '_courses'
             }
-        }).populate({
+        }, {
             path: '_teacher',
-            populate: { path: '_courses' }
+            populate: {
+                path: '_courses'
+            }
         }).exec(function(err, user) {
             if(err) throw err;
             if((user.usertypes.indexOf('admin') !== -1 ) && (user._admin === null)) {
@@ -311,65 +314,89 @@ module.exports = function(router, keys) {
                 user.usertypes.push('teacher');
                 user.save();
             }
-        });
+        });*/
 
         /** BUILD PAYLOAD **/
         AbstractUser.findOne({
             username: req.decoded.username
-        }).populate({
-            path: '_admin'
-        }).populate({
+        }).populate([{
+            path: '_admin',
+            model: 'Admin'
+        }, {
             path: '_student',
-            populate: [{ path: '_courses' }, { path: '_documents' }]
-        }).populate({
+            model: 'Student',
+            populate: [{
+                path: '_courses',
+                model: 'Course'
+            }, {
+                path: '_documents',
+                model: 'Document'
+            }]
+        }, {
             path: '_ta',
-            populate: { path: '_courses' }
-        }).populate({
+            model: 'Ta',
+            populate: {
+                path: '_courses',
+                model: 'Course'
+            }
+        }, {
             path: '_teacher',
-            populate: { path: '_courses' }
-        }).exec(function(err, user) {
+            model: 'Teacher',
+            populate: {
+                path: '_courses',
+                model: 'Course'
+            }
+        }]).exec(function(err, user) {
             if(err) throw err;
             if(user) {
-                console.log(user);
                 profile_payload.user.username = user.username;
                 profile_payload.user.name = user.givenname;
                 profile_payload.user.email = user.email;
 
-                profile_payload.admin_profile.id = user._admin._id;
+                if(user._admin !== undefined && user._admin !== null) {
+                    profile_payload.admin_profile.id = user._admin._id;
+                }
 
-                profile_payload.student_profile.id = user._student._id;
-                user._student._courses.forEach(function(course) {
-                    profile_payload.student_profile.course_list.append({
-                        id: course._id,
-                        title: course.title
-                    });
-                });
-                user._student._documents.forEach(function(document) {
-                    profile_payload.student_profile.documents_list.append({
-                        id: document._id,
-                        title: document.title
-                    })
-                });
+                if(user._student !== undefined && user._student !== null) {
+                    profile_payload.student_profile.id = user._student._id;
+                    user._student._courses.forEach(function (course) {
 
-                profile_payload.ta_profile.id = user._ta._id;
-                user._ta._courses.forEach(function(course) {
-                    profile_payload.ta_profile.course_list.append({
-                        id: course._id,
-                        title: course.title
+                        profile_payload.student_profile.course_list.push({
+                            id: course._id,
+                            title: course.title
+                        });
                     });
-                });
 
-                profile_payload.teacher_profile.id = user._teacher._id;
-                user._teacher._courses.forEach(function(course) {
-                    profile_payload.teacher_profile.course_list.append({
-                        id: course._id,
-                        title: course.title
+                    user._student._documents.forEach(function (document) {
+                        profile_payload.student_profile.documents_list.push({
+                            id: document._id,
+                            title: document.title
+                        });
                     });
-                });
+                }
+
+                if(user._ta !== undefined && user._ta !== null) {
+                    profile_payload.ta_profile.id = user._ta._id;
+                    user._ta._courses.forEach(function (course) {
+                        profile_payload.ta_profile.course_list.push({
+                            id: course._id,
+                            title: course.title
+                        });
+                    });
+                }
+
+                if(user._teacher !== undefined && user._teacher !== null) {
+                    profile_payload.teacher_profile.id = user._teacher._id;
+                    user._teacher._courses.forEach(function (course) {
+                        profile_payload.teacher_profile.course_list.push({
+                            id: course._id,
+                            title: course.title
+                        });
+                    });
+                }
             }
+            res.send(profile_payload);
         });
-
-        res.send(profile_payload);
     });
 
     return router;

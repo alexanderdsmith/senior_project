@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 
-var DocumentSchema = new mongoose.Schema({
+var Schema = mongoose.Schema;
+
+var DocumentSchema = new Schema({
     title       : {
         type    : String,
         default : 'untitled'
@@ -58,4 +60,4 @@ DocumentSchema.methods.updateGrade = function(grade) {
     this.save();
 };
 
-mongoose.model('Document', DocumentSchema);
+module.exports = mongoose.model('Document', DocumentSchema);

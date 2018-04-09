@@ -10,10 +10,11 @@
                 <td><strong>Course Name</strong></td>
                 <td><strong>Instructor</strong></td>
             </tr>
-            <tr ng-repeat="course in main.dataPayload.student_profile.course_list">
-                <td>{{course.title}}</td>
-                <td>{{course.teacher_list}}</td>
+            <tr ng-repeat="course in main.profile_payload.data.student_profile.course_list">
+                <td>{{ course.title }}</td>
+                <td>{{ course.id }}</td>
             </tr>
         </table>
     </div>
+    <p>{{ main.profile_payload }}</p>
 </div>
