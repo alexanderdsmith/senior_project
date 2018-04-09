@@ -29,7 +29,7 @@ AuthListSchema.methods.createList = function(list) {
 
 // ensures users are not double authenticated!
 // AuthList.updateList(list_additions); will update the authenticated users list
-AuthListSchema.methods.updateList = function(list_additions) {
+AuthListSchema.methods.updateList = function(list_additions, course) {
     // Admin list updates on restart
     var thistype = this.usertype;
 
@@ -58,10 +58,12 @@ AuthListSchema.methods.updateList = function(list_additions) {
                             }
                             case 'student': {
                                 var student = new Student({
-                                    _courses: [],
+                                    _courses: [course],
                                     _documents: []
                                 });
                                 student.save();
+                                course._students.push(student);
+                                course.save();
                                 user._student = student;
                                 user.usertypes.push('student');
                                 user.save(function(err) {
@@ -75,9 +77,11 @@ AuthListSchema.methods.updateList = function(list_additions) {
                             }
                             case 'ta': {
                                 var ta = new Ta({
-                                    _courses: []
+                                    _courses: [course]
                                 });
                                 ta.save();
+                                course._tas.push(ta);
+                                course.save();
                                 user._ta = ta;
                                 user.usertypes.push('ta');
                                 user.save(function(err) {
@@ -91,9 +95,11 @@ AuthListSchema.methods.updateList = function(list_additions) {
                             }
                             case 'teacher': {
                                 var teacher = new Teacher({
-                                    _courses: []
+                                    _courses: [course]
                                 });
                                 teacher.save();
+                                course._teachers.push(teacher);
+                                course.save();
                                 user._teacher = teacher;
                                 user.usertypes.push('teacher');
                                 user.save(function(err) {
@@ -131,10 +137,12 @@ AuthListSchema.methods.updateList = function(list_additions) {
                             }
                             case 'student': {
                                 var student = new Student({
-                                    _courses: [],
+                                    _courses: [course],
                                     _documents: []
                                 });
                                 student.save();
+                                course._students.push(student);
+                                course.save();
                                 newUser._student = student;
                                 newUser.usertypes.push('student');
                                 newUser.save(function(err) {
@@ -148,9 +156,11 @@ AuthListSchema.methods.updateList = function(list_additions) {
                             }
                             case 'ta': {
                                 var ta = new Ta({
-                                    _courses: []
+                                    _courses: [course]
                                 });
                                 ta.save();
+                                course.tas.push(ta);
+                                course.save();
                                 newUser._ta = ta;
                                 newUser.usertypes.push('ta');
                                 newUser.save(function(err) {
@@ -164,9 +174,11 @@ AuthListSchema.methods.updateList = function(list_additions) {
                             }
                             case 'teacher': {
                                 var teacher = new Teacher({
-                                    _courses: []
+                                    _courses: [course]
                                 });
                                 teacher.save();
+                                course._teachers.push(teacher);
+                                course.save();
                                 newUser._teacher = teacher;
                                 newUser.usertypes.push('teacher');
                                 newUser.save(function(err) {

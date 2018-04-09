@@ -114,13 +114,14 @@ module.exports = function(router, keys) {
     /*** CSV AUTHLIST UPLOAD ***/
     /***************************/
     router.post('/uploadCourse', function(req, res) {
-        if(req.body.csv !== null && req.body.csv !== '' && typeof(req.body.csv) !== 'undefined') {
-            var csv = Papa.parse(req.body.csv, {
+        console.log(req.body.title);
+        if(req.body.csv !== null && req.body.csv !== '' && typeof(req.body.csv) !== 'undefined' && 0 === 1) {
+            var csv = Papa.parse(req.body.data.csv, {
                 delimiter: ',',
                 header: true
             });
-
-            var course = new Course();
+            if (!req.body.title)
+            var course = new Course({title: req.body.data.title});
 
             var adminlist   = [];
             var studentlist = [];
@@ -155,7 +156,7 @@ module.exports = function(router, keys) {
             AuthList.findOne({ usertype: 'admin' }).exec(function (err, list) {
                 if (err) throw err;
                 if(list) {
-                    list.updateList(adminlist);
+                    list.updateList(adminlist, course);
                 } else {
                     res.json({ success: false, message: 'CSV file is not correctly formatted!' });
                 }
@@ -164,7 +165,7 @@ module.exports = function(router, keys) {
             AuthList.findOne({ usertype: 'student' }).exec(function (err, list) {
                 if (err) throw err;
                 if(list) {
-                    list.updateList(studentlist);
+                    list.updateList(studentlist, course);
                 } else {
                     res.json({ success: false, message: 'CSV file is not correctly formatted!' });
                 }
@@ -173,7 +174,7 @@ module.exports = function(router, keys) {
             AuthList.findOne({ usertype: 'ta' }).exec(function (err, list) {
                 if (err) throw err;
                 if(list) {
-                    list.updateList(talist);
+                    list.updateList(talist, course);
                 } else {
                     res.json({ success: false, message: 'CSV file is not correctly formatted!' });
                 }
@@ -182,7 +183,7 @@ module.exports = function(router, keys) {
             AuthList.findOne({ usertype: 'teacher' }).exec(function (err, list) {
                 if (err) throw err;
                 if(list) {
-                    list.updateList(teacherlist);
+                    list.updateList(teacherlist, course);
                 } else {
                     res.json({ success: false, message: 'CSV file is not correctly formatted!' });
                 }
