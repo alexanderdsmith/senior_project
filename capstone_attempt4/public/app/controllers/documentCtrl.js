@@ -42,7 +42,6 @@ angular.module('documentControllers', ['documentServices'])
  	//Warning about unsaved work on back button
     app.$on('$locationChangeStart', function(event) {
         if (!this.biographObj.dirty) { return; }
-        //CHANGE THIS.BIOGRAPHOBJ TO APP.DIRTY?
         if (!confirm("Are you sure you want to leave this page? All unsaved changes will be lost.")) {
             event.preventDefault();
         }
@@ -60,7 +59,6 @@ angular.module('documentControllers', ['documentServices'])
             window.removeEventListener("beforeunload", confirmFunc);
         }
         this.biographObj.dirty = dirty;
-        //CHANGE THIS.BIOGRAPHOBJ.DIRTY TO APP?
     });
 
 });
