@@ -1,15 +1,15 @@
 angular.module('documentControllers', ['documentServices'])
 
-.controller('DocumentCtrl', ['documents', 'document', 'confirmFunc', 'Auth', '$window'],
- function(documents, document, confirmFunc, Auth, $window){
+.controller('DocumentCtrl', ['documents', 'document', 'confirmFunc', 'Auth', 'window'],
+ function(documents, document, confirmFunc, Auth, window){
 	var app = this;
 
     //This function is added to an event listener to be called when attempting to leave the document graphing page
     var confirmFunc = function (e) {
         var confirmationMessage = "All unsaved changes will be lost.";
 
-        (e || $window.event).returnValue = confirmationMessage;
-        return confirmationMessage;
+        (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+        return confirmationMessage; //Webkit, Safari, Chrome
     }
 
     app.biographObj = {dirty: false}; //used for the graphing page
@@ -42,21 +42,25 @@ angular.module('documentControllers', ['documentServices'])
  	//Warning about unsaved work on back button
     app.$on('$locationChangeStart', function(event) {
         if (!this.biographObj.dirty) { return; }
+        //CHANGE THIS.BIOGRAPHOBJ TO APP.DIRTY?
         if (!confirm("Are you sure you want to leave this page? All unsaved changes will be lost.")) {
             event.preventDefault();
         }
     });
 
+    //CHANGE EVENT PREVENT DEFAULT (BREAKS EVENT LISTENERS?)
+
 
     //loading cytoscape, getting dirty bit from it
     documents.loadCytoScape(document, this.isReadonly, function(dirty){
         if(dirty){
-            $window.addEventListener("beforeunload", confirmFunc);
+            window.addEventListener("beforeunload", confirmFunc);
         }
         else {
-            $window.removeEventListener("beforeunload", confirmFunc);
+            window.removeEventListener("beforeunload", confirmFunc);
         }
         this.biographObj.dirty = dirty;
+        //CHANGE THIS.BIOGRAPHOBJ.DIRTY TO APP?
     });
 
 });
