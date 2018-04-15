@@ -5,7 +5,7 @@ angular.module('documentControllers', ['documentServices'])
 	var app = this;
 
     //This function is added to an event listener to be called when attempting to leave the document graphing page
-    var confirmFunc = function (e) {
+    /**var confirmFunc = function (e) {
         var confirmationMessage = "All unsaved changes will be lost.";
 
         (e || $window.event).returnValue = confirmationMessage;
@@ -49,7 +49,7 @@ angular.module('documentControllers', ['documentServices'])
 
 
     //loading cytoscape, getting dirty bit from it
-    documents.loadCytoScape(document, this.isReadonly, function(dirty){
+    document.loadCytoScape(document, this.isReadonly, function(dirty){
         if(dirty){
             $window.addEventListener("beforeunload", confirmFunc);
         }
@@ -57,6 +57,8 @@ angular.module('documentControllers', ['documentServices'])
             $window.removeEventListener("beforeunload", confirmFunc);
         }
         this.biographObj.dirty = dirty;
-    });
+    });**/
+
+
 
 });
