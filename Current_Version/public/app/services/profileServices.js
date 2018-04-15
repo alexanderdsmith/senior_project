@@ -10,6 +10,13 @@ angular.module('profileServices', [])
         });
     };
 
+    profileFactory.getCourse = function(course) {
+        console.log(course);
+        return $http.post('/api/getCourse', course).then(function(data) {
+            return data;
+        });
+    };
+
     profileFactory.getProfileInfo = function(user_info) {
         return $http.get('/api/profileData', user_info).then(function(data) {
             return data;

@@ -1,6 +1,6 @@
 angular.module('profileController', ['authServices', 'profileServices'])
 
-.controller('profileCtrl', function(Profile, $window) {
+.controller('profileCtrl', function(Profile, $window, $location) {
     var app = this;
 
     this.uploadFile = function(title, csv) {
@@ -13,6 +13,20 @@ angular.module('profileController', ['authServices', 'profileServices'])
                 app.successMessage = data.data.message;
             } else {
                 app.errorMessage = data.data.message;
+            }
+        });
+    };
+
+    this.fetchCourse = function(id, type) {
+        var course = {
+            id: id,
+            type: type
+        };
+        Profile.getCourse(course).then(function(payload) {
+            if (payload) {
+                app.course_payload = payload;
+            } else {
+                app.errorMessage = "Course data could not be collected!";
             }
         });
     };

@@ -35,17 +35,12 @@ var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvide
         controller: 'profileCtrl',
         controllerAs: 'profile',
         authenticated: true
-    }).when('/studentSection', {
-        templateUrl: 'app/views/pages/users/profiles/studentSection.html',
+    }).when('/course', {
+        templateUrl: 'app/views/pages/users/profiles/course.html',
         controller: 'profileCtrl',
         controllerAs: 'profile',
         authenticated: true
-    }).when('/teacherSection', {
-        templateUrl: 'app/views/pages/users/profiles/teacherSection.html',
-        controller: 'profileCtrl',
-        controllerAs: 'profile',
-        authenticated: true
-    }).when('/documents', {
+    }).when('/document', {
         templateUrl: 'app/views/pages/users/profiles/document.html',
         controller: 'documentCtrl',
         controllerAs: 'profile',

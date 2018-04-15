@@ -10,10 +10,9 @@
                 <td><strong>Course Name</strong></td>
                 <td><strong>Instructor</strong></td>
             </tr>
-            <tr ng-repeat="section in profile.sections">
-                <td><a href="/studentSection"> {{ section.name }}</a></td>
-                <td> {{ section.instructor }} </td>
-                <td> {{ section.time }} </td>
+            <tr ng-repeat="course in main.profile_payload.data.student_profile.course_list">
+                <td><a ng-click="profile.fetchCourse(course.id,'ta')"> {{ course.title }}</a></td>
+                <td>MWF 10:00 AM - 11:00 AM</td>
             </tr>
         </table>
     </div>
