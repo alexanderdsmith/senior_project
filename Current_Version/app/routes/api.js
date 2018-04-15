@@ -413,11 +413,10 @@ module.exports = function(router, keys) {
                 _teachers: []
         };
 
-        Course.findById(req.body.id).populate(
-            path: _
-        ).exec(function(err, course) {
+        Course.findById(req.body.id).exec(function(err, course) {
 
         });
+        res.send(null);
     });
 
     return router;

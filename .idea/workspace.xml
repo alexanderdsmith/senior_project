@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="808a175e-6a37-4420-99c7-223abe48464f" name="Default" comment="" />
+    <list default="true" id="808a175e-6a37-4420-99c7-223abe48464f" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/Current_Version/app/routes/api.js" afterPath="$PROJECT_DIR$/Current_Version/app/routes/api.js" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,21 +25,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="profileCtrl.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Current_Version/public/app/controllers/profileCtrl.js">
+      <file leaf-file-name="api.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Current_Version/app/routes/api.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="44" lean-forward="false" selection-start-line="11" selection-start-column="44" selection-end-line="11" selection-end-column="44" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Current_Version/server.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="32" column="9" lean-forward="false" selection-start-line="32" selection-start-column="9" selection-end-line="32" selection-end-column="9" />
+            <state relative-caret-position="511">
+              <caret line="418" column="22" lean-forward="false" selection-start-line="418" selection-start-column="22" selection-end-line="418" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -63,11 +55,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="course.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="course.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Current_Version/public/app/views/pages/users/profiles/course.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="35" column="42" lean-forward="false" selection-start-line="35" selection-start-column="42" selection-end-line="35" selection-end-column="42" />
+            <state relative-caret-position="165">
+              <caret line="11" column="17" lean-forward="false" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
@@ -97,10 +89,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="documentServices.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Current_Version/public/app/views/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="525">
+              <caret line="35" column="57" lean-forward="false" selection-start-line="35" selection-start-column="57" selection-end-line="35" selection-end-column="57" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="documentServices.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Current_Version/public/app/services/documentServices.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-5398">
+            <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -159,11 +161,12 @@
         <option value="$PROJECT_DIR$/Current_Version/server.js" />
         <option value="$PROJECT_DIR$/Current_Version/public/app/controllers/profileCtrl.js" />
         <option value="$PROJECT_DIR$/Current_Version/public/app/services/profileServices.js" />
-        <option value="$PROJECT_DIR$/Current_Version/app/routes/api.js" />
         <option value="$PROJECT_DIR$/Current_Version/public/app/views/pages/users/profiles/course.html" />
         <option value="$PROJECT_DIR$/Current_Version/public/app/routes.js" />
         <option value="$PROJECT_DIR$/Current_Version/public/app/app.js" />
         <option value="$PROJECT_DIR$/Current_Version/public/app/controllers/documentCtrl.js" />
+        <option value="$PROJECT_DIR$/Current_Version/public/app/views/index.html" />
+        <option value="$PROJECT_DIR$/Current_Version/app/routes/api.js" />
       </list>
     </option>
   </component>
@@ -329,6 +332,15 @@
               <item name="assets" type="462c0819:PsiDirectoryNode" />
               <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="senior_project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="senior_project" type="462c0819:PsiDirectoryNode" />
+              <item name="Current_Version" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="w2ui" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -467,12 +479,12 @@
       <workItem from="1523244357092" duration="22355000" />
       <workItem from="1523464223990" duration="1072000" />
       <workItem from="1523600778292" duration="5767000" />
-      <workItem from="1523815908904" duration="752000" />
+      <workItem from="1523815908904" duration="1117000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47340000" />
+    <option name="totallyTimeSpent" value="47705000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -739,14 +751,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Current_Version/public/assets/js/cytoscape.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Current_Version/app/models/announcement.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -758,14 +762,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Current_Version/public/app/views/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1">
-          <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -826,14 +822,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Current_Version/app/routes/api.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="416" column="19" lean-forward="false" selection-start-line="416" selection-start-column="19" selection-end-line="416" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Current_Version/public/app/controllers/mainCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
@@ -850,30 +838,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Current_Version/public/app/views/pages/users/profiles/course.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="35" column="42" lean-forward="false" selection-start-line="35" selection-start-column="42" selection-end-line="35" selection-end-column="42" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Current_Version/public/app/routes.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="182">
           <caret line="45" column="31" lean-forward="false" selection-start-line="45" selection-start-column="31" selection-end-line="45" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Current_Version/public/app/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="23" lean-forward="false" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
           <folding />
         </state>
       </provider>
@@ -886,11 +854,55 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Current_Version/public/app/services/documentServices.js">
+    <entry file="file://$PROJECT_DIR$/Current_Version/public/assets/js/cytoscape.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5398">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Current_Version/public/app/services/documentServices.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Current_Version/public/app/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="23" lean-forward="false" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Current_Version/public/app/views/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="35" column="57" lean-forward="false" selection-start-line="35" selection-start-column="57" selection-end-line="35" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Current_Version/app/routes/api.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="511">
+          <caret line="418" column="22" lean-forward="false" selection-start-line="418" selection-start-column="22" selection-end-line="418" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Current_Version/public/app/views/pages/users/profiles/course.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="17" lean-forward="false" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
