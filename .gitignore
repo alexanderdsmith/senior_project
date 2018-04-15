@@ -3,3 +3,4 @@ capstone_attempt4/node_modules
 .idea/workspace.xml
 Current_Version/config.json
 Current_Version/node_modules
+Current_Version/server.js

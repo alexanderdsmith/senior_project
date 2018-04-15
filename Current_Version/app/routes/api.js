@@ -404,13 +404,13 @@ module.exports = function(router, keys) {
      * COURSE UPLOAD
      */
     router.post('/getCourse', function(req, res) {
-            var course_payload = {
-                title: '',
-                announcements: [],
-                assignments: [],
-                _students: [],
-                _tas: [],
-                _teachers: []
+        var course_payload = {
+            title: '',
+            announcements: [],
+            assignments: [],
+            _students: [],
+            _tas: [],
+            _teachers: []
         };
 
         Course.findById(req.body.id).exec(function(err, course) {
