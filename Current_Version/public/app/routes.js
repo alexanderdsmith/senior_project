@@ -43,7 +43,7 @@ var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvide
     }).when('/document', {
         templateUrl: 'app/views/pages/users/profiles/document.html',
         controller: 'documentCtrl',
-        controllerAs: 'profile',
+        controllerAs: 'document',
         authenticated: true
     }).when('/google/:token', {
         templateUrl: 'app/views/pages/users/social/social.html',
