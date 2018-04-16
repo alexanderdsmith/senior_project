@@ -39,7 +39,10 @@ angular.module('documentControllers', ['documentServices'])
                         source: 'a',
                         target: 'b'
                     }
-                }*/]
+                }*/],
+            zoom: 1.5,
+            maxZoom: 3.5,
+            minZoom: 0.7
         });
 
 
@@ -73,12 +76,14 @@ angular.module('documentControllers', ['documentServices'])
         $('#toolbar').w2toolbar({
             name: 'toolbar',
             items: [
-                {type: 'button', id: 'addNode', text: 'Add Node'},
-                {type: 'button', id: 'addEdge', text: 'Add Edge'},
+                {type: 'button', id: 'addNode', text: 'Add Box'},
+                {type: 'button', id: 'addEdge', text: 'Add Arrow'},
                 {type: 'break'},
                 {type: 'button', id: 'editLabel', text: 'Edit Label', disabled: true},
                 {type: 'button', id: 'delete', text: 'Delete', disabled: true},
-                {type: 'button', id: 'save', text: 'Save'}
+                {type: 'button', id: 'save', text: 'Save'},
+                { type: 'break'},
+                { type: 'button', id: 'autofit', text: 'Auto-Fit'}
             ],
             //onClick: function (event) {
             //    console.log('Target: '+ event.target, event);
@@ -258,9 +263,9 @@ angular.module('documentControllers', ['documentServices'])
 
                         //saveGraph();
                         break;
-                    //case ("fit"): // Fit
-                    //    cy.fit(cy.$('node'), 100);
-                    //    break;
+                    case ("autofit"): // Fit
+                        cy.fit(cy.$('node'), 100);
+                        break;
                     //case ("item9"): // Print Undo stack
                     //    for (var i = 0; i < undoStack.length; i++) {
                     //        console.log(undoStack[i]);
