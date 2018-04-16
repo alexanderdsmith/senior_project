@@ -11,9 +11,23 @@
                 <td><strong>Due Date</strong></td>
                 <!--<td></td>-->
             </tr>
+<<<<<<< HEAD
             <!--<tr>
                 TEST DATA HERE!
             </tr>-->
+=======
+            <tr>
+                <!-- maybe something like the following -->
+                <!-- <td ng-class="{'danger': assignment.dueDate < assignment.timestamp }" -->
+                <!-- TODO : TEST DATA HERE! -->
+                <td>Title Assignment 1</td>
+                <td>Due Tomorrow</td>
+            </tr>
+            <tr>
+                <td class="danger">Assignment 2</td>
+                <td>Due 2 days ago</td>
+            </tr>
+>>>>>>> 1232285f61f22016d7e8e7995c5690078e86ade2
             <tr ng-repeat="assignment in profile.course_payload.assignments">
                 <td><a>{{assignment.name}}</a></td>
                 <td>{{assignment.description}}</td>
@@ -23,16 +37,95 @@
     </div>
 </div>
 
+
+
 <div class="col-md-4">
     <div class="panel panel-info">
-        <div class="panel-heading" style="text-align: center;"><strong>Class Announcements</strong></div>
-        <table class="table table-bordered">
-            <tr ng-repeat="announcement in profile.course_payload.announcements">
-                <td>{{announcement.text}}</td>
-            </tr>
-        </table>
+        <div ng-show="main.usertype==Teacher" class="panel-heading" style="text-align: center;"><strong>Assignment</strong></div>
+        
+        <!-- Adding an Assignment (if user is a teacher) -->
+
+        <div ng-show="main.usertype==Teacher"> <!-- TODO : Not sure about this for checking if teacher -->
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAssignmentsModal">
+                + Add an assignment
+            </button>
+            <div class="modal fade" id="AddAssignmentsModal" tabindex="-1" role="dialog" aria-labelledby="AddAssignmentsModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="AddAssignmentsModalLabel">New Assignment</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="assignmentTitle" class="control-label">Assignment Title</label>
+                                    <textarea class="form-control" id="assignmentTitle"></textarea> 
+                                </div>
+                                <div class="form-group">
+                                    <label for="assignmentDescription" class="control-label">Assignment Description</label>
+                                    <input type="text" class="form-control" id="assignmentDescription">
+                                </div>
+                                <div class="form-group">
+                                    <label for="assignmentDate" class="control-label">Assignment Due Date</label>
+                                    <input type="date" class="form-control" id="assignmentDate">
+                                    <label for="assignmentTime" class="control-label">Time Due</label>
+                                    <input type="time" class="form-control" id="assignmentTime">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
+
+
+<div class="col-md-4">
+    <div class="panel panel-info">
+        <div ng-show="main.usertype==Student" class="panel-heading" style="text-align: center;"><strong>Document</strong></div>
+
+        <!-- Adding a document (if user is a student) -->
+        <!-- TODO : Change this to make a link to the cytoscape page, when the student clicks the button -->
+
+        <div ng-show="main.usertype==Student"> <!-- TODO : Not sure about this for checking if student -->
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddDocumentsModal">
+                + Add a Document
+            </button>
+            <div class="modal fade" id="AddDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="AddDocumentsModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="AddDocumentsModalLabel">New Document</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>Click submit to start working on a new assignment</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
 
 <div class="col-md-8">
     <div class="panel panel-info">
@@ -52,3 +145,50 @@
         </table>
     </div>
 </div>
+
+
+
+<div class="col-md-4">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Class Announcements</strong></div>
+        <table class="table table-bordered">
+            <tr ng-repeat="announcement in profile.course_payload.announcements">
+                <td>{{announcement.text}}</td>
+            </tr>
+        </table>
+
+        <!-- Adding an Announcement (if user is a teacher) -->
+
+        <div ng-show="main.usertype==Teacher"> <!-- TODO : Not sure about this for checking if teacher -->
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAnnouncementsModal">
+                + Add an announcement
+            </button>
+            <div class="modal fade" id="AddAnnouncementsModal" tabindex="-1" role="dialog" aria-labelledby="AddAnnouncementsModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="AddAnnouncementsModalLabel">New Announcement</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label class="control-label">Announcement:</label>
+                                    <textarea class="form-control" id="announcementInput"></textarea> 
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
