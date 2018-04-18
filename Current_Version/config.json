@@ -11,5 +11,5 @@
     "dbURI": "mongodb://asmithslu:pass@ds155278.mlab.com:55278/concept-maps"
   },
   "admins": ["alexanderdsmith", "khanim", "conlonej"],
-  "URL": "http://localhost:8080"
+  "URL": "http://localhost:8080/capstone/conceptmap"
 }

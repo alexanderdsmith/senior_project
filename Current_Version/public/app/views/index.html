@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <base href="/" />
+        <base href="http://localhost:8080/" />
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE-edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -42,21 +42,20 @@
         <script src="app/services/profileServices.js"></script>
 
         <title>Conceptmaps App</title>
-
     </head>
 
     <body ng-app="conceptmapsApp" ng-controller="mainCtrl as main" ng-show="main.loadme" ng-cloak>
         <nav class="navbar navbar-inverse bg-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/">BioGraph Applicaiton</a>
+                    <a class="navbar-brand" href="./">BioGraph Applicaiton</a>
                 </div>
                 <ul class="nav navbar-nav">
-                    <li><a href="/capstone/conceptmap/">Home</a></li>
-                    <li><a ng-show="!main.isLoggedIn" href="/login">Login</a></li>
+                    <li><a href="./">Home</a></li>
+                    <li><a ng-show="!main.isLoggedIn" href="./login">Login</a></li>
                     <!--<li><a ng-show="!main.isLoggedIn" href="/register">Register</a></li>-->
-                    <li ng-repeat="profile in main.usertypes"><a ng-show="main.isLoggedIn" ng-href="/{{ profile }}">{{ profile }} home</a></li>
-                    <li><a ng-show="main.isLoggedIn" href="/logout" ng-click="main.logout();">Log out</a></li>
+                    <li ng-repeat="profile in main.usertypes"><a ng-show="main.isLoggedIn" ng-href="./{{ profile }}">{{ profile }} home</a></li>
+                    <li><a ng-show="main.isLoggedIn" href="./logout" ng-click="main.logout();">Log out</a></li>
                 </ul>
             </div>
         </nav>

@@ -1,61 +1,63 @@
+var prefix = '/capstone/conceptmap/';
+
 var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvider, $locationProvider) {
-    $routeProvider.when('/', {
-        templateUrl: 'app/views/pages/home.html'
-    }).when('/register', {
-        templateUrl: 'app/views/pages/users/register.html',
+    $routeProvider.when(prefix, {
+        templateUrl: prefix + 'app/views/pages/home.html'
+    }).when(prefix + 'register', {
+        templateUrl: prefix + 'app/views/pages/users/register.html',
         controller: 'localStrategyCtrl',
         controllerAs: 'register',
         authenticated: false
-    }).when('/login', {
-        templateUrl: 'app/views/pages/users/login.html',
+    }).when(prefix + 'login', {
+        templateUrl: prefix + 'app/views/pages/users/login.html',
         authenticated: false
-    }).when('/logout', {
-        templateUrl: 'app/views/pages/users/logout.html',
+    }).when(prefix + 'logout', {
+        templateUrl: prefix + 'app/views/pages/users/logout.html',
         authenticated: true
-    }).when('/profile', {
-        templateUrl: 'app/views/pages/users/profile.html',
+    }).when(prefix + 'profile', {
+        templateUrl: prefix + 'app/views/pages/users/profile.html',
         authenticated: true
-    }).when('/admin', {
-        templateUrl: 'app/views/pages/users/profiles/admin.html',
+    }).when(prefix + 'admin', {
+        templateUrl: prefix + 'app/views/pages/users/profiles/admin.html',
         controller: 'profileCtrl',
         controllerAs: 'profile',
         authenticated: true
-    }).when('/student', {
-        templateUrl: 'app/views/pages/users/profiles/student.html',
+    }).when(prefix + 'student', {
+        templateUrl: prefix + 'app/views/pages/users/profiles/student.html',
         controller: 'profileCtrl',
         controllerAs: 'profile',
         authenticated: true
-    }).when('/ta', {
-        templateUrl: 'app/views/pages/users/profiles/ta.html',
+    }).when(prefix + 'ta', {
+        templateUrl: prefix + 'app/views/pages/users/profiles/ta.html',
         controller: 'profileCtrl',
         controllerAs: 'profile',
         authenticated: true
-    }).when('/teacher', {
-        templateUrl: 'app/views/pages/users/profiles/teacher.html',
+    }).when(prefix + 'teacher', {
+        templateUrl: prefix + 'app/views/pages/users/profiles/teacher.html',
         controller: 'profileCtrl',
         controllerAs: 'profile',
         authenticated: true
-    }).when('/course', {
-        templateUrl: 'app/views/pages/users/profiles/course.html',
+    }).when(prefix + 'course', {
+        templateUrl: prefix + 'app/views/pages/users/profiles/course.html',
         controller: 'profileCtrl',
         controllerAs: 'profile',
         authenticated: true
-    }).when('/document', {
-        templateUrl: 'app/views/pages/users/profiles/document.html',
+    }).when(prefix + 'document', {
+        templateUrl: prefix + 'app/views/pages/users/profiles/document.html',
         controller: 'documentCtrl',
         controllerAs: 'document',
         authenticated: true
-    }).when('/google/:token', {
-        templateUrl: 'app/views/pages/users/social/social.html',
+    }).when(prefix + 'google/:token', {
+        templateUrl: prefix + 'app/views/pages/users/social/social.html',
         controller: 'googleStrategyCtrl',
         controllerAs: 'google',
         authenticated: false
-    }).when('/google-error', {
-        templateUrl: 'app/views/pages/users/login.html',
+    }).when(prefix + 'google-error', {
+        templateUrl: prefix + 'app/views/pages/users/login.html',
         controller: 'googleStrategyCtrl',
         controllerAs: 'google',
         authenticated: false
-    }).otherwise({ redirectTo: '/' });
+    }).otherwise({ redirectTo: prefix });
 
     $locationProvider.html5Mode({
         enabled: true,
@@ -69,12 +71,12 @@ app.run(['$rootScope', 'Auth', 'Profile', '$location', function($rootScope, Auth
         if(next.$$route.authenticated === true) {
             if(!Auth.isLoggedIn()) {
                 event.preventDefault();
-                $location.path('/');
+                $location.path(prefix);
             }
         } else if(next.$$route.authenticated === false) {
             if(Auth.isLoggedIn()) {
                 event.preventDefault();
-                $location.path('/profile');
+                $location.path(prefix + 'profile');
             }
         }
 
