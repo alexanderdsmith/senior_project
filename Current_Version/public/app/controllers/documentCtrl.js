@@ -3,6 +3,25 @@ angular.module('documentControllers', ['documentServices'])
 .controller('documentCtrl',function($window) {
     var app = this;
 
+    //Updates the grade for the document
+    this.updateGrade = function() {
+        var newGrade = prompt("Enter a Grade", "");
+        if(newGrade === '' || isNaN(newGrade)) {
+            alert("Invalid grade.");
+            return;
+        }
+        else if(newGrade == null){
+            return;
+        }
+        //then passing the data to factory, interfaces with the backend
+        documents.updateGrade(document, newGrade);
+    };
+
+    /*this.fetchDocument = function(id, ){
+
+    }
+    */
+
         var cy = cytoscape({
             container: document.getElementById('cy'),
             style: [
@@ -71,6 +90,10 @@ angular.module('documentControllers', ['documentServices'])
             }
         }
 
+
+        if(w2ui.hasOwnProperty('toolbar')){
+            w2ui['toolbar'].destroy();
+        }
 
         //$(function () {
         $('#toolbar').w2toolbar({

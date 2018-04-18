@@ -50,20 +50,20 @@
                             <h4 class="modal-title" id="AddAssignmentsModalLabel">New Assignment</h4>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form ng-submit=course.addAssignment(title,description,date,time)>
                                 <div class="form-group">
                                     <label for="assignmentTitle" class="control-label">Assignment Title</label>
-                                    <textarea class="form-control" id="assignmentTitle"></textarea> 
+                                    <input type="text" class="form-control" id="assignmentTitle" ng-model="assignment.title">
                                 </div>
                                 <div class="form-group">
                                     <label for="assignmentDescription" class="control-label">Assignment Description</label>
-                                    <input type="text" class="form-control" id="assignmentDescription">
+                                    <textarea class="form-control" id="assignmentDescription" ng-model="assignment.description"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="assignmentDate" class="control-label">Assignment Due Date</label>
-                                    <input type="date" class="form-control" id="assignmentDate">
+                                    <input type="date" class="form-control" id="assignmentDate" ng-model="assinment.date">
                                     <label for="assignmentTime" class="control-label">Time Due</label>
-                                    <input type="time" class="form-control" id="assignmentTime">
+                                    <input type="time" class="form-control" id="assignmentTime" ng-model="assignment.time">
                                 </div>
                             </form>
                         </div>
@@ -164,7 +164,7 @@
                             <h4 class="modal-title" id="AddAnnouncementsModalLabel">New Announcement</h4>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form ng-submit="course.addAnnouncement()">
                                 <div class="form-group">
                                     <label class="control-label">Announcement:</label>
                                     <textarea class="form-control" id="announcementInput"></textarea> 

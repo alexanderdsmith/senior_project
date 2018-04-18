@@ -419,5 +419,35 @@ module.exports = function(router, keys) {
         res.send(null);
     });
 
+    router.post('/addDocument', function(req, res) {
+        var document = new Document();
+        document.title = req.body.title;
+        document.timestamp = Date.now();
+        document.grade = req.body.grade;
+        document.status = req.body.status;
+        document.submittedTo = req.body.submittedTo;
+        document._student = req.body._student;
+        document.graph = req.body.graph;
+        res.send(document);
+    });
+
+
+    router.post('/getDocument', function(req, res){
+        /*var document_payload = {
+            title: '',
+            timestamp: ,
+            grade: 
+
+
+        };*/
+
+        Document.findById(req.body.id).exec(fucntion(err,document){
+
+        });
+        res.send(null);
+    });
+
+
+
     return router;
 };

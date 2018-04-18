@@ -1,5 +1,9 @@
 <div>
     <style>
+        #grade {
+            top: 0px;
+            left: 0px;
+        }
         #cy {
             /*changed size to leave room for toolbar*/
             width: 80%;
@@ -17,6 +21,12 @@
             left: 0px;
         }
     </style>
+
+    <div id="grade">
+        Current grade: 95{{document.grade}}&nbsp&nbsp
+        <!-- TODO : use ng-show to only show button if user is a teacher -->
+        <button type="button" ng-click="updateGrade()" class="btn btn-primary">Update Grade</button>
+    </div>
 
     <div id="toolbar"></div>
     <br/>
