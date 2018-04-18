@@ -441,7 +441,7 @@ module.exports = function(router, keys) {
 
         };*/
 
-        Document.findById(req.body.id).exec(fucntion(err,document){
+        Document.findById(req.body.id).exec(function(err,document){
 
         });
         res.send(null);
