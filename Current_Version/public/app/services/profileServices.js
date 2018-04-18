@@ -11,10 +11,13 @@ angular.module('profileServices', [])
     };
 
     profileFactory.getCourse = function(course) {
-        console.log(course);
         return $http.post('/api/getCourse', course).then(function(data) {
             return data;
         });
+    };
+
+    profileFactory.getDocument = function(assn) {
+        console.log(assn);
     };
 
     profileFactory.getProfileInfo = function(user_info) {

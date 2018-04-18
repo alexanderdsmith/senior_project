@@ -1,4 +1,4 @@
-var prefix = '/capstone/conceptmap/';
+var prefix = '/';
 
 var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvider, $locationProvider) {
     $routeProvider.when(prefix, {

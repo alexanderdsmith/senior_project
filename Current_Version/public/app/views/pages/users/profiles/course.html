@@ -11,34 +11,30 @@
                 <td><strong>Due Date</strong></td>
             </tr>
             <tr>
-                <!-- maybe something like the following -->
-                <!-- <td ng-class="{'danger': assignment.dueDate < assignment.timestamp }" -->
-                <!-- TODO : TEST DATA HERE! -->
-                <td>Title Assignment 1</td>
-                <td>Due Tomorrow</td>
             </tr>
-            <tr>
+            <tr ng-repeat="assign">
                 <td class="danger">Assignment 2</td>
                 <td>Due 2 days ago</td>
             </tr>
             <tr ng-repeat="assignment in profile.course_payload.assignments">
-                <td><a>{{assignment.name}}</a></td>
+                <td><a ng-click="openDocument(assignment.id)">{{assignment.name}}</a></td>
                 <td>{{assignment.description}}</td>
+                <td>{{assignment.dueDate}}</td> <!-- TODO -->
                 <!-- <td ng-show="!assignment.isSubmitted"><button type="button" class="btn btn-primary">Submit</button></td> -->
             </tr>
         </table>
     </div>
 </div>
 
-
+<p>COURSE ID: {{main}}</p>
 
 <div class="col-md-4">
     <div class="panel panel-info">
-        <div ng-show="main.usertype==Teacher" class="panel-heading" style="text-align: center;"><strong>Assignment</strong></div>
+        <div class="panel-heading" style="text-align: center;"><strong>Assignment</strong></div>
         
         <!-- Adding an Assignment (if user is a teacher) -->
 
-        <div ng-show="main.usertype==Teacher"> <!-- TODO : Not sure about this for checking if teacher -->
+        <div> <!-- TODO : Not sure about this for checking if teacher -->
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAssignmentsModal">
                 + Add an assignment
             </button>
@@ -50,26 +46,26 @@
                             <h4 class="modal-title" id="AddAssignmentsModalLabel">New Assignment</h4>
                         </div>
                         <div class="modal-body">
-                            <form ng-submit=course.addAssignment(title,description,date,time)>
+                            <form ng-submit="profile.addAssignment(title,description,due_date,time, profile.course_payload.id)">
                                 <div class="form-group">
                                     <label for="assignmentTitle" class="control-label">Assignment Title</label>
-                                    <input type="text" class="form-control" id="assignmentTitle" ng-model="assignment.title">
+                                    <input name="title" type="text" class="form-control" id="assignmentTitle" ng-model="title">
                                 </div>
                                 <div class="form-group">
                                     <label for="assignmentDescription" class="control-label">Assignment Description</label>
-                                    <textarea class="form-control" id="assignmentDescription" ng-model="assignment.description"></textarea>
+                                    <textarea name="description" class="form-control" id="assignmentDescription" ng-model="description"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label for="assignmentDate" class="control-label">Assignment Due Date</label>
-                                    <input type="date" class="form-control" id="assignmentDate" ng-model="assinment.date">
+                                    <input name="due_date" type="date" class="form-control" id="assignmentDate" ng-model="due_date">
                                     <label for="assignmentTime" class="control-label">Time Due</label>
-                                    <input type="time" class="form-control" id="assignmentTime" ng-model="assignment.time">
+                                    <input name="time" type="time" class="form-control" id="assignmentTime" ng-model="time">
                                 </div>
+                                <button type="submit" class="btn btn-primary">Create Assignment</button>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -83,12 +79,12 @@
 
 <div class="col-md-4">
     <div class="panel panel-info">
-        <div ng-show="main.usertype==Student" class="panel-heading" style="text-align: center;"><strong>Document</strong></div>
+        <div class="panel-heading" style="text-align: center;"><strong>Document</strong></div>
 
         <!-- Adding a document (if user is a student) -->
         <!-- TODO : Change this to make a link to the cytoscape page, when the student clicks the button -->
 
-        <div ng-show="main.usertype==Student"> <!-- TODO : Not sure about this for checking if student -->
+        <div> <!-- TODO : Not sure about this for checking if student -->
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddDocumentsModal">
                 + Add a Document
             </button>
@@ -152,7 +148,7 @@
 
         <!-- Adding an Announcement (if user is a teacher) -->
 
-        <div ng-show="main.usertype==Teacher"> <!-- TODO : Not sure about this for checking if teacher -->
+        <div> <!-- TODO : Not sure about this for checking if teacher -->
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAnnouncementsModal">
                 + Add an announcement
             </button>

@@ -204,11 +204,22 @@ module.exports = function(router, keys) {
     });
 
     router.post('/addAssignment', function(req, res) {
+
+        console.log(req.body);
         var assignment = new Assignment();
         assignment.title = req.body.title;
         assignment.description = req.body.description;
-        assignment.dueDate = 'Today';
-        res.send(assignment);
+        assignment.dueDate = req.body.dueDate;
+        assignment.timestamp = req.body.time;
+        assignment.save();
+        Course.findById(req.body.course).exec(function(err, course) {
+            if(err) throw err;
+            if(course) {
+                course._assignments.push(assignment);
+                course.save();
+            }
+        });
+        res.json({success: true, message: 'Assignment successfully created!'});
     });
 
     /****************************/
@@ -405,18 +416,50 @@ module.exports = function(router, keys) {
      */
     router.post('/getCourse', function(req, res) {
         var course_payload = {
+            id: '',
             title: '',
             announcements: [],
             assignments: [],
-            _students: [],
-            _tas: [],
-            _teachers: []
+            students: [],
+            tas: [],
+            teachers: []
         };
 
-        Course.findById(req.body.id).exec(function(err, course) {
+        Course.findById(req.body.id)
+        .populate([{
+            path: '_assignments',
+            model: 'Assignment'
+        }, {
+            path: '_announcements',
+            model: 'Announcement'
+        }])
+        .exec(function(err, course) {
+            if(err) throw err;
+            if(course) {
+                course_payload.id = course._id;
 
+                course_payload.title = course.title;
+                course._assignments.forEach(function (assignment) {
+                    course_payload.assignments.push({
+                        id: assignment._id,
+                        title: assignment.title,
+                        description: assignment.description,
+                        dueDate: assignment.dueDate,
+                        timestamp: assignment.timestamp
+                        //TODO: add submissions
+                    });
+                });
+                course._announcements.forEach(function (announcement) {
+                    course_payload.assignments.push({
+                        id: announcement._id,
+                        title: announcement.title,
+                        description: announcement.description,
+                        timestamp: announcement.timestamp
+                    })
+                });
+            }
+            res.send(course_payload);
         });
-        res.send(null);
     });
 
     router.post('/addDocument', function(req, res) {
@@ -428,6 +471,7 @@ module.exports = function(router, keys) {
         document.submittedTo = req.body.submittedTo;
         document._student = req.body._student;
         document.graph = req.body.graph;
+        document.save();
         res.send(document);
     });
 
