@@ -1,7 +1,9 @@
 angular.module('documentControllers', ['documentServices'])
 
-.controller('documentCtrl',function($window) {
+.controller('documentCtrl',function($window) {//function(Document, $window) { // TODO : Why is Document not working, gives error "[ng:areq] Argument 'fn' is not a function, got string"
     var app = this;
+
+    app.document = document;
 
     this.grade = 95;
     this.title = "Document Title";
@@ -17,7 +19,7 @@ angular.module('documentControllers', ['documentServices'])
         this.grade = newGrade;
 
         //then passing the data to factory, interfaces with the backend
-        documents.updateGrade(document, newGrade).then(function(data) {
+        Document.updateGrade(app.document, newGrade).then(function(data) {
             if(data.data.success === true) {
                 app.successMessage = data.data.message;
             } else {
@@ -26,9 +28,13 @@ angular.module('documentControllers', ['documentServices'])
         });
     };
 
-    this.saveDocument = function(document) {
+    this.saveDocument = function(data){//function(document) {
+        var graphData = {
+            elements: data.elements,
+            undoStack: data.undoStack
+        }
 
-        documents.saveDocument(document).then(function(data) {
+        Document.saveDocument(app.document, graphData).then(function(data) {//saveDocument(document).then(function(data) {
             if (data.data.success === true) {
                 app.successMessage = data.data.message;
             }
@@ -38,6 +44,26 @@ angular.module('documentControllers', ['documentServices'])
         });
 
         console.log("Document Saved!");
+    };
+
+    this.updateDocument = function(data) {
+        console.log("Updating now");
+        var graphData = {
+            elements: data.elements,
+            undoStack: data.undoStack
+        };
+        Document.updateGraph(document, graphData)/*.then(function(data) {
+            if(data.data.success === true) {
+                app.successMessage = data.data.message;
+            }
+            else {
+                app.errorMessage = data.data.message;
+            }
+        });*/
+        //document.graph.elements = data.elements;
+        //document.graph.undoStack = data.undoStack;
+        console.log("Graph updated Controller");
+        //return graphData;
     };
 
     this.updateTitle = function() {
@@ -50,7 +76,7 @@ angular.module('documentControllers', ['documentServices'])
         this.title = newTitle;
 
         //then passing the data to factory, interfaces with the backend
-        documents.updateTitle(document, newTitle).then(function(data) {
+        Document.updateTitle(app.document, newTitle).then(function(data) {
             if(data.data.success === true) {
                 app.successMessage = data.data.message;
             } else {
@@ -106,6 +132,10 @@ angular.module('documentControllers', ['documentServices'])
             minZoom: 0.7
         });
 
+        var graph = document.getElementById("cy");
+
+        var undoStack = new Array();
+
 
         /**************************/
         /***** GET TEXT WIDTH *****/
@@ -147,6 +177,9 @@ angular.module('documentControllers', ['documentServices'])
                 {type: 'button', id: 'editLabel', text: 'Edit Label', disabled: true},
                 {type: 'button', id: 'delete', text: 'Delete', disabled: true},
                 {type: 'button', id: 'save', text: 'Save'},
+                { type: 'break'},
+                { type: 'button', id: 'undo', text: 'Undo'},
+                { type: 'button', id: 'redo', text: 'Redo', disabled: true},
                 { type: 'break'},
                 { type: 'button', id: 'autofit', text: 'Auto-Fit'}
             ],
@@ -210,6 +243,22 @@ angular.module('documentControllers', ['documentServices'])
         //cy.add({
         //    data: { id: 'node' }
         //})
+
+
+        // TODO : Load the graph
+
+        /*loadGraph(docArg.graph);
+        function loadGraph(graph) {
+            if(graph.elements != "") {
+                cy.add(JSON.parse(graph.elements));
+            }
+
+            //Handle undo stack
+            var undoItems = graph.undoStack;
+            var deletedElems = [];
+
+            // TODO : Still need more code for loading the graph
+        }*/
 
 
         /****************************************************/
@@ -317,12 +366,12 @@ angular.module('documentControllers', ['documentServices'])
                     case ("delete"): // Delete Selected
                         deleteSelected();
                         break;
-                    //case ("undo"): // Undo
-                    //    undo();
-                    //    break;
-                    //case ("redo"): // Redo
-                    //    redo();
-                    //    break;
+                    case ("undo"): // Undo
+                        undo();
+                        break;
+                    case ("redo"): // Redo
+                        redo();
+                        break;
                     case ("save"): // Save
                         saveGraph();
                         break;
@@ -348,6 +397,198 @@ angular.module('documentControllers', ['documentServices'])
             }
         });
 
+        var dirty;
+        setClean();
+
+        function setDirty() {
+            if (!dirty) {
+                dirty = true;
+                //setDirtyBit(true);
+            }
+            tb.enable("save");
+        }
+
+        function setClean() {
+            dirty = false;
+            //setDirtyBit(false);
+            tb.disable("save");
+        }
+
+        cy.on('drag', 'node', setDirty); //set dirty bit if node is dragged
+
+
+        /*function updateGraph(elements, undoStack) {
+            this.saveDocument(elements, undoStack);//take controller function
+
+        }*/
+
+        // TODO : Updating is npt working, gives console errors
+
+        updateGraph = function(data) {
+            console.log("Updating now inside cytoscape function");
+            var graphData = {
+                elements: data.elements,
+                undoStack: data.undoStack
+            };
+            console.log(graphData);
+            //Document.updateGraph(app.document, graphData).then(function(data) {
+            this.updateDocument(graphData).then(function(data) {
+                if(data.data.success === true) {
+                    app.successMessage = data.data.message;
+                }
+                else {
+                    app.errorMessage = data.data.message;
+                }
+            });
+            //document.graph.elements = data.elements;
+            //document.graph.undoStack = data.undoStack;
+            console.log("Graph updated Controller");
+            //return graphData;
+        };
+
+
+        function saveGraph() {
+            var selectedElements = cy.$('node:selected, edge:selected');
+            selectedElements.unselect();
+
+            var undoStackJSON = [];
+
+            for(var i=0; i<undoStack.length; i++) {
+                undoStackJSON[i] = {};
+                undoStackJSON[i].type = undoStack[i].type;
+                //undoStackJSON[i].time = undoStack[i].time; //TODO : Not sure about this
+
+                //handle case where delete has multiple targets
+                if (undoStackJSON[i].type == "deleteSelected") {
+                    undoStackJSON[i].target = "";
+                    for (var j=0; j<undoStack[i].target.length; j++){
+                        undoStack[i].target += JSON.stringify(undoStack[i].target[j].json());
+                        if (j!=undoStack[i].target.length-1) {
+                            undoStackJSON[i].target += "<newelem>";
+                        }
+                    }
+                }
+                else {
+                    undoStackJSON[i].target = JSON.stringify(undoStack[i].target.json());
+                }
+
+                //save old label in JSON object for editLabel undoStack item
+                if (undoStack[i].type == 'editLabel') {
+                    undoStackJSON[i].oldLabel = undoStack[i].oldLabel;
+                }
+
+                undoStackJSON[i] = JSON.stringify(undoStackJSON[i]); //stringify JSON
+            }
+
+            //o.updateGraph(docArg, { elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
+            //updateGraph( { elements: JSON.stringify(cy.data())})
+            console.log(cy.elements().jsons());
+            console.log(JSON.stringify(cy.elements().jsons()));
+            var elems = JSON.stringify(cy.elements().jsons());
+            var undoing = undoStackJSON;
+            updateGraph({ elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
+            //this.updateGraph(elems, undoing);
+            //updateGraph( { elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
+            //this.updateGraph(docArg, { elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
+
+            //Handle Dirty bit
+            setClean();
+        }
+
+        /* UNDO */
+        var lastEvent;
+        function undo() {
+            var event = undoStack.pop();
+            var targ = event.target;
+
+            targ.unselect();
+
+            if(undoStack.length==0) {
+                tb.disable("undo");
+            }
+
+            if(event.type == "editLabel") {
+                var lab = event.oldLabel;
+                event.oldLabel = targ.data('label');
+            }
+
+            //Handle dirty bit
+            setDirty();
+
+            redoStack.push(event);
+            tb.enable("redo");
+
+            switch (event.type) {
+                case ("addNode"):
+                    cy.remove(targ);
+                    break;
+                case ("addEdge"):
+                    cy.remove(targ);
+                    break;
+                case ("editLabel"):
+                    handleWidth(targ, lab);
+                    targ.json({ data: {label: lab } });
+                    break;
+                case ("deleteSelected"):
+                    for (var i=0; i<targ.length; i++){
+                        targ[i].restore();
+                    }
+                    break;
+            }
+
+        }
+
+        /****************/
+        /***** REDO *****/
+        /****************/
+        var redoStack = new Array();
+
+        function redo() {
+
+            event = redoStack.pop();
+            targ = event.target;
+
+            targ.unselect(); // unselect the target before redoing
+
+            // disable the redo button if redoStack is empty
+            if (redoStack.length == 0) {
+                tb.disable("redo");
+            }
+
+            // Get current label for redo before undoing
+            if (event.type == "editLabel") {
+                var lab = event.oldLabel;
+                event.oldLabel = targ.data('label');
+            }
+
+            // HANDLE DIRTY BIT
+            setDirty();
+
+            // Push to undo stack and enable "undo" button on toolbar
+            undoStack.push(event);
+            tb.enable("undo");
+
+            switch (event.type) {
+                case ("addNode"):
+                    cy.add(targ);
+                    break;
+                case ("addEdge"):
+                    cy.add(targ);
+                    break;
+                case ("editLabel"):
+                    handleWidth(targ, lab);
+                    targ.json({ data: { label: lab } });
+                    break;
+                case ("deleteSelected"):
+                    for (var i = 0; i < targ.length; i++) {
+                        cy.remove(targ[i]);
+                    }
+                    break;
+                case ("moveNode"):
+                    break;
+            }
+        }
+
         /***** ADD NODE *****/
         function addNode(posX, posY) {
             incrementNodeID();
@@ -362,16 +603,16 @@ angular.module('documentControllers', ['documentServices'])
             //var node = cy.getElementById(100);
 
             // UNDO INFO
-            //lastEvent = { type: "addNode", target: node, time: getTimeStamp() };
-            //undoStack.push(lastEvent);
-            //tb.enable("undo"); // enable "undo" button on toolbar
+            lastEvent = { type: "addNode", target: node};//, time: getTimeStamp() };
+            undoStack.push(lastEvent);
+            tb.enable("undo"); // enable "undo" button on toolbar
 
             // EMPTY REDO STACK
-            //redoStack = [];
-            //tb.disable("redo"); // disable "redo" button on toolbar
+            redoStack = [];
+            tb.disable("redo"); // disable "redo" button on toolbar
 
             // HANDLE DIRTY BIT
-            //setDirty();
+            setDirty();
         }
 
         /***** ADD EDGE *****/
@@ -386,16 +627,16 @@ angular.module('documentControllers', ['documentServices'])
             //var edge = cy.getElementById(50);
 
             // UNDO INFO
-            //lastEvent = { type: "addEdge", target : edge, time: getTimeStamp() };
-            //undoStack.push(lastEvent);
-            //tb.enable("undo"); // enable "undo" button on toolbar
+            lastEvent = { type: "addEdge", target : edge};//, time: getTimeStamp() };
+            undoStack.push(lastEvent);
+            tb.enable("undo"); // enable "undo" button on toolbar
 
             // EMPTY REDO STACK
-            //redoStack = [];
-            //tb.disable("redo"); // disable "redo" button on toolbar
+            redoStack = [];
+            tb.disable("redo"); // disable "redo" button on toolbar
 
             // HANDLE DIRTY BIT
-            //setDirty();
+            setDirty();
         }
 
         /***** EDIT LABEL *****/
@@ -412,16 +653,16 @@ angular.module('documentControllers', ['documentServices'])
                 target.json({data: {label: newLabel}});
 
                 // UNDO INFO
-                //lastEvent = { type: "editLabel", target: target, time: getTimeStamp(), oldLabel: oldLabel };
-                //undoStack.push(lastEvent);
-                //tb.enable("undo"); // enable "undo" button on toolbar
+                lastEvent = { type: "editLabel", target: target, oldLabel: oldLabel};//, time: getTimeStamp(), oldLabel: oldLabel };
+                undoStack.push(lastEvent);
+                tb.enable("undo"); // enable "undo" button on toolbar
 
                 // EMPTY REDO STACK
-                //redoStack = [];
-                //tb.disable("redo"); // disable "redo" button on toolbar
+                redoStack = [];
+                tb.disable("redo"); // disable "redo" button on toolbar
 
                 // HANDLE DIRTY BIT
-                //setDirty();
+                setDirty();
             }
         }
 
@@ -438,19 +679,21 @@ angular.module('documentControllers', ['documentServices'])
             cy.remove(selectedElements);
 
             // UNDO INFO
-            //lastEvent = { type: "deleteSelected", target: selectedElements, time: getTimeStamp() };
-            //undoStack.push(lastEvent);
-            //tb.enable("undo"); // enable "undo" button on toolbar
+            lastEvent = { type: "deleteSelected", target: selectedElements};//, time: getTimeStamp() };
+            undoStack.push(lastEvent);
+            tb.enable("undo"); // enable "undo" button on toolbar
 
             // EMPTY REDO STACK
-            //redoStack = [];
-            //tb.disable("redo"); // disable "redo" button on toolbar
+            redoStack = [];
+            tb.disable("redo"); // disable "redo" button on toolbar
 
             // HANDLE DIRTY BIT
-            //setDirty();
+            setDirty();
         }
 
-        function saveGraph() {
+        
+
+        /*function saveGraph() {
             var document = {
                 title: this.title,
                 elements: cy.elements
@@ -466,5 +709,7 @@ angular.module('documentControllers', ['documentServices'])
             });
 
             console.log("Document Saved!");
-        }
+        }*/
+
+    // };
 });

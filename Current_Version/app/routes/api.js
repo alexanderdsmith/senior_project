@@ -450,7 +450,7 @@ module.exports = function(router, keys) {
                     });
                 });
                 course._announcements.forEach(function (announcement) {
-                    course_payload.assignments.push({
+                    course_payload.announcements.push({
                         id: announcement._id,
                         title: announcement.title,
                         description: announcement.description,
@@ -462,6 +462,8 @@ module.exports = function(router, keys) {
         });
     });
 
+
+    //Sending a document to add
     router.post('/addDocument', function(req, res) {
         var document = new Document();
         document.title = req.body.title;
@@ -476,19 +478,60 @@ module.exports = function(router, keys) {
     });
 
 
+
+    //Maybe for saving document
+    /*router.post('/updateDocument', function(req, res){
+        Document.findById(req.body.id)
+        .exec(function(err, document){
+            if(err) throw err;
+            if(document){
+
+            }
+        })
+        document.title = req.body.title;
+        document.timestamp = Date.now();
+        document.grade = req.body.grade;
+        document.status = req.body.status;
+        document.submittedTo = req.body.submittedTo;
+        document._student = req.body._student;
+        document.graph = req.body.graph;
+        document.save();
+        res.send(document);
+    });*/
+
+
+    //Getting a document to send
     router.post('/getDocument', function(req, res){
-        /*var document_payload = {
+        var document_payload = {
+            id: '',
             title: '',
-            timestamp: ,
-            grade: 
+            timestamp: '',
+            grade: '',
+            status: '',
+            submittedTo: '',
+            student: '',
+            graph: ''
+        };
 
+        Document.findById(req.body.id)
+        .exec(function(err, document) {
+            if(err) throw err;
+            if(document) {
+                document_payload.id = document._id;
 
-        };*/
+                document_payload.title = document.title;
 
-        Document.findById(req.body.id).exec(function(err,document){
+                document_payload.timestamp = document.timestamp;
 
+                document_payload.grade = document.grade;
+                document_payload.status = document.status;
+                document_payload.submittedTo = document.submittedTo;
+                document_payload.student = document.student;
+                document_payload.graph = document.graph;
+
+            }
+            res.send(document_payload);
         });
-        res.send(null);
     });
 
 
