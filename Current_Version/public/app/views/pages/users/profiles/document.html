@@ -10,7 +10,7 @@
             height: 70%;
             position: absolute;
             background: #f4f8ff;
-            top: 410px;/*top: 400px;*/
+            top: 540px;/*top: 400px;*/
             left: 140px;
         }
 
@@ -22,12 +22,17 @@
         }
     </style>
 
-    <div id="grade">
-        Current grade: 95{{document.grade}}&nbsp&nbsp
-        <!-- TODO : use ng-show to only show button if user is a teacher -->
-        <button type="button" ng-click="updateGrade()" class="btn btn-primary">Update Grade</button>
+    <div id="title">
+        <h2>{{document.title}}</h2>
+        <button type="button" ng-click="document.updateTitle()" class="btn btn-primary">Update Title</button>
     </div>
-
+    <br/>
+    <div id="grade">
+        Current grade: {{document.grade}}
+        <!-- TODO : use ng-show to only show button if user is a teacher -->
+        <button type="button" ng-click="document.updateGrade()" class="btn btn-primary">Update Grade</button>
+    </div>
+    <br/>
     <div id="toolbar"></div>
     <br/>
     <div id="cy"></div>

@@ -8,6 +8,12 @@ angular.module('documentServices', [])
 
     // All $http requests are accessing the routes that are set up in the "routes" folder
 
+    o.saveDocument = function(document) {
+        return http.post('', document).then(function(data) {
+            return data;
+        });
+    };
+
     //Getting all students documents
     o.getAll = function(){
         return $http.get('/api/student/documents', {

@@ -3,6 +3,9 @@ angular.module('documentControllers', ['documentServices'])
 .controller('documentCtrl',function($window) {
     var app = this;
 
+    this.grade = 95;
+    this.title = "Document Title";
+
     //Updates the grade for the document
     this.updateGrade = function() {
         var newGrade = prompt("Enter a Grade", "");
@@ -10,11 +13,50 @@ angular.module('documentControllers', ['documentServices'])
             alert("Invalid grade.");
             return;
         }
-        else if(newGrade == null){
+
+        this.grade = newGrade;
+
+        //then passing the data to factory, interfaces with the backend
+        documents.updateGrade(document, newGrade).then(function(data) {
+            if(data.data.success === true) {
+                app.successMessage = data.data.message;
+            } else {
+                app.errorMessage = data.data.message;
+            }
+        });
+    };
+
+    this.saveDocument = function(document) {
+
+        documents.saveDocument(document).then(function(data) {
+            if (data.data.success === true) {
+                app.successMessage = data.data.message;
+            }
+            else {
+                app.errorMessage = data.data.message;
+            }
+        });
+
+        console.log("Document Saved!");
+    };
+
+    this.updateTitle = function() {
+        var newTitle = prompt("Enter a Title", "");
+        if(newTitle === '') {
+            alert("Invalid grade.");
             return;
         }
+
+        this.title = newTitle;
+
         //then passing the data to factory, interfaces with the backend
-        documents.updateGrade(document, newGrade);
+        documents.updateTitle(document, newTitle).then(function(data) {
+            if(data.data.success === true) {
+                app.successMessage = data.data.message;
+            } else {
+                app.errorMessage = data.data.message;
+            }
+        });
     };
 
     /*this.fetchDocument = function(id, ){
@@ -282,9 +324,7 @@ angular.module('documentControllers', ['documentServices'])
                     //    redo();
                     //    break;
                     case ("save"): // Save
-                        //TODO: Save the graph
-
-                        //saveGraph();
+                        saveGraph();
                         break;
                     case ("autofit"): // Fit
                         cy.fit(cy.$('node'), 100);
@@ -408,5 +448,23 @@ angular.module('documentControllers', ['documentServices'])
 
             // HANDLE DIRTY BIT
             //setDirty();
+        }
+
+        function saveGraph() {
+            var document = {
+                title: this.title,
+                elements: cy.elements
+            };
+
+            documents.saveDocument(document).then(function(data) {
+                if (data.data.success === true) {
+                    app.successMessage = data.data.message;
+                }
+                else {
+                    app.errorMessage = data.data.message;
+                }
+            });
+
+            console.log("Document Saved!");
         }
 });
