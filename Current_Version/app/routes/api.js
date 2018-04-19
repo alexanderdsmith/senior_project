@@ -465,16 +465,51 @@ module.exports = function(router, keys) {
 
     //Sending a document to add
     router.post('/addDocument', function(req, res) {
+        console.log(req.body);
+
         var document = new Document();
         document.title = req.body.title;
         document.timestamp = Date.now();
         document.grade = req.body.grade;
         document.status = req.body.status;
         document.submittedTo = req.body.submittedTo;
-        document._student = req.body._student;
+        //document._student = req.body._student;
         document.graph = req.body.graph;
         document.save();
-        res.send(document);
+        Student.findById(req.body.student).exec(function(err, student) {
+            if(err) throw err;
+            if(student) {
+                student._documents.push(document);
+                student.save();
+            }
+        });
+        res.json({success: true, message: 'Document added with save'});
+        //res.send(document);
+    });
+
+
+    router.post('/saveDocuments', function(req, res){
+        console.log(req.body);
+        Student.findById(req.body.student).exec(function(err, student) {
+            if(err) throw err;
+            if(student) {
+                student._documents.push(document);
+                student.save();
+            }
+        });
+        var document = new Document();
+        document.title = req.body.title;
+        document.timestamp = Date.now();
+        document.grade = req.body.grade;
+        document.status = req.body.status;
+        document.submittedTo = req.body.submittedTo;
+        //document._student = req.body._student;
+        document.graph = req.body.graph;
+        document.graph.elements = req.body.graph.elements;
+        document.graph.undoStack = req.body.graph.undoStack;
+        document.save();
+        
+        res.json({success: true, message: 'Document saved'});
     });
 
 

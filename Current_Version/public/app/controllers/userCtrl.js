@@ -1,6 +1,6 @@
 angular.module('userControllers', ['userServices'])
 
-.controller('localStrategyCtrl', function($location, $timeout, User) {
+.controller('localStrategyCtrl', ['$location', '$timeout', 'User', function($location, $timeout, User) {
 
     var app = this;
 
@@ -24,9 +24,9 @@ angular.module('userControllers', ['userServices'])
     }
 
 
-})
+}])
 
-.controller('googleStrategyCtrl', function($routeParams, Auth, $location, $window) {
+.controller('googleStrategyCtrl', ['$routeParams', 'Auth', '$location', '$window', function($routeParams, Auth, $location, $window) {
 
     var app = this;
 
@@ -38,4 +38,4 @@ angular.module('userControllers', ['userServices'])
         Auth.google($routeParams.token);
         $location.path('/');
     }
-});
+}]);

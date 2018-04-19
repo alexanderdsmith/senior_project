@@ -1,6 +1,6 @@
 angular.module('documentServices', [])
 
-.factory('Document', 'Auth', function($http, $route, AuthToken) {
+.factory('Documents', ['$http', '$route', 'AuthToken', function($http, $route, AuthToken) {
     var o = {
         documents: []
     };
@@ -8,20 +8,22 @@ angular.module('documentServices', [])
 
     // All $http requests are accessing the routes that are set up in the "routes" folder
 
-    o.saveDocument = function(document, data) {
-        return $http.post('/api/saveDocument')
-        .success(function(data){
-            document.graph.elements = data.elements;
-            document.graph.undoStack = data.undoStack;
-            return data;
+    o.updateDocument = function(document, data) {
+        return $http.post('/api/saveDocuments')
+        .then(function(returnedData){
+            console.log(data);
+            console.log(returnedData);
+            document.graph.elements = returnedData.elements;
+            document.graph.undoStack = returnedData.undoStack;
+            return returnedData;
         });
     };
 
     // Saves changes to a specific graph
     o.updateGraph = function(document, data) {
         return $http.put('/api/student/saveDocuments/' + document._id + '/graph', data, {
-            headers: {Authorization: 'Bearer '+AuthToken.getToken()}
-        }).success(function(returnedData) {
+            //headers: {Authorization: 'Bearer '+AuthToken.getToken()}
+        }).then(function(returnedData) {
             document.graph.elements = returnedData.elements;
             document.graph.undoStack = returnedData.undoStack;
             return returnedData;
@@ -518,6 +520,6 @@ angular.module('documentServices', [])
 
     // };
 
-    // return o;
+    return o;
 
-});
+}]);

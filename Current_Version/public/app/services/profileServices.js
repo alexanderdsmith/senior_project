@@ -1,6 +1,6 @@
 angular.module('profileServices', [])
 
-.factory('Profile', function($http) {
+.factory('Profile', ['$http', function($http) {
     var profileFactory = {};
 
     // Profile.sendFile(csv); will send csv to express
@@ -45,4 +45,4 @@ angular.module('profileServices', [])
     };
 
     return profileFactory;
-});
+}]);

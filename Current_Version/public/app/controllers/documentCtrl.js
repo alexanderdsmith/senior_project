@@ -1,6 +1,6 @@
 angular.module('documentControllers', ['documentServices'])
 
-.controller('documentCtrl',function($window) {//function(Document, $window) { // TODO : Why is Document not working, gives error "[ng:areq] Argument 'fn' is not a function, got string"
+.controller('documentCtrl', ['Documents', '$window', function(Documents, $window) {//function(Document, $window) { 
     var app = this;
 
     app.document = document;
@@ -19,7 +19,7 @@ angular.module('documentControllers', ['documentServices'])
         this.grade = newGrade;
 
         //then passing the data to factory, interfaces with the backend
-        Document.updateGrade(app.document, newGrade).then(function(data) {
+        Documents.updateGrade(app.document, newGrade).then(function(data) {
             if(data.data.success === true) {
                 app.successMessage = data.data.message;
             } else {
@@ -34,7 +34,7 @@ angular.module('documentControllers', ['documentServices'])
             undoStack: data.undoStack
         }
 
-        Document.saveDocument(app.document, graphData).then(function(data) {//saveDocument(document).then(function(data) {
+        Documents.saveDocument(app.document, graphData).then(function(data) {//saveDocument(document).then(function(data) {
             if (data.data.success === true) {
                 app.successMessage = data.data.message;
             }
@@ -46,14 +46,23 @@ angular.module('documentControllers', ['documentServices'])
         console.log("Document Saved!");
     };
 
-    this.updateDocument = function(data) {
+    function updateDocument(document, graphData) {
         console.log("Updating now");
-        var graphData = {
-            elements: data.elements,
-            undoStack: data.undoStack
-        };
-        Document.updateGraph(document, graphData)/*.then(function(data) {
+        //var graphData = {
+        //    elements: data.elements,
+        //    undoStack: data.undoStack
+        //};
+        Documents.updateDocument(this.document, graphData).then(function(data) {
             if(data.data.success === true) {
+                app.successMessage = data.data.message;
+            }
+            else {
+                app.errorMessage = data.data.message;
+            }
+        });
+        console.log("Graph updated Controller");
+        //Document.updateGraph(document, graphData)/*.then(function(data) {
+        /*   if(data.data.success === true) {
                 app.successMessage = data.data.message;
             }
             else {
@@ -62,9 +71,30 @@ angular.module('documentControllers', ['documentServices'])
         });*/
         //document.graph.elements = data.elements;
         //document.graph.undoStack = data.undoStack;
-        console.log("Graph updated Controller");
+        //console.log("Graph updated Controller");
         //return graphData;
     };
+
+    // this.updateDocument = function(graphData) {
+    //     console.log("Updating now");
+    //     //var graphData = {
+    //     //    elements: data.elements,
+    //     //    undoStack: data.undoStack
+    //     //};
+    //     Document.updateDocument(this.document, graphData)
+    //     //Document.updateGraph(document, graphData)/*.then(function(data) {
+    //         if(data.data.success === true) {
+    //             app.successMessage = data.data.message;
+    //         }
+    //         else {
+    //             app.errorMessage = data.data.message;
+    //         }
+    //     });
+    //     //document.graph.elements = data.elements;
+    //     //document.graph.undoStack = data.undoStack;
+    //     console.log("Graph updated Controller");
+    //     //return graphData;
+    // };
 
     this.updateTitle = function() {
         var newTitle = prompt("Enter a Title", "");
@@ -76,7 +106,7 @@ angular.module('documentControllers', ['documentServices'])
         this.title = newTitle;
 
         //then passing the data to factory, interfaces with the backend
-        Document.updateTitle(app.document, newTitle).then(function(data) {
+        Documents.updateTitle(app.document, newTitle).then(function(data) {
             if(data.data.success === true) {
                 app.successMessage = data.data.message;
             } else {
@@ -89,6 +119,10 @@ angular.module('documentControllers', ['documentServices'])
 
     }
     */
+
+    // this.createCytoscape = function() {
+
+    //     loadCytoScape();
 
         var cy = cytoscape({
             container: document.getElementById('cy'),
@@ -432,17 +466,19 @@ angular.module('documentControllers', ['documentServices'])
             };
             console.log(graphData);
             //Document.updateGraph(app.document, graphData).then(function(data) {
-            this.updateDocument(graphData).then(function(data) {
-                if(data.data.success === true) {
-                    app.successMessage = data.data.message;
-                }
-                else {
-                    app.errorMessage = data.data.message;
-                }
-            });
+            //updateDocument(this.document, graphData);//.then(function(data) {
+            updateDocument(this.document, graphData);//.then(function(data){
+            //Document.updateDocument(this.document, graphData);
+                //if(data.data.success === true) {
+                //    app.successMessage = data.data.message;
+                //}
+                //else {
+                //    app.errorMessage = data.data.message;
+                //}
+            //});
             //document.graph.elements = data.elements;
             //document.graph.undoStack = data.undoStack;
-            console.log("Graph updated Controller");
+            console.log("Graph updated Controller cytoscape");
             //return graphData;
         };
 
@@ -712,4 +748,4 @@ angular.module('documentControllers', ['documentServices'])
         }*/
 
     // };
-});
+}]);

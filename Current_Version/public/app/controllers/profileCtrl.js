@@ -1,6 +1,6 @@
 angular.module('profileController', ['authServices', 'profileServices'])
 
-.controller('profileCtrl', function(Profile, $window, $location) {
+.controller('profileCtrl', ['Profile', '$window', '$location', function(Profile, $window, $location) {
     var app = this;
 
     this.uploadFile = function(title, csv) {
@@ -98,4 +98,4 @@ angular.module('profileController', ['authServices', 'profileServices'])
     };
 
 
-});
+}]);

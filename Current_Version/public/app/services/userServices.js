@@ -1,6 +1,6 @@
 angular.module('userServices', [])
 
-.factory('User', function($http) {
+.factory('User', ['$http', function($http) {
     var userFactory = {};
 
     // User.create(regData)
@@ -9,4 +9,4 @@ angular.module('userServices', [])
     };
 
     return userFactory;
-});
+}]);

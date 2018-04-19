@@ -1,6 +1,6 @@
 angular.module('mainController', ['authServices', 'profileServices'])
 
-.controller('mainCtrl', function($location, $timeout, Auth, Profile, $rootScope, $window) {
+.controller('mainCtrl', ['$location', '$timeout', 'Auth', 'Profile', '$rootScope', '$window', function($location, $timeout, Auth, Profile, $rootScope, $window) {
     var app = this;
 
     app.loadme = false;
@@ -65,4 +65,4 @@ angular.module('mainController', ['authServices', 'profileServices'])
         Auth.logout();
         $location.path('/');
     };
-});
+}]);
