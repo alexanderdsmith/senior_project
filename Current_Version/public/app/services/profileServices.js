@@ -17,7 +17,9 @@ angular.module('profileServices', [])
     };
 
     profileFactory.getDocument = function(assn) {
-        console.log(assn);
+        return $http.post('/api/getCourse', assn).then(function(data) {
+            return data;
+        });
     };
 
     profileFactory.getProfileInfo = function(user_info) {

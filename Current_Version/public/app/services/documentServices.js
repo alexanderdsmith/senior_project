@@ -9,7 +9,7 @@ angular.module('documentServices', [])
     // All $http requests are accessing the routes that are set up in the "routes" folder
 
     o.updateDocument = function(document, data) {
-        return $http.post('/api/saveDocuments')
+        return $http.post('/api/saveDocument')
         .then(function(returnedData){
             console.log(data);
             console.log(returnedData);
@@ -21,7 +21,7 @@ angular.module('documentServices', [])
 
     // Saves changes to a specific graph
     o.updateGraph = function(document, data) {
-        return $http.put('/api/student/saveDocuments/' + document._id + '/graph', data, {
+        return $http.put('/api/student/saveDocument' + document._id + '/graph', data, {
             //headers: {Authorization: 'Bearer '+AuthToken.getToken()}
         }).then(function(returnedData) {
             document.graph.elements = returnedData.elements;

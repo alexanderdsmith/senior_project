@@ -69,17 +69,15 @@ app.run(['$rootScope', 'Auth', 'Profile', '$location', function($rootScope, Auth
 
     $rootScope.$on('$routeChangeStart', function(event, next, current) {
         if(next.$$route.authenticated === true) {
-            if(!Auth.isLoggedIn()) {
+            if (!Auth.isLoggedIn()) {
                 event.preventDefault();
                 $location.path(prefix);
             }
         } else if(next.$$route.authenticated === false) {
-            if(Auth.isLoggedIn()) {
+            if (Auth.isLoggedIn()) {
                 event.preventDefault();
                 $location.path(prefix + 'profile');
             }
         }
-
-
     });
 }]);

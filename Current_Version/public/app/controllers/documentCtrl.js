@@ -32,7 +32,7 @@ angular.module('documentControllers', ['documentServices'])
         var graphData = {
             elements: data.elements,
             undoStack: data.undoStack
-        }
+        };
 
         Documents.saveDocument(app.document, graphData).then(function(data) {//saveDocument(document).then(function(data) {
             if (data.data.success === true) {
@@ -46,7 +46,7 @@ angular.module('documentControllers', ['documentServices'])
         console.log("Document Saved!");
     };
 
-    function updateDocument(document, graphData) {
+    this.updateDocument = function(document, graphData) {
         console.log("Updating now");
         //var graphData = {
         //    elements: data.elements,
@@ -73,7 +73,7 @@ angular.module('documentControllers', ['documentServices'])
         //document.graph.undoStack = data.undoStack;
         //console.log("Graph updated Controller");
         //return graphData;
-    };
+    }
 
     // this.updateDocument = function(graphData) {
     //     console.log("Updating now");
