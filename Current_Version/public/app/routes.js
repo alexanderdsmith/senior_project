@@ -37,15 +37,17 @@ var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvide
         controller: 'profileCtrl',
         controllerAs: 'profile',
         authenticated: true
-    }).when(prefix + 'course', {
+    }).when(prefix + 'course/:param', {
         templateUrl: prefix + 'app/views/pages/users/profiles/course.html',
-        controller: 'profileCtrl',
-        controllerAs: 'profile',
+        controller: 'courseCtrl',
+        controllerAs: 'course',
+        reloadOnSearch: false,
         authenticated: true
     }).when(prefix + 'document', {
         templateUrl: prefix + 'app/views/pages/users/profiles/document.html',
         controller: 'documentCtrl',
         controllerAs: 'document',
+        reloadOnSearch: false,
         authenticated: true
     }).when(prefix + 'google/:token', {
         templateUrl: prefix + 'app/views/pages/users/social/social.html',

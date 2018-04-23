@@ -4,6 +4,7 @@ angular.module('conceptmapsApp', [
     'ngAnimate',
 
     //controllers
+    'courseController',
     'documentControllers',
     'userControllers',
     'mainController',
@@ -13,6 +14,7 @@ angular.module('conceptmapsApp', [
     'fileDirectives',
 
     // services
+    'courseServices',
     'documentServices',
     'profileServices',
     'userServices',

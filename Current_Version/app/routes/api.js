@@ -415,15 +415,7 @@ module.exports = function(router, keys) {
      * COURSE UPLOAD
      */
     router.post('/getCourse', function(req, res) {
-        var course_payload = {
-            id: '',
-            title: '',
-            announcements: [],
-            assignments: [],
-            students: [],
-            tas: [],
-            teachers: []
-        };
+        var course_payload = {};
 
         Course.findById(req.body.id)
         .populate([{
@@ -439,24 +431,28 @@ module.exports = function(router, keys) {
                 course_payload.id = course._id;
 
                 course_payload.title = course.title;
-                course._assignments.forEach(function (assignment) {
-                    course_payload.assignments.push({
-                        id: assignment._id,
-                        title: assignment.title,
-                        description: assignment.description,
-                        dueDate: assignment.dueDate,
-                        timestamp: assignment.timestamp
-                        //TODO: add submissions
+                if(course._assignments !== undefined) {
+                    course._assignments.forEach(function (assignment) {
+                        course_payload.assignments.push({
+                            id: assignment._id,
+                            title: assignment.title,
+                            description: assignment.description,
+                            dueDate: assignment.dueDate,
+                            timestamp: assignment.timestamp
+                            //TODO: add submissions
+                        });
                     });
-                });
-                course._announcements.forEach(function (announcement) {
-                    course_payload.announcements.push({
-                        id: announcement._id,
-                        title: announcement.title,
-                        description: announcement.description,
-                        timestamp: announcement.timestamp
-                    })
-                });
+                }
+                if(course._announcements !== null) {
+                    course._announcements.forEach(function (announcement) {
+                        course_payload.announcements.push({
+                            id: announcement._id,
+                            title: announcement.title,
+                            description: announcement.description,
+                            timestamp: announcement.timestamp
+                        });
+                    });
+                }
             }
             res.send(course_payload);
         });

@@ -1,5 +1,5 @@
 <div class="page-header">
-    <h1>Class Home Page</h1>
+    <h1>{{course.course_payload.title}} Home Page</h1>
 </div>
 
 <div class="col-md-8">
@@ -12,11 +12,11 @@
             </tr>
             <tr>
             </tr>
-            <tr ng-repeat="assignment in profile.course_payload.assignments">
+            <tr ng-repeat="assignment in course.course_payload.assignments">
                 <td class="danger">Assignment 2</td>
                 <td>Due 2 days ago</td>
             </tr>
-            <tr ng-repeat="assignment in profile.course_payload.assignments">
+            <tr ng-repeat="assignment in course.course_payload.assignments">
                 <td><a ng-click="openDocument(assignment.id)">{{assignment.name}}</a></td>
                 <td>{{assignment.description}}</td>
                 <td>{{assignment.dueDate}}</td> <!-- TODO -->
@@ -25,8 +25,6 @@
         </table>
     </div>
 </div>
-
-<p>COURSE ID: {{profile}}</p>
 
 <div class="col-md-4">
     <div class="panel panel-info">
@@ -46,7 +44,7 @@
                             <h4 class="modal-title" id="AddAssignmentsModalLabel">New Assignment</h4>
                         </div>
                         <div class="modal-body">
-                            <form ng-submit="profile.addAssignment(title,description,due_date,time, profile.course_payload.id)">
+                            <form ng-submit="course.addAssignment(title,description,due_date,time)">
                                 <div class="form-group">
                                     <label for="assignmentTitle" class="control-label">Assignment Title</label>
                                     <input name="title" type="text" class="form-control" id="assignmentTitle" ng-model="title">
@@ -71,12 +69,10 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 
-
+<!-- DO NOT ADD DOCUMENTS THIS WAY...
 <div class="col-md-4">
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Document</strong></div>
@@ -84,8 +80,8 @@
         <!-- Adding a document (if user is a student) -->
         <!-- TODO : Change this to make a link to the cytoscape page, when the student clicks the button -->
 
-        <div> <!-- TODO : Not sure about this for checking if student -->
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddDocumentsModal">
+        <!-- <div> <!-- TODO : Not sure about this for checking if student -->
+            <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddDocumentsModal">
                 + Add a Document
             </button>
             <div class="modal fade" id="AddDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="AddDocumentsModalLabel">
@@ -106,14 +102,9 @@
                 </div>
             </div>
         </div>
-
-
-        </div>
-    </div>
+     </div>
 </div>
-
-
-
+-->
 
 
 <div class="col-md-8">
@@ -125,7 +116,7 @@
                 <td><strong>Due Date</strong></td>
                 <td><strong>Grade</strong></td>
             </tr>
-            <tr ng-repeat="assignment in profile.course_payload.past_assignments">
+            <tr ng-repeat="assignment in course.course_payload.past_assignments">
                 <td><a>{{assignment.name}}</a></td>
                 <td>{{assignment.dueDate}}</td>
                 <td ng-show="assignment.isGraded">{{assignment.grade}}</td>
@@ -135,20 +126,18 @@
     </div>
 </div>
 
-
-
 <div class="col-md-4">
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Class Announcements</strong></div>
         <table class="table table-bordered">
-            <tr ng-repeat="announcement in profile.course_payload.announcements">
+            <tr ng-repeat="announcement in course.course_payload.announcements">
                 <td>{{announcement.text}}</td>
             </tr>
         </table>
 
         <!-- Adding an Announcement (if user is a teacher) -->
 
-        <div> <!-- TODO : Not sure about this for checking if teacher -->
+        <div> <!-- TODO : checking if teacher -->
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAnnouncementsModal">
                 + Add an announcement
             </button>
@@ -175,7 +164,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
