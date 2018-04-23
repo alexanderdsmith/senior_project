@@ -8,14 +8,33 @@ angular.module('documentServices', [])
 
     // All $http requests are accessing the routes that are set up in the "routes" folder
 
-    o.updateDocument = function(document, data) {
-        return $http.post('/api/saveDocument')
+    o.updateDocument = function(data) {//function(currDocument, data) {
+        var graphData = {'elements': data.elements, 'undoStack': data.undoStack};
+        return $http.post('/api/saveDocuments', graphData)
+        //return $http.post('/api/saveDocuments', graphData, {
+        //    headers: { "Content-Type": "application/json; charset = utf-8;" }
+        //})
         .then(function(returnedData){
             console.log(data);
             console.log(returnedData);
-            document.graph.elements = returnedData.elements;
-            document.graph.undoStack = returnedData.undoStack;
+
+            returnedData.graph = graphData;
+
+
+
+
+            return data;
+            /*returnedData.graph.elements = data.elements;
+            returnedData.graph.undoStack = data.undoStack;*/
+            //currDocument.graph.elements = returnedData.elements;
+            //currDocument.graph.undoStack = returnedData.undoStack;
+            /*return returnedData;*/
+        }).catch(function(returnedData) {//;
+            //return data;
+            console.log(data);
+            console.log(returnedData);
             return returnedData;
+            //return data;
         });
     };
 

@@ -1,6 +1,6 @@
 angular.module('documentControllers', ['documentServices'])
 
-.controller('documentCtrl', ['Documents', '$window', function(Documents, $window) {//function(Document, $window) { 
+.controller('documentCtrl', ['Documents', 'Profile', '$window', function(Documents, Profile, $window) {//function(Document, $window) { 
     var app = this;
 
     app.document = document;
@@ -46,13 +46,23 @@ angular.module('documentControllers', ['documentServices'])
         console.log("Document Saved!");
     };
 
-    this.updateDocument = function(document, graphData) {
+    //function updateDocument(currDocument, graphData) {
+    function updateDocument(graphData){
         console.log("Updating now");
         //var graphData = {
         //    elements: data.elements,
         //    undoStack: data.undoStack
         //};
-        Documents.updateDocument(this.document, graphData).then(function(data) {
+
+        //Documents.updateDocument(currDocument, graphData).then(function(data) {
+        Documents.updateDocument(graphData).then(function(data) {
+            console.log("Data sent back to controller is: ");
+            console.log(data);
+            console.log("Graph maybe updated in Controller");
+        });
+
+
+        /*Documents.updateDocument(currDocument, graphData).then(function(data) {
             if(data.data.success === true) {
                 app.successMessage = data.data.message;
             }
@@ -60,7 +70,9 @@ angular.module('documentControllers', ['documentServices'])
                 app.errorMessage = data.data.message;
             }
         });
-        console.log("Graph updated Controller");
+        console.log("Graph updated Controller");*/
+
+
         //Document.updateGraph(document, graphData)/*.then(function(data) {
         /*   if(data.data.success === true) {
                 app.successMessage = data.data.message;
@@ -73,7 +85,7 @@ angular.module('documentControllers', ['documentServices'])
         //document.graph.undoStack = data.undoStack;
         //console.log("Graph updated Controller");
         //return graphData;
-    }
+    };
 
     // this.updateDocument = function(graphData) {
     //     console.log("Updating now");
@@ -467,7 +479,12 @@ angular.module('documentControllers', ['documentServices'])
             console.log(graphData);
             //Document.updateGraph(app.document, graphData).then(function(data) {
             //updateDocument(this.document, graphData);//.then(function(data) {
-            updateDocument(this.document, graphData);//.then(function(data){
+            //updateDocument(Profile.getDocument(), graphData);
+            //TODO : Check where to get current document working on (Maybe)
+            updateDocument(graphData);
+            //updatingDocument(app.document, graphData).then(function(data) {//;//.then(function(data){
+            //    console.log(data);
+            //});
             //Document.updateDocument(this.document, graphData);
                 //if(data.data.success === true) {
                 //    app.successMessage = data.data.message;
@@ -518,11 +535,17 @@ angular.module('documentControllers', ['documentServices'])
 
             //o.updateGraph(docArg, { elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
             //updateGraph( { elements: JSON.stringify(cy.data())})
-            console.log(cy.elements().jsons());
+
+            updateGraph({ elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
+
+
+            /*console.log(cy.elements().jsons());
             console.log(JSON.stringify(cy.elements().jsons()));
             var elems = JSON.stringify(cy.elements().jsons());
             var undoing = undoStackJSON;
             updateGraph({ elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
+*/
+
             //this.updateGraph(elems, undoing);
             //updateGraph( { elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
             //this.updateGraph(docArg, { elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
