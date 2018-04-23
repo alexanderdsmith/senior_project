@@ -2,6 +2,7 @@
     <h1>{{course.course_payload.title}} Home Page</h1>
 </div>
 
+<!-- TODO: Open Documents with Assignment -->
 <div class="col-md-8">
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Current Assignments</strong></div>
@@ -10,22 +11,17 @@
                 <td><strong>Assignment</strong></td>
                 <td><strong>Due Date</strong></td>
             </tr>
-            <tr>
-            </tr>
-            <tr ng-repeat="assignment in course.course_payload.assignments">
-                <td class="danger">Assignment 2</td>
-                <td>Due 2 days ago</td>
-            </tr>
-            <tr ng-repeat="assignment in course.course_payload.assignments">
+            <tr ng-repeat="assignment in course.course_payload.assignments track by $index">
                 <td><a ng-click="openDocument(assignment.id)">{{assignment.name}}</a></td>
                 <td>{{assignment.description}}</td>
-                <td>{{assignment.dueDate}}</td> <!-- TODO -->
+                <td>{{assignment.dueDate}}</td> <!-- TODO: add due date correctly! -->
                 <!-- <td ng-show="!assignment.isSubmitted"><button type="button" class="btn btn-primary">Submit</button></td> -->
             </tr>
         </table>
     </div>
 </div>
 
+<!-- TODO: add assignment by course id -->
 <div class="col-md-4">
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Assignment</strong></div>
@@ -44,7 +40,7 @@
                             <h4 class="modal-title" id="AddAssignmentsModalLabel">New Assignment</h4>
                         </div>
                         <div class="modal-body">
-                            <form ng-submit="course.addAssignment(title,description,due_date,time)">
+                            <form ng-submit="course.addAssignment(title,description,due_date,time, course.course_payload.id)">
                                 <div class="form-group">
                                     <label for="assignmentTitle" class="control-label">Assignment Title</label>
                                     <input name="title" type="text" class="form-control" id="assignmentTitle" ng-model="title">

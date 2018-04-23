@@ -113,6 +113,8 @@ module.exports = function(router, keys) {
     /***************************/
     /*** CSV AUTHLIST UPLOAD ***/
     /***************************/
+
+    // TODO: Fix this so that users can be updated when they already exist! (this is a course upload, not a user auth list!)
     router.post('/uploadCourse', function(req, res) {
         if(req.body.csv !== null && req.body.csv !== '' && typeof(req.body.csv) !== 'undefined') {
             var csv = Papa.parse(req.body.csv, {
@@ -128,7 +130,6 @@ module.exports = function(router, keys) {
                 _assignments: []
             });
             course.save();
-            console.log(course._id);
 
             var adminlist   = [];
             var studentlist = [];
@@ -204,22 +205,23 @@ module.exports = function(router, keys) {
     });
 
     router.post('/addAssignment', function(req, res) {
-
         console.log(req.body);
         var assignment = new Assignment();
         assignment.title = req.body.title;
         assignment.description = req.body.description;
         assignment.dueDate = req.body.dueDate;
         assignment.timestamp = req.body.time;
-        assignment.save();
         Course.findById(req.body.course).exec(function(err, course) {
             if(err) throw err;
             if(course) {
                 course._assignments.push(assignment);
                 course.save();
+                assignment.save();
+                res.json({success: true, message: 'Assignment successfully created!'});
+            } else {
+                res.json({success: false, message: 'Assignment creation failed!'});
             }
         });
-        res.json({success: true, message: 'Assignment successfully created!'});
     });
 
     /****************************/
@@ -227,8 +229,6 @@ module.exports = function(router, keys) {
     /****** UPDATE PROFILE ******/
     /***** 'JSONIFIES' DATA *****/
     /****************************/
-
-    // TODO: FINISH POPULATION TREE & UPDATE REQUESTS
     router.get('/profileData', function(req, res) {
 
         /** SEND PAYLOAD (Structure for payload) **/
@@ -414,6 +414,8 @@ module.exports = function(router, keys) {
      *
      * COURSE UPLOAD
      */
+
+    // TODO: Add students, teachers, etc.
     router.post('/getCourse', function(req, res) {
         var course_payload = {};
 
@@ -429,9 +431,21 @@ module.exports = function(router, keys) {
             if(err) throw err;
             if(course) {
                 course_payload.id = course._id;
-
                 course_payload.title = course.title;
-                if(course._assignments !== undefined) {
+
+                if(course._announcements !== undefined && course._announcements !== null) {
+                    course_payload.announcements = [];
+                    course._announcements.forEach(function (announcement) {
+                        course_payload.announcements.push({
+                            id: announcement._id,
+                            title: announcement.title,
+                            description: announcement.description,
+                            timestamp: announcement.timestamp
+                        });
+                    });
+                }
+                if(course._assignments !== undefined && course._assignments !== null) {
+                    course_payload.assignments = [];
                     course._assignments.forEach(function (assignment) {
                         course_payload.assignments.push({
                             id: assignment._id,
@@ -440,16 +454,6 @@ module.exports = function(router, keys) {
                             dueDate: assignment.dueDate,
                             timestamp: assignment.timestamp
                             //TODO: add submissions
-                        });
-                    });
-                }
-                if(course._announcements !== null) {
-                    course._announcements.forEach(function (announcement) {
-                        course_payload.announcements.push({
-                            id: announcement._id,
-                            title: announcement.title,
-                            description: announcement.description,
-                            timestamp: announcement.timestamp
                         });
                     });
                 }
@@ -533,39 +537,24 @@ module.exports = function(router, keys) {
 
     //Getting a document to send
     router.post('/getDocument', function(req, res){
-        var document_payload = {
-            id: '',
-            title: '',
-            timestamp: '',
-            grade: '',
-            status: '',
-            submittedTo: '',
-            student: '',
-            graph: ''
-        };
+        var document_payload = {};
 
         Document.findById(req.body.id)
         .exec(function(err, document) {
             if(err) throw err;
             if(document) {
                 document_payload.id = document._id;
-
                 document_payload.title = document.title;
-
                 document_payload.timestamp = document.timestamp;
-
                 document_payload.grade = document.grade;
                 document_payload.status = document.status;
                 document_payload.submittedTo = document.submittedTo;
                 document_payload.student = document.student;
                 document_payload.graph = document.graph;
-
             }
             res.send(document_payload);
         });
     });
-
-
 
     return router;
 };
