@@ -1,5 +1,7 @@
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
+var extend       = require('mongoose-extend-schema');
+var User         = require('./abstract_user');
 
 var StudentSchema = new Schema({
     _courses  : [{
