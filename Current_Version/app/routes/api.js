@@ -485,27 +485,92 @@ module.exports = function(router, keys) {
 
 
     router.post('/saveDocuments', function(req, res){
-        console.log(req.body);
-        Student.findById(req.body.student).exec(function(err, student) {
+
+        /*Document.findOne( {_id: req.document, student: req.body._id} ).exec(function(err, document1) {
+            if(err) throw err;
+            if(document1) {
+                document1.updateGraph(req.body, function(err, graph) {
+                    if(err) throw err;
+                    if(graph){
+                        res.json(graph);
+                    }
+                });
+            }
+        });*/
+
+
+
+
+        /*Student.findById(req.body.student).exec(function(err, student) {
             if(err) throw err;
             if(student) {
                 student._documents.push(document);
                 student.save();
             }
-        });
-        var document = new Document();
-        document.title = req.body.title;
-        document.timestamp = Date.now();
-        document.grade = req.body.grade;
-        document.status = req.body.status;
-        document.submittedTo = req.body.submittedTo;
-        //document._student = req.body._student;
-        document.graph = req.body.graph;
-        document.graph.elements = req.body.graph.elements;
-        document.graph.undoStack = req.body.graph.undoStack;
-        document.save();
+        });*/
+
+        console.log(req.body.graph);
+
+        var graph = {
+            elements: [],
+            undoStack: []
+        };
+
+        var document_payload= {
+            id: '',
+            title: '',
+            timestamp: '',
+            grade: '',
+            status: '',
+            submittedTo: '',
+            _student: '',
+            graph
+
+            //graph.elements: [],
+            //graph.undoStack: []
+            /*graph: {
+                elements: '',
+                undoStack: ''
+            }*/
+        };
+
+
+        graph.elements = req.body.elements;
+        graph.undoStack = req.body.undoStack;
+
+        // TODO: Need to get current document to save the graph to
+
+
+        //Sends the graph back.
+        res.json(graph);
+
         
-        res.json({success: true, message: 'Document saved'});
+
+        /*document_payload.graph = graph;
+        document_payload.save();
+        res.json(graph);*/
+
+
+
+        /*document_payload.graph = req.body.graph;
+        console.log(document_payload.graph);
+        res.json(document_payload);//.graph);
+    */    //console.log(document_payload.graph);
+
+
+        //var document = new Document();
+        //document.title = req.body.title;
+        //document.timestamp = Date.now();
+        //document.grade = req.body.grade;
+        //document.status = req.body.status;
+        //document.submittedTo = req.body.submittedTo;
+        ////document._student = req.body._student;
+        //document.graph = req.body.graph;
+        //document.graph.elements = req.body.graph.elements;
+        //document.graph.undoStack = req.body.graph.undoStack;
+        //document.save();
+        
+        //res.json({success: true, message: 'Document saved'});
     });
 
 
@@ -533,6 +598,11 @@ module.exports = function(router, keys) {
 
     //Getting a document to send
     router.post('/getDocument', function(req, res){
+        var graph = {
+            elements: [],
+            undoStack: []
+        };
+
         var document_payload = {
             id: '',
             title: '',
@@ -541,7 +611,7 @@ module.exports = function(router, keys) {
             status: '',
             submittedTo: '',
             student: '',
-            graph: ''
+            graph
         };
 
         Document.findById(req.body.id)
