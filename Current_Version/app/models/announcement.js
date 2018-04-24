@@ -13,10 +13,6 @@ var AnnouncementSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Ta'
     },
-    _course: {
-        type: Schema.Types.ObjectId,
-        ref: 'Course'
-    }
 });
 
 module.exports = mongoose.model('Announcement', AnnouncementSchema);

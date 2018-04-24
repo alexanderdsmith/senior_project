@@ -2,8 +2,16 @@ angular.module('courseController', ['courseServices'])
 
 .controller('courseCtrl', ['Course', '$routeParams', function(Course, $routeParams) {
     var app = this;
-    app.course_payload = JSON.parse('{"' + decodeURI($routeParams.param).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
-
+    app.url = JSON.parse('{"' + decodeURI($routeParams.param).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+    console.log(app.url);
+    if(app.url !== null && app.url !== undefined) {
+        Course.getData({ id: app.url.id }).then(function(data) {
+            console.log(data);
+            app.course_payload = data.data;
+        });
+    } else {
+        app.course_payload = { errorMessage: "404: Course not found." };
+    }
     this.openDocument = function(assn_id) {
         var assn = { id: assn_id };
         Course.getDocument(assn).then(function(payload) {

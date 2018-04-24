@@ -15,8 +15,14 @@ angular.module('courseServices', [])
         });
     };
 
+    courseFactory.getData = function(id) {
+        return $http.post('/api/getCourse', id).then(function(data) {
+            return data;
+        });
+    };
+
     courseFactory.getDocument = function(assn) {
-        return $http.post('/api/getCourse', assn).then(function(data) {
+        return $http.post('/api/getDocument', assn).then(function(data) {
             return data;
         });
     };

@@ -204,13 +204,26 @@ module.exports = function(router, keys) {
         }
     });
 
+    router.post('/addAnnouncement', function(req, res) {
+        console.log(req.body);
+        var announcement = new Announcement();
+        announcement.title = req.body.title;
+        announcement.description = req.body.description;
+        announcement.timeStamp = Date.now();
+
+
+    });
+
     router.post('/addAssignment', function(req, res) {
         console.log(req.body);
         var assignment = new Assignment();
         assignment.title = req.body.title;
         assignment.description = req.body.description;
-        assignment.dueDate = req.body.dueDate;
-        assignment.timestamp = req.body.time;
+        var dd = new Date(req.body.dueDate);
+        var t = new Date(req.body.time);
+        assignment.dueDate = dd.setHours(t.getHours());
+        console.log(assignment.dueDate);
+
         Course.findById(req.body.course).exec(function(err, course) {
             if(err) throw err;
             if(course) {
@@ -527,8 +540,7 @@ module.exports = function(router, keys) {
             grade: '',
             status: '',
             submittedTo: '',
-            _student: '',
-            graph
+            _student: ''
 
             //graph.elements: [],
             //graph.undoStack: []
@@ -601,26 +613,12 @@ module.exports = function(router, keys) {
 
 
     //Getting a document to send
-    router.post('/getDocument', function(req, res){
-<<<<<<< HEAD
+    router.post('/getDocument', function(req, res) {
         var document_payload = {};
-=======
         var graph = {
             elements: [],
             undoStack: []
         };
-
-        var document_payload = {
-            id: '',
-            title: '',
-            timestamp: '',
-            grade: '',
-            status: '',
-            submittedTo: '',
-            student: '',
-            graph
-        };
->>>>>>> bc2dc8ed4964f9d8a368226232564adfed93f34b
 
         Document.findById(req.body.id)
         .exec(function(err, document) {
