@@ -3,7 +3,7 @@ var User         = require('./abstract_user');
 var Schema       = mongoose.Schema;
 var extend       = require('mongoose-extend-schema');
 
-var TaSchema = extend(User, {
+var TaSchema = new Schema({
     _courses : [{
         type : Schema.Types.ObjectId,
         ref  : 'Course'

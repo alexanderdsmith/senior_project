@@ -17,10 +17,11 @@ angular.module('profileController', ['authServices', 'profileServices'])
         });
     };
 
-    this.fetchCourse = function(id, type) {
+    this.fetchCourse = function(id, type, user_id) {
         var course = {
             id: id,
-            type: type  // TODO: Design type to allow different users' access
+            type: type,  // TODO: Design type to allow different users' access
+            user_id: user_id
         };
         Profile.getCourse(course).then(function(payload) {
             if (payload) {

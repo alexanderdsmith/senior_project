@@ -21,9 +21,8 @@ angular.module('courseServices', [])
         });
     };
 
-    courseFactory.getDocument = function(assn) {
-        return $http.post('/api/getDocument', assn).then(function(data) {
-            console.log(data);
+    courseFactory.getStudentDocument = function(assn) {
+        return $http.post('/api/getStudentDocument', assn).then(function(data) {
             return data;
         });
     };

@@ -1,12 +1,19 @@
 angular.module('documentControllers', ['documentServices'])
 
-.controller('documentCtrl', ['Documents', 'Profile', '$window', function(Documents, Profile, $window) {//function(Document, $window) { 
+.controller('documentCtrl', ['Documents', '$routeParams', function(Documents, $routeParams) {
     var app = this;
+    app.url = JSON.parse('{"' + decodeURI(atob($routeParams.param)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+    if(app.url !== null && app.url !== undefined) {
+        Documents.getDocument({ id: app.url.id }).then(function(data) {
+            console.log(data);
+            app.document = data.data;
+            app.grade = app.document.grade;
+        });
+    } else {
+        app.document = { errorMessage: "404: Course not found." };
+    }
 
-    app.document = document;
-
-    this.grade = 95;
-    this.title = "Document Title";
+    this.title = 'TODO: MAKE THIS THE ASSIGNMENT TITLE + DESCRIPTION';
 
     //Updates the grade for the document
     this.updateGrade = function() {
@@ -28,13 +35,15 @@ angular.module('documentControllers', ['documentServices'])
         });
     };
 
-    this.saveDocument = function(data){//function(document) {
+    // TODO: this is not used
+    this.saveDocument = function(data){
         var graphData = {
+            doc_id: app.url.id,
             elements: data.elements,
             undoStack: data.undoStack
         };
 
-        Documents.saveDocument(app.document, graphData).then(function(data) {//saveDocument(document).then(function(data) {
+        Documents.saveDocument(graphData).then(function(data) {
             if (data.data.success === true) {
                 app.successMessage = data.data.message;
             }
@@ -46,13 +55,13 @@ angular.module('documentControllers', ['documentServices'])
         console.log("Document Saved!");
     };
 
-    //function updateDocument(currDocument, graphData) {
     function updateDocument(graphData){
         console.log("Updating now");
         //var graphData = {
         //    elements: data.elements,
         //    undoStack: data.undoStack
         //};
+        graphData.doc_id = app.url.id;
 
         //Documents.updateDocument(currDocument, graphData).then(function(data) {
         Documents.updateDocument(graphData).then(function(data) {
@@ -750,7 +759,7 @@ angular.module('documentControllers', ['documentServices'])
             setDirty();
         }
 
-        
+
 
         /*function saveGraph() {
             var document = {

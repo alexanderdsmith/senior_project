@@ -27,7 +27,7 @@
         <button type="button" ng-click="document.updateTitle()" class="btn btn-primary">Update Title</button>
     </div>
     <br/>
-    <div id="grade">
+    <div id="grade" ng-show="document.grade !== -1">
         Current grade: {{document.grade}}
         <!-- TODO : use ng-show to only show button if user is a teacher -->
         <button type="button" ng-click="document.updateGrade()" class="btn btn-primary">Update Grade</button>

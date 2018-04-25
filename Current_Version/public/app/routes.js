@@ -43,7 +43,7 @@ var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvide
         controllerAs: 'course',
         reloadOnSearch: false,
         authenticated: true
-    }).when(prefix + 'document', {
+    }).when(prefix + 'document/:param', {
         templateUrl: prefix + 'app/views/pages/users/profiles/document.html',
         controller: 'documentCtrl',
         controllerAs: 'document',

@@ -3,27 +3,17 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var DocumentSchema = new Schema({
-    title       : {
-        type    : String,
-        default : 'untitled'
-    },
     timestamp   : {
-        type : Date,
-        default : Date.now
+        type : Date
     },
-    grade       : Number,
+    grade       : {
+        type : Number,
+        default : -1
+    },
     status      : {
         type    : String,
         default : 'unsubmitted',
         enum    : ['unsubmitted', 'submitted', 'returned']
-    },
-    submittedTo : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref  : 'Assignment'
-    },
-    _student    : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref  : 'Student'
     },
     graph       : {
         elements  : [String],

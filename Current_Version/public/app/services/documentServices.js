@@ -1,21 +1,20 @@
 angular.module('documentServices', [])
 
-.factory('Documents', ['$http', '$route', 'AuthToken', function($http, $route, AuthToken) {
-    var o = {
-        documents: []
-    };
+.factory('Documents', ['$http', function($http) {
+    var documentsFactory = {};
 
+    documentsFactory.getDocument = function(id) {
+        return $http.post('/api/getDocument', id).then(function(data) {
+            return data;
+        });
+    };
 
     // All $http requests are accessing the routes that are set up in the "routes" folder
 
-    o.updateDocument = function(data) {//function(currDocument, data) {
-        var graphData = {'elements': data.elements, 'undoStack': data.undoStack};
-        return $http.post('/api/saveDocuments', graphData)
-        //return $http.post('/api/saveDocuments', graphData, {
-        //    headers: { "Content-Type": "application/json; charset = utf-8;" }
-        //})
+    documentsFactory.updateDocument = function(data) {
+        var graphData = {'elements': data.elements, 'undoStack': data.undoStack, 'doc_id': data.doc_id };
+        return $http.post('/api/saveDocument', graphData)
         .then(function(returnedData){
-            console.log(data);
             console.log(returnedData);
 
             returnedData.graph = graphData;
@@ -39,7 +38,7 @@ angular.module('documentServices', [])
     };
 
     // Saves changes to a specific graph
-    o.updateGraph = function(document, data) {
+    documentsFactory.updateGraph = function(document, data) {
         return $http.put('/api/student/saveDocument' + document._id + '/graph', data, {
             //headers: {Authorization: 'Bearer '+AuthToken.getToken()}
         }).then(function(returnedData) {
@@ -49,14 +48,14 @@ angular.module('documentServices', [])
         });
     };
 
-    /*o.saveDocument = function(document) {
+    /*documentsFactory.saveDocument = function(document) {
         return http.post('', document).then(function(data) {
             return data;
         });
     };*/
 
     // //Getting all students documents
-    // o.getAll = function(){
+    // documentsFactory.getAll = function(){
     //     return $http.get('/api/student/documents', {
     //         headers: {Authorization: 'Bearer '+AuthToken.getToken()}
     //     }).success(function(data){
@@ -539,6 +538,6 @@ angular.module('documentServices', [])
 
     // };
 
-    return o;
+    return documentsFactory;
 
 }]);

@@ -475,18 +475,15 @@ module.exports = function(router, keys) {
 
     //Sending a document to add
     router.post('/addDocument', function(req, res) {
-        console.log(req.body);
-
         var document = new Document();
         document.title = req.body.title;
         document.timestamp = Date.now();
         document.grade = req.body.grade;
         document.status = req.body.status;
         document.submittedTo = req.body.submittedTo;
-        //document._student = req.body._student;
         document.graph = req.body.graph;
         document.save();
-        Student.findById(req.body.student).exec(function(err, student) {
+        AbstractUser.findById(req.body.user).exec(function(err, student) {
             if(err) throw err;
             if(student) {
                 student._documents.push(document);
@@ -496,139 +493,105 @@ module.exports = function(router, keys) {
                 res.json({success: false, message: 'Document failed to save'});
             }
         });
-
     });
 
-
-    router.post('/saveDocuments', function(req, res){
-
-        /*Document.findOne( {_id: req.document, student: req.body._id} ).exec(function(err, document1) {
-            if(err) throw err;
-            if(document1) {
-                document1.updateGraph(req.body, function(err, graph) {
-                    if(err) throw err;
-                    if(graph){
-                        res.json(graph);
-                    }
-                });
-            }
-        });*/
-
-
-
-
-        /*Student.findById(req.body.student).exec(function(err, student) {
-            if(err) throw err;
-            if(student) {
-                student._documents.push(document);
-                student.save();
-            }
-        });*/
-
-        console.log(req.body.graph);
-
-        var graph = {
-            elements: [],
-            undoStack: []
-        };
-
-        var document_payload= {
-            id: '',
-            title: '',
-            timestamp: '',
-            grade: '',
-            status: '',
-            submittedTo: '',
-            _student: ''
-
-            //graph.elements: [],
-            //graph.undoStack: []
-            /*graph: {
-                elements: '',
-                undoStack: ''
-            }*/
-        };
-
-
-        graph.elements = req.body.elements;
-        graph.undoStack = req.body.undoStack;
-
-        // TODO: Need to get current document to save the graph to
-
-
-        //Sends the graph back.
-        res.json(graph);
-
-        
-
-        /*document_payload.graph = graph;
-        document_payload.save();
-        res.json(graph);*/
-
-
-
-        /*document_payload.graph = req.body.graph;
-        console.log(document_payload.graph);
-        res.json(document_payload);//.graph);
-    */    //console.log(document_payload.graph);
-
-
-        //var document = new Document();
-        //document.title = req.body.title;
-        //document.timestamp = Date.now();
-        //document.grade = req.body.grade;
-        //document.status = req.body.status;
-        //document.submittedTo = req.body.submittedTo;
-        ////document._student = req.body._student;
-        //document.graph = req.body.graph;
-        //document.graph.elements = req.body.graph.elements;
-        //document.graph.undoStack = req.body.graph.undoStack;
-        //document.save();
-        
-        //res.json({success: true, message: 'Document saved'});
-    });
-
-
-
-    //Maybe for saving document
-    /*router.post('/updateDocument', function(req, res){
-        Document.findById(req.body.id)
-        .exec(function(err, document){
-            if(err) throw err;
-            if(document){
-
-            }
-        })
-        document.title = req.body.title;
-        document.timestamp = Date.now();
-        document.grade = req.body.grade;
-        document.status = req.body.status;
-        document.submittedTo = req.body.submittedTo;
-        document._student = req.body._student;
-        document.graph = req.body.graph;
-        document.save();
-        res.send(document);
-    });*/
-
-
-    //Getting a document to send
     router.post('/getDocument', function(req, res) {
         var document_payload = {};
 
-        Document.findById(req.body.id)
-        .exec(function(err, document) {
-            if(err) throw err;
+        Document.findById(req.body.id).exec(function(err, document) {
+            if(err) throw error;
             if(document) {
                 document_payload.id = document._id;
-                document_payload.title = document.title;
                 document_payload.timestamp = document.timestamp;
                 document_payload.grade = document.grade;
                 document_payload.status = document.status;
-                document_payload.submittedTo = document.submittedTo;
-                document_payload.student = document.student;
                 document_payload.graph = document.graph;
+                console.log(document_payload);
+                res.send(document_payload);
             }
-            res.send(document_payload);
+        });
+    });
+
+
+    // TODO: Save document
+    router.post('/saveDocument', function(req, res){
+        console.log(req.body.doc_id);
+        var graph = {
+            elements: req.body.elements,
+            undoStack: req.body.undoStack
+        };
+        // TODO: Need to get current document to save the graph to
+        Document.findById(req.body.doc_id).exec(function(err, document) {
+            if(err) throw err;
+            if(document) {
+                document.graph = graph;
+                document.save();
+                res.json({success: true, message: 'Document successfully saved'});
+            } else {
+                res.json({success: false, message: 'Document failed to save...'});
+            }
+        });
+    });
+
+    // TODO: Save Document
+
+    /** Find, create, open student docs **/
+    router.post('/getStudentDocument', function(req, res) {
+        var document_payload = {};
+
+        Assignment.findById(req.body.id).populate([{
+            path: '_submissions',
+            model: 'Document'
+        }]).exec(function(err, assignment){
+            if(err) throw err;
+            if(assignment) {
+                Student.findById(req.body.uid).populate([{
+                    path: '_documents',
+                    model: 'Document'
+                }]).exec(function (err, student) {
+                    if (err) throw err;
+                    if (student) {
+                        var sendDoc = false;
+                        assignment._submissions.forEach(function (doc1) {
+                            student._documents.forEach(function (doc2) {
+                                if (doc1._id === doc2._id) {
+                                    /**  If document exists send,  **/
+                                    /**   Else, create a new one   **/
+                                    Document.findById(doc1._id).exec(function (err, document) {
+                                        if (err) throw err;
+                                        if (document) {
+                                            document_payload.id = document._id;
+                                            document_payload.grade = document.grade;
+                                            document_payload.status = document.status;
+                                            document_payload.graph = document.graph;
+                                            sendDoc = true;
+                                            res.send(document_payload);
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+                        if(!sendDoc) {
+                            var newDoc = new Document();
+                            newDoc.timestamp = Date.now();
+                            newDoc.save();
+                            assignment._submissions.push(newDoc);
+                            student._documents.push(newDoc);
+                            document_payload.id = newDoc._id;
+                            document_payload.timestamp = newDoc.timestamp;
+                            document_payload.status = newDoc.status;
+                            document_payload.graph = newDoc.graph;
+                            res.send(document_payload);
+                        }
+
+                    } else {
+                        res.json({success: false, message: 'Student was not found'});
+                    }
+                });
+            } else {
+                res.json({ success: false, message: 'Assignment was not found'});
+            }
         });
     });
 

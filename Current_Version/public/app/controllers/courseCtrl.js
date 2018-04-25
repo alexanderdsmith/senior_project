@@ -3,24 +3,32 @@ angular.module('courseController', ['courseServices'])
 .controller('courseCtrl', ['Course', '$location', '$routeParams', function(Course, $location, $routeParams) {
     var app = this;
     app.url = JSON.parse('{"' + decodeURI(atob($routeParams.param)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
-    console.log(app.url);
     if(app.url !== null && app.url !== undefined) {
-        Course.getData({ id: app.url.id }).then(function(data) {
-            console.log(data);
+        Course.getData({id: app.url.id}).then(function (data) {
             app.course_payload = data.data;
         });
     } else {
         app.course_payload = { errorMessage: "404: Course not found." };
     }
-    this.openDocument = function(assn_id) {
-        var assn = { id: assn_id };
-        Course.getDocument(assn).then(function(payload) {
-            if (payload) {
-                app.document_payload = payload;
+
+    // TODO: Teachers & TA's open documents
+    this.openDocument = function(assn_id, user_id) {
+        var assn = { id: assn_id, uid: user_id };
+        Course.getStudentDocument(assn).then(function(document) {
+            if(document) {
+                var param = {
+                    id: document.data.id
+                };
+                var objectParam = Object.keys(param).map(function (k) {
+                    if (param[k] !== null && param[k] !== undefined) {
+                        return encodeURIComponent(k) + '=' + encodeURIComponent(param[k])
+                    }
+                }).join('&');
+                console.log(document);
+                $location.path('/document/' + btoa(objectParam));
             } else {
-                app.errorMessage = "Document could not be loaded";
+                app.errorMessage = "Document data could not be collected!";
             }
-            $location.path('/document');
         });
     };
 
