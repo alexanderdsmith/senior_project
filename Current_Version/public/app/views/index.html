@@ -56,7 +56,7 @@
                     <li><a href="./">Home</a></li>
                     <li><a ng-show="!main.isLoggedIn" href="./login">Login</a></li>
                     <!--<li><a ng-show="!main.isLoggedIn" href="/register">Register</a></li>-->
-                    <li ng-repeat="profile in main.usertypes"><a ng-show="main.isLoggedIn" ng-href="./{{ profile }}">{{ profile }} home</a></li>
+                    <li><a ng-show="main.isLoggedIn" ng-href="./profile">Profile Portal</a></li>
                     <li><a ng-show="main.isLoggedIn" href="./logout" ng-click="main.logout();">Log out</a></li>
                 </ul>
             </div>
