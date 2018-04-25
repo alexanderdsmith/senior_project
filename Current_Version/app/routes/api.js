@@ -18,6 +18,7 @@ module.exports = function(router, keys) {
     /***************************/
     /**** USER REGISTRATION ****/
     /***************************/
+    // TODO: Cleanup & Remove this function, as it is unused.
     router.post('/users', function(req, res) {
         var user = new AbstractUser();
         user.username = req.body.username;
@@ -61,18 +62,13 @@ module.exports = function(router, keys) {
                         res.json({success: false, message: 'Incorrect password!'});
                     } else {
                         var token = jwt.sign({
+                            givenname : user.givenname,
                             username  : user.username,
                             email     : user.email,
                             usertypes : user.usertypes
                         }, keys.encryption.secret, { expiresIn: keys.encryption.expiration });
 
                         // TODO: when user is authenticated, begin user updates!
-                        if((user.usertypes.indexOf('student') !== -1) && user._student === null) {
-                            user._student = new Student({
-                                _courses: [],
-                                _documents: []
-                            });
-                        }
 
                         res.json({success: true, message: 'User authenticated', token: token });
                     }
@@ -209,8 +205,8 @@ module.exports = function(router, keys) {
         var announcement = new Announcement();
         announcement.title = req.body.title;
         announcement.description = req.body.description;
-        announcement.timeStamp = Date.now();
-
+        announcement.timestamp = Date.now();
+        announcement.postedBy = req.body.postedBy;
 
     });
 
@@ -219,6 +215,7 @@ module.exports = function(router, keys) {
         var assignment = new Assignment();
         assignment.title = req.body.title;
         assignment.description = req.body.description;
+        assignment.timestamp = Date.now();
         var dd = new Date(req.body.dueDate);
         var t = new Date(req.body.time);
         assignment.dueDate = dd.setHours(t.getHours());
@@ -494,10 +491,12 @@ module.exports = function(router, keys) {
             if(student) {
                 student._documents.push(document);
                 student.save();
+                res.send({success: true, message: 'Document successfully saved'});
+            } else {
+                res.json({success: false, message: 'Document failed to save'});
             }
         });
-        res.json({success: true, message: 'Document added with save'});
-        //res.send(document);
+
     });
 
 
@@ -615,10 +614,6 @@ module.exports = function(router, keys) {
     //Getting a document to send
     router.post('/getDocument', function(req, res) {
         var document_payload = {};
-        var graph = {
-            elements: [],
-            undoStack: []
-        };
 
         Document.findById(req.body.id)
         .exec(function(err, document) {

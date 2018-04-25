@@ -20,6 +20,7 @@ module.exports = function(app, passport, keys) {
 
     passport.serializeUser(function(user, done) {
         token = jwt.sign({
+            givenname : user.givenname,
             username  : user.username,
             email     : user.email,
             usertypes : user.usertypes
@@ -47,7 +48,7 @@ module.exports = function(app, passport, keys) {
                     user.save();
                 }
                 done(null, user);
-            } else {
+            } else {    // TODO: create user with no permissions!
                 done(err);
             }
         });

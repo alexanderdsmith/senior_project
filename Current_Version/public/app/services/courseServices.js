@@ -23,6 +23,7 @@ angular.module('courseServices', [])
 
     courseFactory.getDocument = function(assn) {
         return $http.post('/api/getDocument', assn).then(function(data) {
+            console.log(data);
             return data;
         });
     };

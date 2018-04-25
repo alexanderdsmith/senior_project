@@ -13,7 +13,7 @@
                 <td><strong>Due Date</strong></td>
             </tr>
             <tr ng-repeat="assignment in course.course_payload.assignments">
-                <td><a ng-click="openDocument(assignment.id)">{{assignment.title}}</a></td>
+                <td><a ng-click="course.openDocument(assignment.id)">{{assignment.title}}</a></td>
                 <td>{{assignment.timeStamp}}</td>
                 <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a" }}</td> <!-- TODO: add due date correctly! -->
                 <!-- <td ng-show="!assignment.isSubmitted"><button type="button" class="btn btn-primary">Submit</button></td> -->

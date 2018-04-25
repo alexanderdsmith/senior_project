@@ -12,6 +12,7 @@ angular.module('mainController', ['authServices', 'profileServices'])
             Auth.getUser().then(function(data) {
                 // User Information
                 app.username = data.data.username;
+                app.givenname = data.data.givenname;
                 app.email = data.data.email;
                 app.usertypes = data.data.usertypes;
                 app.loadme = true;

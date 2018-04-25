@@ -1,8 +1,8 @@
 angular.module('courseController', ['courseServices'])
 
-.controller('courseCtrl', ['Course', '$routeParams', function(Course, $routeParams) {
+.controller('courseCtrl', ['Course', '$location', '$routeParams', function(Course, $location, $routeParams) {
     var app = this;
-    app.url = JSON.parse('{"' + decodeURI($routeParams.param).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+    app.url = JSON.parse('{"' + decodeURI(atob($routeParams.param)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     console.log(app.url);
     if(app.url !== null && app.url !== undefined) {
         Course.getData({ id: app.url.id }).then(function(data) {
@@ -18,7 +18,7 @@ angular.module('courseController', ['courseServices'])
             if (payload) {
                 app.document_payload = payload;
             } else {
-                app.errorMessage = "Document could not be loaded"
+                app.errorMessage = "Document could not be loaded";
             }
             $location.path('/document');
         });
@@ -32,7 +32,7 @@ angular.module('courseController', ['courseServices'])
             else {
                 app.errorMessage = data.data.message;
             }
-        })
+        });
     };
 
     this.addAssignment = function(title, description, due_date, time, c_id) {

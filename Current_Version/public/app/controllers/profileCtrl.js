@@ -24,22 +24,21 @@ angular.module('profileController', ['authServices', 'profileServices'])
         };
         Profile.getCourse(course).then(function(payload) {
             if (payload) {
-                var objectParam = Object.keys(payload.data).map(function(k) {
-                    if(payload.data[k] !== null && payload.data[k] !== undefined) {
-                        return encodeURIComponent(k) + '=' + encodeURIComponent(payload.data[k])
+                var objectParam = Object.keys(course).map(function(k) {
+                    if(course[k] !== null && course[k] !== undefined) {
+                        return encodeURIComponent(k) + '=' + encodeURIComponent(course[k])
                     }
                 }).join('&');
-                $location.path('/course/' + objectParam);
+                $location.path('/course/' + btoa(objectParam));
             } else {
                 app.errorMessage = "Course data could not be collected!";
             }
         });
     };
 
+    // TODO: ensure that only ADMINS can do this...
     this.addCourse = function(name) {
-        var courseName = name;
-
-        Profile.addCourse(courseName).then(function(data) {
+        Profile.addCourse(name).then(function(data) {
            if (data.data.success === true) {
                app.successMessage = data.data.message;
            }
@@ -55,6 +54,5 @@ angular.module('profileController', ['authServices', 'profileServices'])
 
     this.removeAnnouncement = function(announcement) {
     };
-
 
 }]);
