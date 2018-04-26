@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var DocumentSchema = new Schema({
-    timestamp: String,
+    timestamp: Date,
     grade: {
         type: Number,
         default: -1
@@ -25,7 +25,7 @@ var DocumentSchema = new Schema({
 /****************************/
 DocumentSchema.methods.updateTitle = function(title) {
     this.title = title;
-    this.save();no
+    this.save();
 };
 
 DocumentSchema.methods.updateGrade = function(grade) {

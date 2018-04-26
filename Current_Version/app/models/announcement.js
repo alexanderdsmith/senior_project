@@ -4,7 +4,7 @@ var Schema   = mongoose.Schema;
 var AnnouncementSchema = new Schema({
     title: String,
     description: String,
-    timestamp: String,
+    timestamp: Date,
     _teacher: {
         type: Schema.Types.ObjectId,
         ref: 'Teacher'

@@ -5,10 +5,10 @@ var AssignmentSchema = new Schema({
     title: String,
     description: String,
     dueDate : {
-        type: String,
+        type: Date,
         required: true
     },
-    timestamp: String,
+    timestamp: Date,
     _teachers: [{
         type: Schema.Types.ObjectId,
         ref: 'Teacher'
