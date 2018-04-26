@@ -55,8 +55,7 @@ angular.module('documentControllers', ['documentServices'])
         console.log("Document Saved!");
     };
 
-    function updateDocument(graphData){
-        console.log("Updating now");
+    function updateDocument(graphData) {
         //var graphData = {
         //    elements: data.elements,
         //    undoStack: data.undoStack
@@ -64,11 +63,7 @@ angular.module('documentControllers', ['documentServices'])
         graphData.doc_id = app.url.id;
 
         //Documents.updateDocument(currDocument, graphData).then(function(data) {
-        Documents.updateDocument(graphData).then(function(data) {
-            console.log("Data sent back to controller is: ");
-            console.log(data);
-            console.log("Graph maybe updated in Controller");
-        });
+        Documents.updateDocument(graphData);
 
 
         /*Documents.updateDocument(currDocument, graphData).then(function(data) {
@@ -94,7 +89,7 @@ angular.module('documentControllers', ['documentServices'])
         //document.graph.undoStack = data.undoStack;
         //console.log("Graph updated Controller");
         //return graphData;
-    };
+    }
 
     // this.updateDocument = function(graphData) {
     //     console.log("Updating now");

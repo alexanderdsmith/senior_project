@@ -107,7 +107,7 @@ module.exports = function(router, keys) {
     });
 
     /***************************/
-    /*** CSV AUTHLIST UPLOAD ***/
+    /**** CSV COURSE UPLOAD ****/
     /***************************/
 
     // TODO: Fix this so that users can be updated when they already exist! (this is a course upload, not a user auth list!)
@@ -198,40 +198,6 @@ module.exports = function(router, keys) {
         } else {
             res.json({ success: false, message: 'Please select a CSV File!' });
         }
-    });
-
-    router.post('/addAnnouncement', function(req, res) {
-        console.log(req.body);
-        var announcement = new Announcement();
-        announcement.title = req.body.title;
-        announcement.description = req.body.description;
-        announcement.timestamp = Date.now();
-        announcement.postedBy = req.body.postedBy;
-
-    });
-
-    router.post('/addAssignment', function(req, res) {
-        console.log(req.body);
-        var assignment = new Assignment();
-        assignment.title = req.body.title;
-        assignment.description = req.body.description;
-        assignment.timestamp = Date.now();
-        var dd = new Date(req.body.dueDate);
-        var t = new Date(req.body.time);
-        assignment.dueDate = dd.setHours(t.getHours());
-        console.log(assignment.dueDate);
-
-        Course.findById(req.body.course).exec(function(err, course) {
-            if(err) throw err;
-            if(course) {
-                course._assignments.push(assignment);
-                course.save();
-                assignment.save();
-                res.json({success: true, message: 'Assignment successfully created!'});
-            } else {
-                res.json({success: false, message: 'Assignment creation failed!'});
-            }
-        });
     });
 
     /****************************/
@@ -425,7 +391,7 @@ module.exports = function(router, keys) {
      * COURSE UPLOAD
      */
 
-    // TODO: Add students, teachers, etc.
+    // TODO: Add types (students, teachers, etc.)
     router.post('/getCourse', function(req, res) {
         var course_payload = {};
 
@@ -472,6 +438,39 @@ module.exports = function(router, keys) {
         });
     });
 
+    router.post('/addAnnouncement', function(req, res) {
+        console.log(req.body);
+        var announcement = new Announcement();
+        announcement.title = req.body.title;
+        announcement.description = req.body.description;
+        announcement.timestamp = Date.now();
+        announcement.postedBy = req.body.postedBy;
+
+    });
+
+    router.post('/addAssignment', function(req, res) {
+        console.log(req.body);
+        var assignment = new Assignment();
+        assignment.title = req.body.title;
+        assignment.description = req.body.description;
+        assignment.timestamp = Date.now();
+        var dd = new Date(req.body.dueDate);
+        var t = new Date(req.body.time);
+        assignment.dueDate = dd.setHours(t.getHours()).setMinutes(t.getMinutes());
+        console.log(assignment.dueDate);
+
+        Course.findById(req.body.course).exec(function(err, course) {
+            if(err) throw err;
+            if(course) {
+                course._assignments.push(assignment);
+                course.save();
+                assignment.save();
+                res.json({success: true, message: 'Assignment successfully created!'});
+            } else {
+                res.json({success: false, message: 'Assignment creation failed!'});
+            }
+        });
+    });
 
     //Sending a document to add
     router.post('/addDocument', function(req, res) {
@@ -554,7 +553,9 @@ module.exports = function(router, keys) {
                         var sendDoc = false;
                         assignment._submissions.forEach(function (doc1) {
                             student._documents.forEach(function (doc2) {
-                                if (doc1._id === doc2._id) {
+                                console.log(doc1._id.equals(doc2._id));
+                                if (doc1._id.equals(doc2._id)) {
+                                    sendDoc = true;
                                     /**  If document exists send,  **/
                                     /**   Else, create a new one   **/
                                     Document.findById(doc1._id).exec(function (err, document) {
@@ -564,7 +565,6 @@ module.exports = function(router, keys) {
                                             document_payload.grade = document.grade;
                                             document_payload.status = document.status;
                                             document_payload.graph = document.graph;
-                                            sendDoc = true;
                                             res.send(document_payload);
                                         }
                                     });
@@ -578,6 +578,8 @@ module.exports = function(router, keys) {
                             newDoc.save();
                             assignment._submissions.push(newDoc);
                             student._documents.push(newDoc);
+                            assignment.save();
+                            student.save();
                             document_payload.id = newDoc._id;
                             document_payload.timestamp = newDoc.timestamp;
                             document_payload.status = newDoc.status;

@@ -4,7 +4,7 @@ var Schema   = mongoose.Schema;
 var AnnouncementSchema = new Schema({
     title: String,
     description: String,
-    timestamp: Date,
+    timestamp: String,
     _teacher: {
         type: Schema.Types.ObjectId,
         ref: 'Teacher'
@@ -12,7 +12,7 @@ var AnnouncementSchema = new Schema({
     _ta: {
         type: Schema.Types.ObjectId,
         ref: 'Ta'
-    },
+    }
 });
 
 module.exports = mongoose.model('Announcement', AnnouncementSchema);

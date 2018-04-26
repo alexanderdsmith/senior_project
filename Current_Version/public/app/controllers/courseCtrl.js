@@ -24,7 +24,6 @@ angular.module('courseController', ['courseServices'])
                         return encodeURIComponent(k) + '=' + encodeURIComponent(param[k])
                     }
                 }).join('&');
-                console.log(document);
                 $location.path('/document/' + btoa(objectParam));
             } else {
                 app.errorMessage = "Document data could not be collected!";
