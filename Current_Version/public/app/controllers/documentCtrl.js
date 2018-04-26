@@ -8,6 +8,7 @@ angular.module('documentControllers', ['documentServices'])
             console.log(data);
             app.document = data.data;
             app.grade = app.document.grade;
+            loadGraph(app.document.graph);
         });
     } else {
         app.document = { errorMessage: "404: Course not found." };
@@ -372,6 +373,89 @@ angular.module('documentControllers', ['documentServices'])
             var targ = event.target;
             editLabel(targ);
         }
+
+        /**********************/
+        /***** LOAD GRAPH *****/
+        /**********************/
+        //loadGraph(docArg.graph);
+        //loadGraph(graphData);
+        //TODO : Call loadGraph when the student opens a document
+        function loadGraph(graph) {
+            // HANDLE NODES AND EDGES //
+            if (graph.elements != "") {
+                cy.add(JSON.parse(graph.elements));
+            }
+
+            // HANDLE UNDO STACK //
+            var undoItems = graph.undoStack;
+            var deletedElems = [];
+
+            // loop backwards so deleted elements are re-created before other undo
+            // events use them as their target
+            for (var i = undoItems.length-1; i >= 0; i--) {
+                var undoItemTemp = JSON.parse(undoItems[i]);
+                console.log(undoItemTemp);
+
+                var undoItem = {
+                    type: undoItemTemp.type//,
+                    //time: undoItemTemp.time,
+                };
+
+                // handling oldlabel for "editLabel"
+                if (undoItem.type == "editLabel") {
+                    undoItem.oldLabel = undoItemTemp.oldLabel;
+                }
+
+                // handling "deleteSelected" case
+                if (undoItemTemp.type == "deleteSelected") {
+                    targStrings = [];
+                    targElems = [];
+
+                    // split target string into array of deleteSelected target strings
+                    targStrings = undoItemTemp.target.split("<newelem>");
+
+                    // loop through deleteSelected target strings
+                    for (var j = 0; j < targStrings.length; j++) {
+                        // parse deleteSelected target string into JSON
+                        var targJSON = JSON.parse(targStrings[j]);
+
+                        // add the JSON object
+                        cy.add(targJSON);
+
+                        // get the element by its ID
+                        var elem = cy.getElementById(targJSON.data.id);
+
+                        targElems.push(elem);
+                        deletedElems.push(elem);
+                    }
+                    undoItem.target = targElems;
+                }
+                else {
+                    // TODO : Check this for errors when Temp.target is undefined
+                    console.log(undoItemTemp.target);
+                    targJSON = JSON.parse(undoItemTemp.target);
+                    undoItem.target = cy.getElementById(targJSON.data.id);
+                }
+
+                undoStack[i] = undoItem;
+            }
+
+            // removing deletedElems after undo stack is completely loaded
+            for (var i = 0; i < deletedElems.length; i++) {
+                cy.remove(deletedElems[i]);
+            }
+
+            // setting global ID's
+            globalNodeID = "n".concat(cy.nodes().length.toString());
+            //globalNodeID = graph.globalNodeID;
+            globalEdgeID = "e".concat(cy.edges().length.toString());
+            //globalEdgeID = graph.globalEdgeID;
+
+            // disable undo toolbar item if undoStack is empty
+            if (undoStack.length == 0) {
+                tb.disable("undo");
+            }
+        };
 
 
         /***************************/
