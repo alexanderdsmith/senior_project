@@ -8,7 +8,9 @@ angular.module('documentControllers', ['documentServices'])
             console.log(data);
             app.document = data.data;
             app.grade = app.document.grade;
-            loadGraph(app.document.graph);
+            // TODO: readonly
+            isReadOnly=false;
+            loadCytoscape(isReadOnly, app.document.graph);
         });
     } else {
         app.document = { errorMessage: "404: Course not found." };
@@ -140,6 +142,8 @@ angular.module('documentControllers', ['documentServices'])
     // this.createCytoscape = function() {
 
     //     loadCytoScape();
+
+    function loadCytoscape(readOnly, docData) {
 
         var cy = cytoscape({
             container: document.getElementById('cy'),
@@ -380,6 +384,7 @@ angular.module('documentControllers', ['documentServices'])
         //loadGraph(docArg.graph);
         //loadGraph(graphData);
         //TODO : Call loadGraph when the student opens a document
+        loadGraph(docData);
         function loadGraph(graph) {
             // HANDLE NODES AND EDGES //
             if (graph.elements != "") {
@@ -456,6 +461,10 @@ angular.module('documentControllers', ['documentServices'])
                 tb.disable("undo");
             }
         };
+
+        if(readOnly){
+            cy.nodes().ungrabify();
+        }
 
 
         /***************************/
@@ -859,4 +868,5 @@ angular.module('documentControllers', ['documentServices'])
         }*/
 
     // };
+    };
 }]);
