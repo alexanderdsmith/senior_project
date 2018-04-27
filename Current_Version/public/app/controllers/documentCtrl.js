@@ -9,8 +9,9 @@ angular.module('documentControllers', ['documentServices'])
             app.document = data.data;
             app.grade = app.document.grade;
             // TODO: readonly
-            isReadOnly=false;
-            loadCytoscape(isReadOnly, app.document.graph);
+            //app.isReadOnly=true;
+            app.isReadOnly = false;
+            loadCytoscape(app.isReadOnly, app.document.graph);
         });
     } else {
         app.document = { errorMessage: "404: Course not found." };
@@ -247,6 +248,12 @@ angular.module('documentControllers', ['documentServices'])
         var tb = w2ui['toolbar'];
         var items = tb['items'];
 
+        if(readOnly){
+            cy.autounselectify(true);
+            cy.nodes().ungrabify();
+            tb.disable("addNode", "addEdge", "editLabel", "delete", "save", "undo", "redo");
+        }
+
 
         /***************************/
         /***** ID Book-keeping *****/
@@ -383,7 +390,6 @@ angular.module('documentControllers', ['documentServices'])
         /**********************/
         //loadGraph(docArg.graph);
         //loadGraph(graphData);
-        //TODO : Call loadGraph when the student opens a document
         loadGraph(docData);
         function loadGraph(graph) {
             // HANDLE NODES AND EDGES //
@@ -462,9 +468,10 @@ angular.module('documentControllers', ['documentServices'])
             }
         };
 
-        if(readOnly){
-            cy.nodes().ungrabify();
-        }
+        
+        //if(readOnly){
+        //    cy.nodes().ungrabify();
+        //}
 
 
         /***************************/
