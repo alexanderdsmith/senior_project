@@ -8,9 +8,10 @@ angular.module('documentControllers', ['documentServices'])
             console.log(data);
             app.document = data.data;
             app.grade = app.document.grade;
-            // TODO: readonly
-            //app.isReadOnly=true;
-            app.isReadOnly = false;
+            // these two lines for readonly testing
+            //app.isReadOnly = true;
+            //app.isReadOnly = false;
+            app.isReadonly = app.document.status !== 'unsubmitted';
             loadCytoscape(app.isReadOnly, app.document.graph);
         });
     } else {
