@@ -5,7 +5,7 @@ angular.module('documentControllers', ['documentServices'])
     app.url = JSON.parse('{"' + decodeURI(atob($routeParams.param)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     if(app.url !== null && app.url !== undefined) {
         Documents.getDocument({ id: app.url.id }).then(function(data) {
-            console.log(data);
+            //console.log(data);
             app.document = data.data;
             app.grade = app.document.grade;
             // these two lines for readonly testing
@@ -302,6 +302,15 @@ angular.module('documentControllers', ['documentServices'])
             //globalEdgeID = "e" + num.toString();
         }*/
 
+        /**************************/
+        /***** GET TIME STAMP *****/
+        /**************************/
+        function getTimeStamp() {
+            var d = new Date(Date.now());
+            var t = (d.getMonth()+1) + "-" + d.getDate() + "-" + d.getFullYear() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+            return t;
+        }
+
 
         //cy.add({
         //    data: { id: 'node' }
@@ -406,11 +415,11 @@ angular.module('documentControllers', ['documentServices'])
             // events use them as their target
             for (var i = undoItems.length-1; i >= 0; i--) {
                 var undoItemTemp = JSON.parse(undoItems[i]);
-                console.log(undoItemTemp);
+                //console.log(undoItemTemp);
 
                 var undoItem = {
-                    type: undoItemTemp.type//,
-                    //time: undoItemTemp.time,
+                    type: undoItemTemp.type,
+                    time: undoItemTemp.time
                 };
 
                 // handling oldlabel for "editLabel"
@@ -443,8 +452,7 @@ angular.module('documentControllers', ['documentServices'])
                     undoItem.target = targElems;
                 }
                 else {
-                    // TODO : Check this for errors when Temp.target is undefined
-                    console.log(undoItemTemp.target);
+                    //console.log(undoItemTemp.target);
                     targJSON = JSON.parse(undoItemTemp.target);
                     undoItem.target = cy.getElementById(targJSON.data.id);
                 }
@@ -608,25 +616,35 @@ angular.module('documentControllers', ['documentServices'])
         function saveGraph() {
             var selectedElements = cy.$('node:selected, edge:selected');
             selectedElements.unselect();
+            //console.log(undoStack);
 
             var undoStackJSON = [];
 
             for(var i=0; i<undoStack.length; i++) {
+                //console.log(cy.json());
+                //console.log(undoStack[i]);
+                //console.log(undoStack[i].target);
+                //console.log(JSON.stringify(undoStack[i].target[1]));
+                //console.log(undoStack[i].target._private);
                 undoStackJSON[i] = {};
                 undoStackJSON[i].type = undoStack[i].type;
-                //undoStackJSON[i].time = undoStack[i].time; //TODO : Not sure about this
+                undoStackJSON[i].time = undoStack[i].time; //TODO : Not sure about this
 
                 //handle case where delete has multiple targets
                 if (undoStackJSON[i].type == "deleteSelected") {
                     undoStackJSON[i].target = "";
                     for (var j=0; j<undoStack[i].target.length; j++){
-                        undoStack[i].target += JSON.stringify(undoStack[i].target[j].json());
+                        //console.log(i);
+                        //console.log(j);
+                        //console.log(undoStack[i].target[j]);
+                        undoStackJSON[i].target += JSON.stringify(undoStack[i].target[j].json());
                         if (j!=undoStack[i].target.length-1) {
                             undoStackJSON[i].target += "<newelem>";
                         }
                     }
                 }
                 else {
+                    //console.log(undoStack[i].target);
                     undoStackJSON[i].target = JSON.stringify(undoStack[i].target.json());
                 }
 
@@ -637,6 +655,8 @@ angular.module('documentControllers', ['documentServices'])
 
                 undoStackJSON[i] = JSON.stringify(undoStackJSON[i]); //stringify JSON
             }
+
+            //console.log(undoStackJSON);
 
             //o.updateGraph(docArg, { elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
             //updateGraph( { elements: JSON.stringify(cy.data())})
@@ -767,7 +787,7 @@ angular.module('documentControllers', ['documentServices'])
             //var node = cy.getElementById(100);
 
             // UNDO INFO
-            lastEvent = { type: "addNode", target: node};//, time: getTimeStamp() };
+            lastEvent = { type: "addNode", target: node, time: getTimeStamp() };
             undoStack.push(lastEvent);
             tb.enable("undo"); // enable "undo" button on toolbar
 
@@ -791,7 +811,7 @@ angular.module('documentControllers', ['documentServices'])
             //var edge = cy.getElementById(50);
 
             // UNDO INFO
-            lastEvent = { type: "addEdge", target : edge};//, time: getTimeStamp() };
+            lastEvent = { type: "addEdge", target : edge, time: getTimeStamp() };
             undoStack.push(lastEvent);
             tb.enable("undo"); // enable "undo" button on toolbar
 
@@ -817,7 +837,7 @@ angular.module('documentControllers', ['documentServices'])
                 target.json({data: {label: newLabel}});
 
                 // UNDO INFO
-                lastEvent = { type: "editLabel", target: target, oldLabel: oldLabel};//, time: getTimeStamp(), oldLabel: oldLabel };
+                lastEvent = { type: "editLabel", target: target, oldLabel: oldLabel, time: getTimeStamp() };//, oldLabel: oldLabel };
                 undoStack.push(lastEvent);
                 tb.enable("undo"); // enable "undo" button on toolbar
 
@@ -843,7 +863,7 @@ angular.module('documentControllers', ['documentServices'])
             cy.remove(selectedElements);
 
             // UNDO INFO
-            lastEvent = { type: "deleteSelected", target: selectedElements};//, time: getTimeStamp() };
+            lastEvent = { type: "deleteSelected", target: selectedElements, time: getTimeStamp() };
             undoStack.push(lastEvent);
             tb.enable("undo"); // enable "undo" button on toolbar
 
