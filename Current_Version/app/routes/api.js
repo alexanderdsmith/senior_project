@@ -551,25 +551,23 @@ module.exports = function(router, keys) {
                     if (err) throw err;
                     if (student) {
                         var sendDoc = false;
-                        assignment._submissions.forEach(function (doc1) {
-                            student._documents.forEach(function (doc2) {
-                                console.log(doc1._id.equals(doc2._id));
-                                if (doc1._id.equals(doc2._id)) {
-                                    sendDoc = true;
-                                    /**  If document exists send,  **/
-                                    /**   Else, create a new one   **/
-                                    Document.findById(doc1._id).exec(function (err, document) {
-                                        if (err) throw err;
-                                        if (document) {
-                                            document_payload.id = document._id;
-                                            document_payload.grade = document.grade;
-                                            document_payload.status = document.status;
-                                            document_payload.graph = document.graph;
-                                            res.send(document_payload);
-                                        }
-                                    });
-                                }
-                            });
+                        assignment._submissions.forEach(function (doc) {
+                            if (student._documents.indexOf(doc._id) !== -1) {
+                                console.log(doc._id);
+                                sendDoc = true;
+                                /**  If document exists send,  **/
+                                /**   Else, create a new one   **/
+                                Document.findById(doc1._id).exec(function (err, document) {
+                                    if (err) throw err;
+                                    if (document) {
+                                        document_payload.id = document._id;
+                                        document_payload.grade = document.grade;
+                                        document_payload.status = document.status;
+                                        document_payload.graph = document.graph;
+                                        res.send(document_payload);
+                                    }
+                                });
+                            }
                         });
 
                         if(!sendDoc) {
