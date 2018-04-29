@@ -2,8 +2,38 @@
     <h1>{{course.course_payload.title}} Home Page</h1>
 </div>
 
+<div class="col-md-2">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Students</strong></div>
+        <table class="table table-bordered">
+            <tr ng-repeat="student course.course_payload.students">
+                <td>{{student}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="col-md-10" style="float: right">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Announcements</strong></div>
+        <table class="table table-bordered">
+            <tr>
+                <td><strong>Title</strong></td>
+                <td><strong>Summary</strong></td>
+                <td><strong>Time</strong></td>
+            </tr>
+            <tr ng-repeat="announcement in course.course_payload.announcements">
+                <td><a ng-click="course.openDocument(assignment.id, main.profile_payload.data.student_profile.id)">{{announcement.title}}</a></td>
+                <td>{{announcement.description}}</td>
+                <td>{{announcement.timestamp | date : "MM/dd/yyyy 'at' h:mm a" }}</td> <!-- TODO: add due date correctly! -->
+                <!-- <td ng-show="!assignment.isSubmitted"><button type="button" class="btn btn-primary">Submit</button></td> -->
+            </tr>
+        </table>
+    </div>
+</div>
+
 <!-- TODO: Open Documents with Assignment -->
-<div class="col-md-8">
+<div class="col-md-10" style="float: right">
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Current Assignments</strong></div>
         <table class="table table-bordered">
@@ -18,21 +48,19 @@
                 <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a" }}</td> <!-- TODO: add due date correctly! -->
                 <!-- <td ng-show="!assignment.isSubmitted"><button type="button" class="btn btn-primary">Submit</button></td> -->
             </tr>
+            <tr>
+                <td>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAssignmentsModal">+ Add an assignment</button>
+                </td>
+            </tr>
         </table>
     </div>
 </div>
 
 <!-- TODO: add assignment by course id -->
-<div class="col-md-4">
-    <div class="panel panel-info">
-        <div class="panel-heading" style="text-align: center;"><strong>Assignment</strong></div>
-        
         <!-- Adding an Assignment (if user is a teacher) -->
 
         <div> <!-- TODO : Not sure about this for checking if teacher -->
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAssignmentsModal">
-                + Add an assignment
-            </button>
             <div class="modal fade" id="AddAssignmentsModal" tabindex="-1" role="dialog" aria-labelledby="AddAssignmentsModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -66,8 +94,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
 <!-- DO NOT ADD DOCUMENTS THIS WAY...
 <div class="col-md-4">
@@ -104,7 +130,7 @@
 -->
 
 
-<div class="col-md-8">
+<div class="col-md-10" style="float: right">
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Past Assignments</strong></div>
         <table class="table table-bordered">
@@ -123,46 +149,7 @@
     </div>
 </div>
 
-<div class="col-md-4">
-    <div class="panel panel-info">
-        <div class="panel-heading" style="text-align: center;"><strong>Class Announcements</strong></div>
-        <table class="table table-bordered">
-            <tr ng-repeat="announcement in course.course_payload.announcements">
-                <td>{{announcement.text}}</td>
-            </tr>
-        </table>
-
-        <!-- Adding an Announcement (if user is a teacher) -->
-
-        <div> <!-- TODO : checking if teacher -->
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#AddAnnouncementsModal">
-                + Add an announcement
-            </button>
-            <div class="modal fade" id="AddAnnouncementsModal" tabindex="-1" role="dialog" aria-labelledby="AddAnnouncementsModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="AddAnnouncementsModalLabel">New Announcement</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form ng-submit="course.addAnnouncement()">
-                                <div class="form-group">
-                                    <label class="control-label">Announcement:</label>
-                                    <textarea class="form-control" id="announcementInput"></textarea> 
-                                </div>
-                                <button type="submit" class="btn btn-primary">Create Announcement</button>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+<tr ng-repeat="course in main.dataPayload.teacher_profile.course_list">
+    <td><a href="/teacherSection">{{ course.title }}</a></td>
+    <td>{{course.teacher_list}}</td>
+</tr>
