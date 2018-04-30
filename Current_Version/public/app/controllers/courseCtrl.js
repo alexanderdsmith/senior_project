@@ -11,7 +11,7 @@ angular.module('courseController', ['courseServices'])
         app.course_payload = { errorMessage: "404: Course not found." };
     }
 
-    // TODO: Teachers & TA's open documents
+    // TODO: Instructors & TA's open documents
     this.openDocument = function(assn_id, user_id) {
         var assn = { id: assn_id, uid: user_id };
         Course.getStudentDocument(assn).then(function(document) {

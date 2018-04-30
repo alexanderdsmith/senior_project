@@ -56,16 +56,16 @@ if(isBroken) {
             });
         }
     });
-    AuthList.findOne({ usertype: 'teacher'} ).exec(function(err, list) {
+    AuthList.findOne({ usertype: 'instructor'} ).exec(function(err, list) {
         if(err) throw err;
         if(!list) {
             var alist = new AuthList();
             alist.authorized = [];
-            alist.usertype = 'teacher';
+            alist.usertype = 'instructor';
             alist.save(function (err) {
                 if (err) throw err;
                 else {
-                    console.log('teacher list created!');
+                    console.log('instructor list created!');
                 }
             });
         }

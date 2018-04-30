@@ -12,9 +12,9 @@ var CourseSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Ta'
     }],
-    _teachers: [{
+    _instructors: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Teacher'
+        ref: 'Instructor'
     }],
     _assignments: [{
         type: mongoose.Schema.Types.ObjectId,

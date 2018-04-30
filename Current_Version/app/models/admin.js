@@ -1,8 +1,11 @@
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
-var extend       = require('mongoose-extend-schema');
-var User         = require('./abstract_user');
 
-var AdminSchema = extend(User, {});
+var AdminSchema = new Schema({
+    username: {
+        type: String,
+        required: true
+    }
+});
 
 module.exports = mongoose.model('Admin', AdminSchema);

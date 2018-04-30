@@ -1,19 +1,15 @@
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
-var StudentSchema = new Schema({
+var InstructorSchema = new Schema({
     username: {
         type: String,
         required: true
     },
-    _courses  : [{
+    _courses : [{
         type : Schema.Types.ObjectId,
         ref  : 'Course'
-    }],
-    _documents : [{
-        type : Schema.Types.ObjectId,
-        ref  : 'Document'
     }]
 });
 
-module.exports = mongoose.model('Student', StudentSchema);
+module.exports = mongoose.model('Instructor', InstructorSchema);

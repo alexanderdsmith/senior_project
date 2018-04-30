@@ -9,9 +9,9 @@ var AssignmentSchema = new Schema({
         required: true
     },
     timestamp: Date,
-    _teachers: [{
+    _instructors: [{
         type: Schema.Types.ObjectId,
-        ref: 'Teacher'
+        ref: 'Instructor'
     }],
     _course: {
         type: Schema.Types.ObjectId,

@@ -5,9 +5,9 @@ var AnnouncementSchema = new Schema({
     title: String,
     description: String,
     timestamp: Date,
-    _teacher: {
+    _instructor: {
         type: Schema.Types.ObjectId,
-        ref: 'Teacher'
+        ref: 'Instructor'
     },
     _ta: {
         type: Schema.Types.ObjectId,

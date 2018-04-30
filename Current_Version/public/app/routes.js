@@ -32,8 +32,8 @@ var app = angular.module('appRoutes', ['ngRoute']).config(function($routeProvide
         controller: 'profileCtrl',
         controllerAs: 'profile',
         authenticated: true
-    }).when(prefix + 'teacher', {
-        templateUrl: prefix + 'app/views/pages/users/profiles/teacher.html',
+    }).when(prefix + 'instructor', {
+        templateUrl: prefix + 'app/views/pages/users/profiles/instructor.html',
         controller: 'profileCtrl',
         controllerAs: 'profile',
         authenticated: true

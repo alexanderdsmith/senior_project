@@ -27,7 +27,7 @@ var AbstractUserSchema = new Schema({
     },
     usertypes : [{
         type: String,
-        enum: ['admin', 'student', 'ta', 'teacher']
+        enum: ['admin', 'student', 'ta', 'instructor']
     }],
     _admin    : {
         type : Schema.Types.ObjectId,
@@ -41,9 +41,9 @@ var AbstractUserSchema = new Schema({
         type : Schema.Types.ObjectId,
         ref  : 'Ta'
     },
-    _teacher  : {
+    _instructor : {
         type : Schema.Types.ObjectId,
-        ref  : 'Teacher'
+        ref  : 'Instructor'
     }
 });
 

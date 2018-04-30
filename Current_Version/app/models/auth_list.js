@@ -4,7 +4,7 @@ var Admin        = require('./admin');
 var Course       = require('./course');
 var Student      = require('./student');
 var Ta           = require('./ta');
-var Teacher      = require('./teacher');
+var Instructor      = require('./instructor');
 var Schema       = mongoose.Schema;
 
 var AuthListSchema = new Schema({
@@ -15,7 +15,7 @@ var AuthListSchema = new Schema({
         lowercase : true,
         unique    : true,
         // can add new types
-        enum      : ['admin', 'student', 'ta', 'teacher']
+        enum      : ['admin', 'student', 'ta', 'instructor']
     }
 });
 
@@ -100,16 +100,16 @@ AuthListSchema.methods.updateList = function(list_additions, course_id) {
                                             });
                                             break;
                                         }
-                                        case 'teacher': {
-                                            var teacher = new Teacher({
+                                        case 'instructor': {
+                                            var instructor = new Instructor({
                                                 _courses: []
                                             });
-                                            teacher._courses.push(course);
-                                            teacher.save();
-                                            course._teachers.push(teacher);
+                                            instructor._courses.push(course);
+                                            instructor.save();
+                                            course._instructors.push(instructor);
                                             course.save();
-                                            user._teacher = teacher;
-                                            user.usertypes.push('teacher');
+                                            user._instructor = instructor;
+                                            user.usertypes.push('instructor');
                                             user.save(function (err) {
                                                 if (err) {
                                                     console.log('could not save user!');
@@ -190,16 +190,16 @@ AuthListSchema.methods.updateList = function(list_additions, course_id) {
                                             });
                                             break;
                                         }
-                                        case 'teacher': {
-                                            var teacher = new Teacher({
+                                        case 'instructor': {
+                                            var instructor = new Instructor({
                                                 _courses: []
                                             });
-                                            teacher._courses.push(course);
-                                            teacher.save();
-                                            course._teachers.push(teacher);
+                                            instructor._courses.push(course);
+                                            instructor.save();
+                                            course._instructors.push(instructor);
                                             course.save();
-                                            newUser._teacher = teacher;
-                                            newUser.usertypes.push('teacher');
+                                            newUser._instructor = instructor;
+                                            newUser.usertypes.push('instructor');
                                             newUser.save(function (err) {
                                                 if (err) {
                                                     console.log('could not save user!');

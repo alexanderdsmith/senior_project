@@ -10,9 +10,9 @@
                 <td><strong>Class Name</strong></td>
                 <td><strong>Time</strong></td>
             </tr>
-            <tr ng-repeat="course in main.dataPayload.teacher_profile.course_list">
-                <td><a href="/teacherSection">{{ course.title }}</a></td>
-                <td>{{course.teacher_list}}</td>
+            <tr ng-repeat="course in main.dataPayload.instructor_profile.course_list">
+                <td><a href="/instructorSection">{{ course.title }}</a></td>
+                <td>{{course.instructor_list}}</td>
             </tr>
         </table>
         <!--<form ng-submit="profile.addCourse()">

@@ -7,7 +7,7 @@ var Course       = require('../models/course');
 var Document     = require('../models/document');
 var Student      = require('../models/student');
 var Ta           = require('../models/ta');
-var Teacher      = require('../models/teacher');
+var Instructor      = require('../models/instructor');
 var jwt          = require('jsonwebtoken');
 var mongoose     = require('mongoose');
 var Papa         = require('papaparse');
@@ -121,7 +121,7 @@ module.exports = function(router, keys) {
                 title: req.body.title,
                 _students: [],
                 _tas: [],
-                _teachers: [],
+                _instructors: [],
                 _announcements: [],
                 _assignments: []
             });
@@ -130,7 +130,7 @@ module.exports = function(router, keys) {
             var adminlist   = [];
             var studentlist = [];
             var talist      = [];
-            var teacherlist = [];
+            var instructorlist = [];
 
             /** build authorized users lists **/
             for(var i = 0; i < csv.data.length; i++) {
@@ -147,8 +147,8 @@ module.exports = function(router, keys) {
                         talist.push(csv.data[i].Username);
                         break;
                     }
-                    case 'teacher' : {
-                        teacherlist.push(csv.data[i].Username);
+                    case 'instructor' : {
+                        instructorlist.push(csv.data[i].Username);
                         break;
                     }
                     default: {
@@ -184,10 +184,10 @@ module.exports = function(router, keys) {
                 }
             });
 
-            AuthList.findOne({ usertype: 'teacher' }).exec(function (err, list) {
+            AuthList.findOne({ usertype: 'instructor' }).exec(function (err, list) {
                 if (err) throw err;
                 if(list) {
-                    list.updateList(teacherlist, course._id);
+                    list.updateList(instructorlist, course._id);
                 } else {
                     res.json({ success: false, message: 'CSV file is not correctly formatted!' });
                 }
@@ -226,7 +226,7 @@ module.exports = function(router, keys) {
                 id: mongoose.Schema.ObjectId,
                 course_list: []
             },
-            teacher_profile: {
+            instructor_profile: {
                 course_list: []
             }
         };
@@ -245,7 +245,7 @@ module.exports = function(router, keys) {
                 path: '_courses',
                 model: 'Course',
                 populate: [{
-                    path: '_teachers'
+                    path: '_instructors'
                 }, {
                     path: '_assignments'
                 }, {
@@ -260,7 +260,7 @@ module.exports = function(router, keys) {
                 path: '_courses'
             }
         }, {
-            path: '_teacher',
+            path: '_instructor',
             populate: {
                 path: '_courses'
             }
@@ -292,13 +292,13 @@ module.exports = function(router, keys) {
                 user.usertypes.push('ta');
                 user.save();
             }
-            if((user.usertypes.indexOf('teacher') !== -1) && (user._teacher === null)) {
-                var teacher = new Teacher({
+            if((user.usertypes.indexOf('instructor') !== -1) && (user._instructor === null)) {
+                var instructor = new instructor({
                     _courses: []
                 });
-                teacher.save();
-                user._teacher = teacher;
-                user.usertypes.push('teacher');
+                instructor.save();
+                user._instructor = instructor;
+                user.usertypes.push('instructor');
                 user.save();
             }
         });*/
@@ -327,8 +327,8 @@ module.exports = function(router, keys) {
                 model: 'Course'
             }
         }, {
-            path: '_teacher',
-            model: 'Teacher',
+            path: '_instructor',
+            model: 'Instructor',
             populate: {
                 path: '_courses',
                 model: 'Course'
@@ -372,10 +372,10 @@ module.exports = function(router, keys) {
                     });
                 }
 
-                if(user._teacher !== undefined && user._teacher !== null) {
-                    profile_payload.teacher_profile.id = user._teacher._id;
-                    user._teacher._courses.forEach(function (course) {
-                        profile_payload.teacher_profile.course_list.push({
+                if(user._instructor !== undefined && user._instructor !== null) {
+                    profile_payload.instructor_profile.id = user._instructor._id;
+                    user._instructor._courses.forEach(function (course) {
+                        profile_payload.instructor_profile.course_list.push({
                             id: course._id,
                             title: course.title
                         });
@@ -391,7 +391,7 @@ module.exports = function(router, keys) {
      * COURSE UPLOAD
      */
 
-    // TODO: Add types (students, teachers, etc.)
+    // TODO: Add types (students, instructors, etc.)
     router.post('/getCourse', function(req, res) {
         var course_payload = {};
 
@@ -551,23 +551,26 @@ module.exports = function(router, keys) {
                     if (err) throw err;
                     if (student) {
                         var sendDoc = false;
-                        assignment._submissions.forEach(function (doc) {
-                            if (student._documents.indexOf(doc._id) !== -1) {
-                                console.log(doc._id);
-                                sendDoc = true;
-                                /**  If document exists send,  **/
-                                /**   Else, create a new one   **/
-                                Document.findById(doc1._id).exec(function (err, document) {
-                                    if (err) throw err;
-                                    if (document) {
-                                        document_payload.id = document._id;
-                                        document_payload.grade = document.grade;
-                                        document_payload.status = document.status;
-                                        document_payload.graph = document.graph;
-                                        res.send(document_payload);
-                                    }
-                                });
-                            }
+                        assignment._submissions.forEach(function (doc1) {
+                            student._documents.forEach(function (doc2) {
+                                console.log(doc1._id.equals(doc2._id));
+                                if (doc1._id.equals(doc2._id)) {
+                                    sendDoc = true;
+                                    /**  If document exists send,  **/
+                                    /**   Else, create a new one   **/
+                                    Document.findById(doc1._id).exec(function (err, document) {
+                                        if (err) throw err;
+                                        if (document) {
+                                            console.log(document._id);
+                                            document_payload.id = document._id;
+                                            document_payload.grade = document.grade;
+                                            document_payload.status = document.status;
+                                            document_payload.graph = document.graph;
+                                            res.send(document_payload);
+                                        }
+                                    });
+                                }
+                            });
                         });
 
                         if(!sendDoc) {
