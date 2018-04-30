@@ -2,9 +2,19 @@
     <h1>Admin {{ main.username }}'s Profile</h1>
 </div>
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-    Upload a new course
-</button>
+<div class="col-md-12">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Courses</strong>
+            <button type="button" style="float: right" data-toggle="modal" data-target="#exampleModal">+</button>
+        </div>
+        <table class="table table-bordered">
+          <tr ng-repeat="course in main.dataPayload.teacher_profile.course_list">
+              <td>{{ course.title }}</a></td>
+              <td>{{course.teacher_list}}</td>
+          </tr>
+        </table>
+    </div>
+</div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -37,4 +47,3 @@
         </div>
     </div>
 </div>
-
