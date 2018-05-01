@@ -12,7 +12,7 @@ var DocumentSchema = new Schema({
     status: {
         type    : String,
         default : 'unsubmitted',
-        enum    : ['unsubmitted', 'submitted', 'returned']
+        enum    : ['unsubmitted', 'submitted', 'graded']
     },
     graph: {
         elements  : [String],

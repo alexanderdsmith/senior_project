@@ -312,6 +312,15 @@ module.exports = function(router, keys) {
         }, {
             path: '_announcements',
             model: 'Announcement'
+        }, {
+            path: '_students',
+            model: 'Student'
+        }, {
+            path: '_instructors',
+            model: 'Instructor'
+        }, {
+            path: '_tas',
+            model: 'Ta'
         }])
         .exec(function(err, course) {
             if(err) throw err;
@@ -339,6 +348,16 @@ module.exports = function(router, keys) {
                             description: assignment.description,
                             dueDate: assignment.dueDate,
                             timestamp: assignment.timestamp
+                            //TODO: add submissions
+                        });
+                    });
+                }
+                if(course._students !== undefined && course._students !== null) {
+                    course_payload.students = [];
+                    course._students.forEach(function (student) {
+                        course_payload.students.push({
+                            id: student._id,
+                            username: student.username
                             //TODO: add submissions
                         });
                     });

@@ -9,7 +9,7 @@
         </div>
         <table class="table table-bordered">
             <tr ng-repeat="student in course.course_payload.students">
-                <td>{{student}}</td>
+                <td>{{student.username}}</td>
             </tr>
         </table>
     </div>
@@ -129,7 +129,7 @@
                 <td><strong>Due Date</strong></td>
                 <td><strong>Grade</strong></td>
             </tr>
-            <tr ng-repeat="assignment in course.course_payload.past_assignments">
+            <tr ng-repeat="assignment in course.course_payload.assignments">
                 <td><a>{{assignment.name}}</a></td>
                 <td>{{assignment.dueDate}}</td>
                 <td ng-show="assignment.isGraded">{{assignment.grade}}</td>
