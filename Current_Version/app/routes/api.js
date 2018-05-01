@@ -2,12 +2,11 @@ var AbstractUser = require('../models/abstract_user');
 var Admin        = require('../models/admin');
 var Assignment   = require('../models/assignment');
 var Announcement = require('../models/announcement');
-var AuthList     = require('../models/auth_list');
 var Course       = require('../models/course');
 var Document     = require('../models/document');
 var Student      = require('../models/student');
 var Ta           = require('../models/ta');
-var Instructor      = require('../models/instructor');
+var Instructor   = require('../models/instructor');
 var jwt          = require('jsonwebtoken');
 var mongoose     = require('mongoose');
 var Papa         = require('papaparse');
@@ -16,68 +15,9 @@ mongoose.Promise = require('bluebird');
 module.exports = function(router, keys) {
 
     /***************************/
-    /**** USER REGISTRATION ****/
+    /* REGISTRATION IS HANDLED */
+    /* USING OAUTH IN PASSPORT */
     /***************************/
-    // TODO: Cleanup & Remove this function, as it is unused.
-    router.post('/users', function(req, res) {
-        var user = new AbstractUser();
-        user.username = req.body.username;
-        user.password = req.body.password;
-        user.email    = req.body.email;
-        if(req.body.username === null || req.body.username === '' || req.body.password === null || req.body.password === '' || req.body.email === null || req.body.email === '') {
-            res.json({ success: false, message: 'Ensure username, password, and email are provided' });
-        } else {
-            AuthList.findOne({ usertype: 'admin' }).exec(function(err, list) {
-                if(err) throw err;
-                if(list.authorized.indexOf(user.username) !== -1) {
-                    user.usertypes = ['admin'];
-                    var admin = new Admin();
-                    admin.save();
-                    user._admin = admin;
-                }
-            });
-            user.save(function(err) {
-                if(err) {
-                    res.json({ success: false, message: 'Username or Email already exists!' });
-                } else {
-                    res.json({ success: true, message: 'Account successfully created!' });
-                }
-            });
-        }
-    });
-
-    /***************************/
-    /**** AUTHENTICATE USER ****/
-    /** UPDATES USER ON LOGIN **/
-    /***************************/
-    router.post('/authenticate', function(req, res) {
-        AbstractUser.findOne({ username: req.body.username }).exec(function(err, user) {
-            if(err) throw err;
-            if(!user) {
-                res.json({ success: false, message: 'Could not find user!' });
-            } else if(user) {
-                if (req.body.password) {
-                    var validPassword = user.comparePassword(req.body.password);
-                    if (!validPassword) {
-                        res.json({success: false, message: 'Incorrect password!'});
-                    } else {
-                        var token = jwt.sign({
-                            givenname : user.givenname,
-                            username  : user.username,
-                            email     : user.email,
-                            usertypes : user.usertypes
-                        }, keys.encryption.secret, { expiresIn: keys.encryption.expiration });
-
-                        // TODO: when user is authenticated, begin user updates!
-
-                        res.json({success: true, message: 'User authenticated', token: token });
-                    }
-                } else {
-                    res.json({success: false, message: 'No password provided.'});
-                }
-            }
-        })
-    });
 
     /***************************/
     /***** ROUTER METHODS ******/
@@ -127,28 +67,85 @@ module.exports = function(router, keys) {
             });
             course.save();
 
-            var adminlist   = [];
-            var studentlist = [];
-            var talist      = [];
-            var instructorlist = [];
-
-            /** build authorized users lists **/
+            /** build authorized users **/
             for(var i = 0; i < csv.data.length; i++) {
                 switch(csv.data[i].Type) {
                     case 'admin': {
-                        adminlist.push(csv.data[i].Username);
+                        (function(index) {
+                            Admin.findOne({ username: csv.data[index].Username }).exec(function(err, admin) {
+                                if(err) throw err;
+                                if(admin) {
+
+                                } else {
+                                    var newAdmin = new Admin();
+                                    newAdmin.username = csv.data[index].Username;
+                                    newAdmin.save();
+                                }
+                            });
+                        })(i);
                         break;
                     }
                     case 'student' || '' || null: {
-                        studentlist.push(csv.data[i].Username);
+                        (function(index, course) {
+                            Student.findOne({ username: csv.data[index].Username }).exec(function(err, student) {
+                                if(err) throw err;
+                                if(student) {
+                                    student._courses.push(course);
+                                    course._students.push(student);
+                                    student.save();
+                                    course.save();
+                                } else {
+                                    var newStudent = new Student();
+                                    newStudent.username = csv.data[index].Username;
+                                    newStudent._courses = [course];
+                                    course._students.push(newStudent);
+                                    newStudent.save();
+                                    course.save();
+                                }
+                            });
+                        })(i, course);
                         break;
                     }
                     case 'ta' : {
-                        talist.push(csv.data[i].Username);
+                        (function(index, course) {
+                            Ta.findOne({ username: csv.data[index].Username }).exec(function(err, ta) {
+                                if(err) throw err;
+                                if(ta) {
+                                    ta._courses.push(course);
+                                    course._tas.push(ta);
+                                    ta.save();
+                                    course.save();
+                                } else {
+                                    var newTa = new Ta();
+                                    newTa.username = csv.data[index].Username;
+                                    newTa._courses = [course];
+                                    course._tas.push(newTa);
+                                    newTa.save();
+                                    course.save();
+                                }
+                            });
+                        })(i, course);
                         break;
                     }
                     case 'instructor' : {
-                        instructorlist.push(csv.data[i].Username);
+                        (function(index, course) {
+                            Instructor.findOne({ username: csv.data[index].Username }).exec(function(err, instructor) {
+                                if(err) throw err;
+                                if(instructor) {
+                                    instructor._courses.push(course);
+                                    course._instructors.push(instructor);
+                                    instructor.save();
+                                    course.save();
+                                } else {
+                                    var newInstructor = new Instructor();
+                                    newInstructor.username = csv.data[index].Username;
+                                    newInstructor._courses = [course];
+                                    course._instructors.push(newInstructor);
+                                    newInstructor.save();
+                                    course.save();
+                                }
+                            });
+                        })(i, course);
                         break;
                     }
                     default: {
@@ -156,42 +153,6 @@ module.exports = function(router, keys) {
                     }
                 }
             }
-
-            AuthList.findOne({ usertype: 'admin' }).exec(function (err, list) {
-                if (err) throw err;
-                if(list) {
-                    list.updateList(adminlist, course._id);
-                } else {
-                    res.json({ success: false, message: 'CSV file is not correctly formatted!' });
-                }
-            });
-
-            AuthList.findOne({ usertype: 'student' }).exec(function (err, list) {
-                if (err) throw err;
-                if(list) {
-                    list.updateList(studentlist, course._id);
-                } else {
-                    res.json({ success: false, message: 'CSV file is not correctly formatted!' });
-                }
-            });
-
-            AuthList.findOne({ usertype: 'ta' }).exec(function (err, list) {
-                if (err) throw err;
-                if(list) {
-                    list.updateList(talist, course._id);
-                } else {
-                    res.json({ success: false, message: 'CSV file is not correctly formatted!' });
-                }
-            });
-
-            AuthList.findOne({ usertype: 'instructor' }).exec(function (err, list) {
-                if (err) throw err;
-                if(list) {
-                    list.updateList(instructorlist, course._id);
-                } else {
-                    res.json({ success: false, message: 'CSV file is not correctly formatted!' });
-                }
-            });
 
             res.json({ success: true, message: 'CSV file successfully uploaded!' });
 
@@ -215,7 +176,8 @@ module.exports = function(router, keys) {
                 usertypes: req.decoded.usertypes
             },
             admin_profile: {
-                id: mongoose.Schema.ObjectId
+                id: mongoose.Schema.ObjectId,
+                course_list: []
             },
             student_profile: {
                 id: mongoose.Schema.ObjectId,
@@ -231,79 +193,27 @@ module.exports = function(router, keys) {
             }
         };
 
-        // TODO:
-        /** UPDATE USERS BEFORE PAYLOAD **/
-        /*AbstractUser.findOne({
-            username: req.decoded.username
-        }).populate({
-            path: '_admin',
-            model: 'Admin'
+        /*Course.find().populate({
+            path: '_instructors',
+            model: 'Instructor'
         }, {
-            path: '_student',
-            model: 'Student',
-            populate: [{
-                path: '_courses',
-                model: 'Course',
-                populate: [{
-                    path: '_instructors'
-                }, {
-                    path: '_assignments'
-                }, {
-                    path: '_announcements'
-                }]
-            }, {
-                path: '_documents'
-            }]
+            path: '_students',
+            model: 'Student'
         }, {
-            path: '_ta',
-            populate: {
-                path: '_courses'
-            }
-        }, {
-            path: '_instructor',
-            populate: {
-                path: '_courses'
-            }
-        }).exec(function(err, user) {
+            path: '_teachers',
+            model: 'Teacher'
+        }).exec(function(err, course) {
             if(err) throw err;
-            if((user.usertypes.indexOf('admin') !== -1 ) && (user._admin === null)) {
-                var admin = new Admin();
-                admin.save();
-                user._admin = admin;
-                user.usertypes.push('admin');
-                user.save();
-            }
-            if((user.usertypes.indexOf('student') !== -1) && (user._student === null)) {
-                var student = new Student({
-                    _courses: [],
-                    _documents: []
-                });
-                student.save();
-                user._student = student;
-                user.usertypes.push('student');
-                user.save();
-            }
-            if((user.usertypes.indexOf('ta') !== -1) && (user._ta === null)) {
-                var ta = new Ta({
-                    _courses: []
-                });
-                ta.save();
-                user._ta = ta;
-                user.usertypes.push('ta');
-                user.save();
-            }
-            if((user.usertypes.indexOf('instructor') !== -1) && (user._instructor === null)) {
-                var instructor = new instructor({
-                    _courses: []
-                });
-                instructor.save();
-                user._instructor = instructor;
-                user.usertypes.push('instructor');
-                user.save();
+            if(course) {
+                profile_payload.admin_profile.course_list.push({
+                    id: course._id,
+                    title: course.title
+                })
             }
         });*/
 
         /** BUILD PAYLOAD **/
+        // TODO: list ALL existing courses in admin_profile
         AbstractUser.findOne({
             username: req.decoded.username
         }).populate([{
@@ -382,13 +292,14 @@ module.exports = function(router, keys) {
                     });
                 }
             }
+            console.log(profile_payload);
             res.send(profile_payload);
         });
     });
 
     /**
      *
-     * COURSE UPLOAD
+     * COURSE PAYLOAD
      */
 
     // TODO: Add types (students, instructors, etc.)

@@ -30,7 +30,7 @@ angular.module('mainController', ['authServices', 'profileServices'])
         } else {
             app.isLoggedIn = false;
             app.username = '';
-            app.dataPayload = {};
+            app.profile_payload = {};
             app.loadme = true;
         }
     });

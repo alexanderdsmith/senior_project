@@ -6,7 +6,7 @@
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Students</strong></div>
         <table class="table table-bordered">
-            <tr ng-repeat="student course.course_payload.students">
+            <tr ng-repeat="student in course.course_payload.students">
                 <td>{{student}}</td>
             </tr>
         </table>

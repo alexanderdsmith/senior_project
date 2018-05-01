@@ -6,18 +6,13 @@ var AbstractUserSchema = new Schema({
 
     // TODO: make givenname required!
     givenname : {
-        type      : String,
-        lowercase : true
+        type      : String
     },
     username  : {
         type      : String,
         lowercase : true,
         required  : true,
         unique    : true
-    },
-    password  : {
-        type     : String
-        // required : true
     },
     email     : {
         type      : String,
@@ -27,7 +22,7 @@ var AbstractUserSchema = new Schema({
     },
     usertypes : [{
         type: String,
-        enum: ['admin', 'student', 'ta', 'instructor']
+        enum: ['admin', 'student', 'ta', 'instructor', '']
     }],
     _admin    : {
         type : Schema.Types.ObjectId,
