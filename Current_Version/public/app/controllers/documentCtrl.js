@@ -13,17 +13,12 @@ angular.module('documentControllers', ['documentServices'])
             //console.log(data);
             app.document = data.data;
             app.grade = app.document.grade;
-<<<<<<< HEAD
-            app.isReadOnly = (app.document.status !== 'unsubmitted');
-            loadCytoscape(app.isReadOnly, app.document.graph);
-=======
             // these two lines for readonly testing
             //app.isReadOnly = true;
             //app.isReadOnly = false;
             app.isReadOnly = app.document.status !== 'unsubmitted';
             //loadCytoscape(app.isReadOnly, app.document.graph);
             loadCytoscape(app.isReadOnly, app.document.graph, setDirtyBit);
->>>>>>> ea620e7bba0d74e8609e67ac00a7fdeb288680e7
         });
     } else {
         app.document = { errorMessage: "Document not found." };
