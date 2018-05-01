@@ -7,6 +7,7 @@ angular.module('documentControllers', ['documentServices'])
     app.description = app.url.description;
     app.dirty = false;
     //var contDirty = false;
+    var windowListener = false;
     if(app.url !== null && app.url !== undefined) {
         Documents.getDocument({ id: app.url.id }).then(function(data) {
             //console.log(data);
@@ -23,6 +24,25 @@ angular.module('documentControllers', ['documentServices'])
         app.document = { errorMessage: "Document not found." };
     }
 
+    /*window.onload = function() {
+        window.addEventListener("beforeunload", function (e) {
+            if(!app.dirty){
+                return undefined;
+            }
+            var confirmationMessage = "All unsaved changes will be lost";
+
+            (e || window.event).returnValue = confirmationMessage;
+            return confirmationMessage;
+        });
+    };*/
+
+    var confirmFunc = function(e) {
+        var confirmationMessage = "All unsaved changes will be lost";
+
+        (e || window.event).returnValue = confirmationMessage;
+        return confirmationMessage;
+    };
+
     $scope.$on('$locationChangeStart', function(event) {
         if(!app.dirty) {
             return;
@@ -35,8 +55,19 @@ angular.module('documentControllers', ['documentServices'])
     });
 
     function setDirtyBit(dirty) {
+        if(dirty) {
+            window.addEventListener("beforeunload", confirmFunc);
+            windowListener = true;
+        }
+        else{
+            if(windowListener){
+                window.removeEventListener("beforeunload", confirmFunc);
+            }
+        }
         app.dirty = dirty;
     }
+
+
 
     /*var confirmFunc = function(e) {
         var confirmationMessage = "All unsaved changes will be lost";
