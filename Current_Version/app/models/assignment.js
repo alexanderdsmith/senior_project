@@ -13,10 +13,6 @@ var AssignmentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Instructor'
     }],
-    _course: {
-        type: Schema.Types.ObjectId,
-        ref: 'Course'
-    },
     _submissions: [{
         type: Schema.Types.ObjectId,
         ref: 'Document'

@@ -4,8 +4,9 @@
 
 <div class="col-md-12">
     <div class="panel panel-info">
-        <div class="panel-heading" style="text-align: center;"><strong>Courses</strong>
-            <button type="button" style="float: right" data-toggle="modal" data-target="#exampleModal">+</button>
+        <div class="panel-heading" style="text-align: center;">
+            <strong>Courses</strong>
+            <button type="button" style="float: right" data-toggle="modal" data-target="#courseModal">+</button>
         </div>
         <table class="table table-bordered">
           <tr ng-repeat="course in main.dataPayload.instructor_profile.course_list">
@@ -16,7 +17,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="courseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">

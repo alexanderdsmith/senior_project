@@ -292,7 +292,6 @@ module.exports = function(router, keys) {
                     });
                 }
             }
-            console.log(profile_payload);
             res.send(profile_payload);
         });
     });
@@ -325,7 +324,7 @@ module.exports = function(router, keys) {
                     course._announcements.forEach(function (announcement) {
                         course_payload.announcements.push({
                             id: announcement._id,
-                            title: announcement.title,
+                            postedBy: announcement.postedBy,
                             description: announcement.description,
                             timestamp: announcement.timestamp
                         });
@@ -352,11 +351,18 @@ module.exports = function(router, keys) {
     router.post('/addAnnouncement', function(req, res) {
         console.log(req.body);
         var announcement = new Announcement();
-        announcement.title = req.body.title;
-        announcement.description = req.body.description;
+        announcement.description = req.body.text;
         announcement.timestamp = Date.now();
         announcement.postedBy = req.body.postedBy;
 
+        Course.findById(req.body.course).exec(function(err, course) {
+            if(err) throw err;
+            if(course) {
+                course._announcements.push(announcement);
+                course.save();
+                announcement.save();
+            }
+        })
     });
 
     router.post('/addAssignment', function(req, res) {

@@ -8,16 +8,19 @@ angular.module('courseController', ['courseServices'])
             app.course_payload = data.data;
         });
     } else {
-        app.course_payload = { errorMessage: "404: Course not found." };
+        app.course_payload = { errorMessage: "Course not found." };
     }
 
     // TODO: Instructors & TA's open documents
-    this.openDocument = function(assn_id, user_id) {
+    this.openDocument = function(assn_id, user_id, assignment) {
         var assn = { id: assn_id, uid: user_id };
         Course.getStudentDocument(assn).then(function(document) {
             if(document) {
                 var param = {
-                    id: document.data.id
+                    id: document.data.id,
+                    type: app.url.usertype,
+                    title: assignment.title,
+                    description: assignment.description
                 };
                 var objectParam = Object.keys(param).map(function (k) {
                     if (param[k] !== null && param[k] !== undefined) {
@@ -31,8 +34,8 @@ angular.module('courseController', ['courseServices'])
         });
     };
 
-    this.addAnnouncement = function(text) {
-        Course.addAnnouncement(text).then(function(data) {
+    this.addAnnouncement = function(text, user, c_id) {
+        Course.addAnnouncement({text: text, postedBy: user, course: c_id}).then(function(data) {
             if (data.data.success === true) {
                 app.successMessage = data.data.message;
             }

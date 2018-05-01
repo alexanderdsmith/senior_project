@@ -3,6 +3,8 @@ angular.module('documentControllers', ['documentServices'])
 .controller('documentCtrl', ['Documents', '$routeParams', function(Documents, $routeParams) {
     var app = this;
     app.url = JSON.parse('{"' + decodeURI(atob($routeParams.param)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+    app.title = app.url.title;
+    app.description = app.url.description;
     if(app.url !== null && app.url !== undefined) {
         Documents.getDocument({ id: app.url.id }).then(function(data) {
             //console.log(data);
@@ -15,10 +17,8 @@ angular.module('documentControllers', ['documentServices'])
             loadCytoscape(app.isReadOnly, app.document.graph);
         });
     } else {
-        app.document = { errorMessage: "404: Course not found." };
+        app.document = { errorMessage: "Document not found." };
     }
-
-    this.title = 'TODO: MAKE THIS THE ASSIGNMENT TITLE + DESCRIPTION';
 
     //Updates the grade for the document
     this.updateGrade = function() {
