@@ -48,8 +48,14 @@ angular.module('documentControllers', ['documentServices'])
             return;
         }
         if(app.dirty){
-            if(!confirm("Are you sure you want to leave this page.  All unsaved changes will be lost.")){
+            if(!confirm("Are you sure you want to leave this page?  All unsaved changes will be lost.")){
                 event.preventDefault();
+            }
+            else{
+                if(windowListener){
+                    window.removeEventListener("beforeunload", confirmFunc);
+                }
+                app.dirty = false;
             }
         }
     });
