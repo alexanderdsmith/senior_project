@@ -1,21 +1,106 @@
 angular.module('documentControllers', ['documentServices'])
 
-.controller('documentCtrl', ['Documents', '$routeParams', function(Documents, $routeParams) {
+.controller('documentCtrl', ['Documents', '$routeParams', '$scope', function(Documents, $routeParams, $scope) {
     var app = this;
     app.url = JSON.parse('{"' + decodeURI(atob($routeParams.param)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     app.title = app.url.title;
     app.description = app.url.description;
+    app.dirty = false;
+    //var contDirty = false;
+    var windowListener = false;
     if(app.url !== null && app.url !== undefined) {
         Documents.getDocument({ id: app.url.id }).then(function(data) {
             //console.log(data);
             app.document = data.data;
             app.grade = app.document.grade;
+<<<<<<< HEAD
             app.isReadOnly = (app.document.status !== 'unsubmitted');
             loadCytoscape(app.isReadOnly, app.document.graph);
+=======
+            // these two lines for readonly testing
+            //app.isReadOnly = true;
+            //app.isReadOnly = false;
+            app.isReadOnly = app.document.status !== 'unsubmitted';
+            //loadCytoscape(app.isReadOnly, app.document.graph);
+            loadCytoscape(app.isReadOnly, app.document.graph, setDirtyBit);
+>>>>>>> ea620e7bba0d74e8609e67ac00a7fdeb288680e7
         });
     } else {
         app.document = { errorMessage: "Document not found." };
     }
+
+    /*window.onload = function() {
+        window.addEventListener("beforeunload", function (e) {
+            if(!app.dirty){
+                return undefined;
+            }
+            var confirmationMessage = "All unsaved changes will be lost";
+
+            (e || window.event).returnValue = confirmationMessage;
+            return confirmationMessage;
+        });
+    };*/
+
+    var confirmFunc = function(e) {
+        var confirmationMessage = "All unsaved changes will be lost";
+
+        (e || window.event).returnValue = confirmationMessage;
+        return confirmationMessage;
+    };
+
+    $scope.$on('$locationChangeStart', function(event) {
+        if(!app.dirty) {
+            return;
+        }
+        if(app.dirty){
+            if(!confirm("Are you sure you want to leave this page?  All unsaved changes will be lost.")){
+                event.preventDefault();
+            }
+            else{
+                if(windowListener){
+                    window.removeEventListener("beforeunload", confirmFunc);
+                }
+                app.dirty = false;
+            }
+        }
+    });
+
+    function setDirtyBit(dirty) {
+        if(dirty) {
+            window.addEventListener("beforeunload", confirmFunc);
+            windowListener = true;
+        }
+        else{
+            if(windowListener){
+                window.removeEventListener("beforeunload", confirmFunc);
+            }
+        }
+        app.dirty = dirty;
+    }
+
+
+
+    /*var confirmFunc = function(e) {
+        var confirmationMessage = "All unsaved changes will be lost";
+
+        (e || window.event).returnValue = confirmationMessage;
+        return confirmationMessage;
+    };
+
+    function setDirtyBit(dirty){
+        if(dirty){
+            //window.addEventListener("beforeunload", confirmFunc);
+            window.addEventListener("beforeunload", confirmFunc);
+            //app.document.addEventListener("beforeunload", confirmFunc);
+        }
+        else{
+            //window.removeEventListener("beforeunload", confirmFunc);
+            window.removeEventListener("beforeunload", confirmFunc);
+            //app.document.removeEventListener("beforeunload", confirmFunc);
+        }
+        app.dirty = dirty;
+        //contDirty=dirty;
+    }*/
 
     //Updates the grade for the document
     this.updateGrade = function() {
@@ -142,7 +227,8 @@ angular.module('documentControllers', ['documentServices'])
 
     //     loadCytoScape();
 
-    function loadCytoscape(readOnly, docData) {
+    /*function loadCytoscape(readOnly, docData) {*/
+    function loadCytoscape(readOnly, docData, setDirtyBit) {
 
         var cy = cytoscape({
             container: document.getElementById('cy'),
@@ -559,14 +645,14 @@ angular.module('documentControllers', ['documentServices'])
         function setDirty() {
             if (!dirty) {
                 dirty = true;
-                //setDirtyBit(true);
+                setDirtyBit(true);
             }
             tb.enable("save");
         }
 
         function setClean() {
             dirty = false;
-            //setDirtyBit(false);
+            setDirtyBit(false);
             tb.disable("save");
         }
 
@@ -578,7 +664,6 @@ angular.module('documentControllers', ['documentServices'])
 
         }*/
 
-        // TODO : Updating is npt working, gives console errors
 
         updateGraph = function(data) {
             console.log("Updating now inside cytoscape function");
@@ -625,7 +710,7 @@ angular.module('documentControllers', ['documentServices'])
                 //console.log(undoStack[i].target._private);
                 undoStackJSON[i] = {};
                 undoStackJSON[i].type = undoStack[i].type;
-                undoStackJSON[i].time = undoStack[i].time; //TODO : Not sure about this
+                undoStackJSON[i].time = undoStack[i].time;
 
                 //handle case where delete has multiple targets
                 if (undoStackJSON[i].type == "deleteSelected") {
