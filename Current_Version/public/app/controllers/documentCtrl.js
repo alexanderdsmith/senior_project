@@ -1,6 +1,6 @@
 angular.module('documentControllers', ['documentServices'])
 
-.controller('documentCtrl', ['Documents', '$routeParams', '$scope', function(Documents, $routeParams, $scope) {
+.controller('documentCtrl', ['Documents', '$routeParams', '$window', '$scope', function(Documents, $routeParams, $window, $scope) {
     var app = this;
     app.url = JSON.parse('{"' + decodeURI(atob($routeParams.param)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     app.title = app.url.title;
@@ -8,11 +8,18 @@ angular.module('documentControllers', ['documentServices'])
     app.dirty = false;
     //var contDirty = false;
     var windowListener = false;
+
+    function reloadRoute() {
+        $window.location.reload();
+    }
+
     if(app.url !== null && app.url !== undefined) {
         Documents.getDocument({ id: app.url.id }).then(function(data) {
             //console.log(data);
             app.document = data.data;
+            app.id = app.document.id;
             app.grade = app.document.grade;
+            app.status = app.document.status;
             // these two lines for readonly testing
             //app.isReadOnly = true;
             //app.isReadOnly = false;
@@ -117,12 +124,26 @@ angular.module('documentControllers', ['documentServices'])
         });
     };
 
+    //TODO: database
     this.updateFeedback = function() {
         var feedback = prompt("Please leave feedback: ", "Feedback");
         var grade = prompt("Please enter grade: ", "Grade");
 
+        Documents.feedback();
+
         app.grade = grade;
         app.feedback = feedback;
+    };
+
+    this.submitDoc = function() {
+        Documents.submit({ id: app.id }).then(function(data) {
+            if(data.data.success === true) {
+                app.successMessage = data.data.message;
+                reloadRoute();
+            } else {
+                app.errorMessage = data.data.message;
+            }
+        });
     };
 
     // TODO: this is not used

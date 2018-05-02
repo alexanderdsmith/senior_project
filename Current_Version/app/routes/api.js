@@ -335,7 +335,11 @@ module.exports = function(router, keys) {
         Course.findById(req.body.id)
         .populate([{
             path: '_assignments',
-            model: 'Assignment'
+            model: 'Assignment',
+            populate: {
+                path: '_submissions',
+                model: 'Document'
+            }
         }, {
             path: '_announcements',
             model: 'Announcement'
@@ -369,13 +373,15 @@ module.exports = function(router, keys) {
                 if(course._assignments !== undefined && course._assignments !== null) {
                     course_payload.assignments = [];
                     course._assignments.forEach(function (assignment) {
+                        if (assignment._submissions !== undefined && course._assignments !== null) {
+                            
+                        }
                         course_payload.assignments.push({
                             id: assignment._id,
                             title: assignment.title,
                             description: assignment.description,
                             dueDate: assignment.dueDate,
                             timestamp: assignment.timestamp
-                            //TODO: add submissions
                         });
                     });
                 }

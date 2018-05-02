@@ -32,10 +32,16 @@
 
     <hr/>
 
-    <h3 ng-show="document.feedback">Feedback:</h3>
-    <h5 ng-show="document.feedback">{{document.feedback}}</h5><h5 ng-show="!document.feedback">Awaiting Feedback</h5>
-    <h3 ng-show="document.grade !== -1">Grade:</h3>
-    <h5 ng-show="document.grade !== -1">{{document.grade}}</h5><h5 ng-show="document.grade === -1">Awaiting Grade</h5>
+    <div ng-show="document.status === 'unsubmitted'">
+        <button type="button" ng-click="document.submitDoc()" class="btn btn-primary">Submit Work</button>
+    </div>
+
+    <div id="modals" ng-show="document.status !== 'unsubmitted'">
+        <h3 ng-show="document.feedback">Feedback:</h3>
+        <h5 ng-show="document.feedback">{{document.feedback}}</h5><h5 ng-show="!document.feedback">Awaiting Feedback</h5>
+        <h3 ng-show="document.grade !== -1">Grade:</h3>
+        <h5 ng-show="document.grade !== -1">{{document.grade}}</h5><h5 ng-show="document.grade === -1">Awaiting Grade</h5>
+    </div>
 
     <div id="feedback" ng-show="document.url.usertype !== 'student'">
         <button type="button" ng-click="document.updateFeedback()" class="btn btn-primary">Give Feedback</button>
