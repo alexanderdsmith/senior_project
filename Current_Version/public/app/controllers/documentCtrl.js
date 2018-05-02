@@ -117,6 +117,12 @@ angular.module('documentControllers', ['documentServices'])
         });
     };
 
+    this.updateFeedback = function() {
+        var feedback = prompt("Enter Feedback", "");
+
+        this.feedback = feedback;
+    };
+
     // TODO: this is not used
     this.saveDocument = function(data){
         var graphData = {
