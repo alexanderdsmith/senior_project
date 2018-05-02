@@ -57,17 +57,18 @@ module.exports = function(router, keys) {
                 delimiter: ',',
                 header: true
             });
-            var course = new Course({
-                title: req.body.title,
-                _students: [],
-                _tas: [],
-                _instructors: [],
-                _announcements: [],
-                _assignments: []
-            });
+            var course = new Course();
+
+            course.title = req.body.title;
+            course._students = [];
+            course._tas = [];
+            course._instructors = [];
+            course._announcements = [];
+            course._assignments = [];
+
             course.save();
 
-            /** build authorized users **/
+            /** build course authorized users **/
             for(var i = 0; i < csv.data.length; i++) {
                 switch(csv.data[i].Type) {
                     case 'admin': {
@@ -86,7 +87,7 @@ module.exports = function(router, keys) {
                         break;
                     }
                     case 'student' || '' || null: {
-                        (function(index, course) {
+                        (function(index) {
                             Student.findOne({ username: csv.data[index].Username }).exec(function(err, student) {
                                 if(err) throw err;
                                 if(student) {
@@ -98,16 +99,16 @@ module.exports = function(router, keys) {
                                     var newStudent = new Student();
                                     newStudent.username = csv.data[index].Username;
                                     newStudent._courses = [course];
-                                    course._students.push(newStudent);
                                     newStudent.save();
+                                    course._students.push(newStudent);
                                     course.save();
                                 }
                             });
-                        })(i, course);
+                        })(i);
                         break;
                     }
                     case 'ta' : {
-                        (function(index, course) {
+                        (function(index) {
                             Ta.findOne({ username: csv.data[index].Username }).exec(function(err, ta) {
                                 if(err) throw err;
                                 if(ta) {
@@ -119,16 +120,16 @@ module.exports = function(router, keys) {
                                     var newTa = new Ta();
                                     newTa.username = csv.data[index].Username;
                                     newTa._courses = [course];
-                                    course._tas.push(newTa);
                                     newTa.save();
+                                    course._tas.push(newTa);
                                     course.save();
                                 }
                             });
-                        })(i, course);
+                        })(i);
                         break;
                     }
                     case 'instructor' : {
-                        (function(index, course) {
+                        (function(index) {
                             Instructor.findOne({ username: csv.data[index].Username }).exec(function(err, instructor) {
                                 if(err) throw err;
                                 if(instructor) {
@@ -140,16 +141,17 @@ module.exports = function(router, keys) {
                                     var newInstructor = new Instructor();
                                     newInstructor.username = csv.data[index].Username;
                                     newInstructor._courses = [course];
-                                    course._instructors.push(newInstructor);
                                     newInstructor.save();
+                                    course._instructors.push(newInstructor);
                                     course.save();
                                 }
                             });
-                        })(i, course);
+                        })(i);
                         break;
                     }
                     default: {
                         console.log(csv.data[i].Username + ' was not correctly formatted!\n' + csv.data[i].Type + ' is not a valid type.');
+                        break;
                     }
                 }
             }
@@ -167,6 +169,31 @@ module.exports = function(router, keys) {
     /***** 'JSONIFIES' DATA *****/
     /****************************/
     router.get('/profileData', function(req, res) {
+
+        Course.find({}).exec(function(err, courses) {
+            if(err) throw err;
+            if(courses) {
+                courses.forEach(function (course) {
+                    var s = course._students;
+                    var i = course._instructors;
+                    var t = course._tas;
+                    var uniqueS = s.filter(function (elem, pos) {
+                        return s.indexOf(elem) === pos;
+                    });
+                    var uniqueI = i.filter(function (elem, pos) {
+                        return i.indexOf(elem) === pos;
+                    });
+                    var uniqueT = t.filter(function (elem, pos) {
+                        return t.indexOf(elem) === pos;
+                    });
+                    course._students = uniqueS;
+                    course._instructors = uniqueI;
+                    course._tas = uniqueT;
+
+                    course.save();
+                });
+            }
+        });
 
         /** SEND PAYLOAD (Structure for payload) **/
         var profile_payload = {

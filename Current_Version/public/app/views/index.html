@@ -54,9 +54,11 @@
                 </div>
                 <ul class="nav navbar-nav">
                     <li><a href="./">Home</a></li>
-                    <li><a ng-show="!main.isLoggedIn" href="./login">Login</a></li>
-                    <!--<li><a ng-show="!main.isLoggedIn" href="/register">Register</a></li>-->
                     <li><a ng-show="main.isLoggedIn" ng-href="./profile">Profile Portal</a></li>
+                    <!-- TODO: create about/contact/etc pages -->
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a ng-show="!main.isLoggedIn" ng-click="main.google()">Login with Google+</a></li>
                     <li><a ng-show="main.isLoggedIn" href="./logout" ng-click="main.logout();">Log out</a></li>
                 </ul>
             </div>

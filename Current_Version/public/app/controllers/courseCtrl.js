@@ -18,7 +18,7 @@ angular.module('courseController', ['courseServices'])
             if(document) {
                 var param = {
                     id: document.data.id,
-                    type: app.url.usertype,
+                    usertype: app.url.usertype,
                     title: assignment.title,
                     description: assignment.description
                 };
