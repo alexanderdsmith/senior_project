@@ -4,12 +4,14 @@
             top: 0px;
             left: 0px;
         }
+
         #cy {
             /*changed size to leave room for toolbar*/
-            width: 70%;
+            width: 78.5%;
             height: 70%;
             position: absolute;
-            background: #f4f8ff;
+            background: #0f0f0f;
+            /*background: #f4f8ff;*/
             top: 540px;/*top: 400px;*/
             left: 140px;
             margin-bottom: 100px;
@@ -27,20 +29,24 @@
         <h2>{{document.title}}</h2>
         <h5>{{document.description}}</h5>
     </div>
-    <div id="grade" ng-show="document.grade !== -1">
-        Current grade: {{document.grade}}
-        <!-- TODO : use ng-show to only show button if user is an instr -->
-        <button type="button" ng-click="document.updateGrade()" class="btn btn-primary">Update Grade</button>
-    </div>
-    <div id="feedback">
-        Feedback: {{document.feedback}}
+
+    <hr/>
+
+    <h3 ng-show="document.feedback">Feedback:</h3>
+    <h5 ng-show="document.feedback">{{document.feedback}}</h5><h5 ng-show="!document.feedback">Awaiting Feedback</h5>
+    <h3 ng-show="document.grade !== -1">Grade:</h3>
+    <h5 ng-show="document.grade !== -1">{{document.grade}}</h5><h5 ng-show="document.grade === -1">Awaiting Grade</h5>
+
+    <div id="feedback" ng-show="document.url.usertype !== 'student'">
         <button type="button" ng-click="document.updateFeedback()" class="btn btn-primary">Give Feedback</button>
     </div>
 
     <br/>
-    <div id="toolbar"></div>
-    <br/>
-    <div id="cy"></div>
-    <br/>
+    <div>
+        <div id="toolbar"></div>
+        <br/>
+        <div id="cy"></div>
+        <br/>
+    </div>
 
 </div>

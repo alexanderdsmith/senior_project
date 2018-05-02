@@ -1,6 +1,6 @@
 angular.module('courseController', ['courseServices'])
 
-.controller('courseCtrl', ['Course', '$location', '$routeParams', function(Course, $location, $routeParams) {
+.controller('courseCtrl', ['Course', '$location', '$window', '$routeParams', function(Course, $location, $window, $routeParams) {
     var app = this;
     app.url = JSON.parse('{"' + decodeURI(atob($routeParams.param)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     if(app.url !== null && app.url !== undefined) {
@@ -9,6 +9,10 @@ angular.module('courseController', ['courseServices'])
         });
     } else {
         app.course_payload = { errorMessage: "Course not found." };
+    }
+
+    function reloadRoute() {
+        $window.location.reload();
     }
 
     // TODO: Instructors & TA's open documents
@@ -38,6 +42,7 @@ angular.module('courseController', ['courseServices'])
         Course.addAnnouncement({text: text, postedBy: user, course: c_id}).then(function(data) {
             if (data.data.success === true) {
                 app.successMessage = data.data.message;
+                reloadRoute();
             }
             else {
                 app.errorMessage = data.data.message;
@@ -57,6 +62,7 @@ angular.module('courseController', ['courseServices'])
         Course.addAssignment(assignment).then(function(data) {
             if (data.data.success === true) {
                 app.successMessage = data.data.message;
+                reloadRoute();
             }
             else {
                 app.errorMessage = data.data.message;

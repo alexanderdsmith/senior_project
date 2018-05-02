@@ -41,7 +41,7 @@
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;">
             <strong>Announcements</strong>
-            <button type="button" style="float: right" data-toggle="modal" data-target="#AddAnnouncementsModal">+</button>
+            <button ng-show="course.url.usertype !== 'student'" type="button" style="float: right" data-toggle="modal" data-target="#AddAnnouncementsModal">+</button>
         </div>
         <table class="table table-bordered">
             <tr>
@@ -61,7 +61,7 @@
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;">
             <strong>Current Assignments</strong>
-            <button type="button" style="float: right" data-toggle="modal" data-target="#AddAssignmentsModal">+</button>
+            <button ng-show="course.url.usertype === 'instructor'" type="button" style="float: right" data-toggle="modal" data-target="#AddAssignmentsModal">+</button>
         </div>
         <table class="table table-bordered">
             <tr>
@@ -70,7 +70,8 @@
                 <td><strong>Due Date</strong></td>
             </tr>
             <tr ng-repeat="assignment in course.course_payload.assignments">
-                <td><a ng-click="course.openDocument(assignment.id, main.profile_payload.data.student_profile.id, assignment)">{{assignment.title}}</a></td>
+                <td ng-show="course.url.usertype === 'student'"><a ng-click="course.openDocument(assignment.id, main.profile_payload.data.student_profile.id, assignment)">{{assignment.title}}</a></td>
+                <td ng-show="course.url.usertype !== 'student'">{{assignment.title}}</td>
                 <td>{{assignment.timestamp | date : "MM/dd/yyyy 'at' h:mm a" }}</td>
                 <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a" }}</td> <!-- TODO: add due date correctly! -->
                 <!-- <td ng-show="!assignment.isSubmitted"><button type="button" class="btn btn-primary">Submit</button></td> -->
@@ -78,6 +79,7 @@
         </table>
     </div>
 
+    <!-- TODO: fix display -->
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;"><strong>Past Assignments</strong></div>
         <table class="table table-bordered">

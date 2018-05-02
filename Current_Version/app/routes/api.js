@@ -424,8 +424,11 @@ module.exports = function(router, keys) {
                 course._announcements.push(announcement);
                 course.save();
                 announcement.save();
+                res.json({success: true, message: 'Announcement successfully created'});
+            } else {
+                res.json({success: false, message: 'Announcement upload failed'});
             }
-        })
+        });
     });
 
     router.post('/addAssignment', function(req, res) {
@@ -445,9 +448,9 @@ module.exports = function(router, keys) {
                 course._assignments.push(assignment);
                 course.save();
                 assignment.save();
-                res.json({success: true, message: 'Assignment successfully created!'});
+                res.json({success: true, message: 'Assignment successfully created'});
             } else {
-                res.json({success: false, message: 'Assignment creation failed!'});
+                res.json({success: false, message: 'Assignment upload failed'});
             }
         });
     });

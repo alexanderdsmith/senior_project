@@ -118,9 +118,11 @@ angular.module('documentControllers', ['documentServices'])
     };
 
     this.updateFeedback = function() {
-        var feedback = prompt("Enter Feedback", "");
+        var feedback = prompt("Please leave feedback: ", "Feedback");
+        var grade = prompt("Please enter grade: ", "Grade");
 
-        this.feedback = feedback;
+        app.grade = grade;
+        app.feedback = feedback;
     };
 
     // TODO: this is not used
@@ -242,7 +244,10 @@ angular.module('documentControllers', ['documentServices'])
                         "text-halign": "center",
                         'label': 'data(label)',
                         //'padding': 5,
-                        'width': 'data(width)'
+                        'width': 'data(width)',
+                        'color': '#ffffff',
+                        'text-outline-width': 1.5,
+                        'text-outline-color': '#1f1f1f'
                         //'padding': 10px
                     }
                 },
@@ -252,7 +257,7 @@ angular.module('documentControllers', ['documentServices'])
                         'curve-style': 'bezier',
                         'target-arrow-shape': 'triangle',
                         'label': 'data(label)',
-                        'text-outline-width': 2.5,
+                        'text-outline-width': 1.5,
                         "text-outline-color": "#f4f8ff"
                     }
                 }],
