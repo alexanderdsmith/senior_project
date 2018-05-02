@@ -4,14 +4,14 @@
 
 <div class="center-block">
     <div class="panel panel-info">
-        <div class="panel-heading" style="text-align: center;"><strong>Your Classes</strong></div>
+        <div class="panel-heading" style="text-align: center;"><strong>Your Courses</strong></div>
         <table class="table table-bordered">
             <tr>
                 <td><strong>Course Name</strong></td>
-                <td><strong>Instructor</strong></td>
+                <td><strong>Meeting Time</strong></td>
             </tr>
-            <tr ng-repeat="course in main.profile_payload.data.student_profile.course_list">
-                <td><a ng-click="profile.fetchCourse(course.id,'ta')"> {{ course.title }}</a></td>
+            <tr ng-repeat="course in main.profile_payload.data.ta_profile.course_list">
+                <td><a ng-click="profile.fetchCourse(course.id, 'ta', main.profile_payload.data.ta_profile.id)">{{ course.title }}</a></td>
                 <td>MWF 10:00 AM - 11:00 AM</td>
             </tr>
         </table>

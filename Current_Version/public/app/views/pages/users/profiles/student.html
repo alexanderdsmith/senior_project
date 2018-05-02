@@ -4,11 +4,11 @@
 
 <div class="center-block">
     <div class="panel panel-info">
-        <div class="panel-heading" style="text-align: center;"><strong>Your Classes</strong></div>
+        <div class="panel-heading" style="text-align: center;"><strong>Your Courses</strong></div>
         <table class="table table-bordered">
             <tr>
                 <td><strong>Course Name</strong></td>
-                <td><strong>Instructor</strong></td>
+                <td><strong>Meeting Time</strong></td>
             </tr>
             <tr ng-repeat="course in main.profile_payload.data.student_profile.course_list">
                 <td><a ng-click="profile.fetchCourse(course.id, 'student', main.profile_payload.data.student_profile.id)">{{ course.title }}</a></td>

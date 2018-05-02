@@ -4,21 +4,16 @@
 
 <div class="center-block">
     <div class="panel panel-info">
-        <div class="panel-heading" style="text-align: center;"><strong>Your Classes</strong></div>
+        <div class="panel-heading" style="text-align: center;"><strong>Your Sections</strong></div>
         <table class="table table-bordered">
             <tr>
-                <td><strong>Class Name</strong></td>
-                <td><strong>Time</strong></td>
+                <td><strong>Course Name</strong></td>
+                <td><strong>Meeting Time</strong></td>
             </tr>
-            <tr ng-repeat="course in main.dataPayload.instructor_profile.course_list">
-                <td><a href="/instructorSection">{{ course.title }}</a></td>
-                <td>{{course.instructor_list}}</td>
+            <tr ng-repeat="course in main.profile_payload.data.instructor_profile.course_list">
+                <td><a ng-click="profile.fetchCourse(course.id, 'instructor', main.profile_payload.data.instructor_profile.id)">{{ course.title }}</a></td>
+                <td>MWF 10:00 AM - 11:00 AM</td>
             </tr>
         </table>
-        <!--<form ng-submit="profile.addCourse()">
-            <input class="form-control" type="text" placeholder="Section Name" name="name" ng-model="profile.sections.name" ng-required="true" />
-            <input class="form-control" type="text" placeholder="Section Time" name="time" ng-model="profile.sections.time" ng-required="true" />
-            <input class="form-control" type="submit" value="Add Section"/>
-        </form>-->
     </div>
 </div>

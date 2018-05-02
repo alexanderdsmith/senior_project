@@ -2,8 +2,30 @@
     <h1>{{course.course_payload.title}} Home Page</h1>
 </div>
 
-<div class="col-md-2">
+<div class="col-md-3">
     <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;">
+            <strong>Instructors</strong>
+        </div>
+        <table class="table table-bordered">
+            <tr ng-repeat="instructor in course.course_payload.instructors">
+                <td>{{instructor.username}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;">
+            <strong>Teaching Assistants</strong>
+        </div>
+        <table class="table table-bordered">
+            <tr ng-repeat="ta in course.course_payload.tas">
+                <td>{{ta.username}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div ng-show="course.url.usertype != 'student'" class="panel panel-info">
         <div class="panel-heading" style="text-align: center;">
             <strong>Students</strong>
         </div>
@@ -15,7 +37,7 @@
     </div>
 </div>
 
-<div class="col-md-10" style="float: right">
+<div class="col-md-9" style="float: right">
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;">
             <strong>Announcements</strong>
@@ -35,10 +57,7 @@
             </tr>
         </table>
     </div>
-</div>
 
-<!-- TODO: Open Documents with Assignment -->
-<div class="col-md-10" style="float: right">
     <div class="panel panel-info">
         <div class="panel-heading" style="text-align: center;">
             <strong>Current Assignments</strong>
@@ -55,6 +74,24 @@
                 <td>{{assignment.timestamp | date : "MM/dd/yyyy 'at' h:mm a" }}</td>
                 <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a" }}</td> <!-- TODO: add due date correctly! -->
                 <!-- <td ng-show="!assignment.isSubmitted"><button type="button" class="btn btn-primary">Submit</button></td> -->
+            </tr>
+        </table>
+    </div>
+
+    <div class="panel panel-info">
+        <div class="panel-heading" style="text-align: center;"><strong>Past Assignments</strong></div>
+        <table class="table table-bordered">
+            <tr>
+                <td><strong>Assignment</strong></td>
+                <td><strong>Due Date</strong></td>
+                <td><strong>Grade</strong></td>
+            </tr>
+            <tr ng-repeat="assignment in course.course_payload.assignments">
+                <td ng-show="course.url.usertype == 'student'">{{assignment.title}}</td>
+                <td ng-show="course.url.usertype != 'student'">{{assignment.title}}</td>
+                <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a"}}</td>
+                <td ng-show="assignment.isGraded">{{assignment.grade}}</td>
+                <td ng-show="!assignment.isGraded">No Grade Yet</td>
             </tr>
         </table>
     </div>
@@ -117,24 +154,5 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<div class="col-md-10" style="float: right">
-    <div class="panel panel-info">
-        <div class="panel-heading" style="text-align: center;"><strong>Past Assignments</strong></div>
-        <table class="table table-bordered">
-            <tr>
-                <td><strong>Assignment</strong></td>
-                <td><strong>Due Date</strong></td>
-                <td><strong>Grade</strong></td>
-            </tr>
-            <tr ng-repeat="assignment in course.course_payload.assignments">
-                <td><a>{{assignment.name}}</a></td>
-                <td>{{assignment.dueDate}}</td>
-                <td ng-show="assignment.isGraded">{{assignment.grade}}</td>
-                <td ng-show="!assignment.isGraded">No Grade Yet</td>
-            </tr>
-        </table>
     </div>
 </div>

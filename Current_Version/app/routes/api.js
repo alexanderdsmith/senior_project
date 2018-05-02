@@ -379,13 +379,30 @@ module.exports = function(router, keys) {
                         });
                     });
                 }
+                if(course._instructors !== undefined && course._instructors !== null) {
+                    course_payload.instructors = [];
+                    course._instructors.forEach(function (instructor) {
+                        course_payload.instructors.push({
+                            id: instructor._id,
+                            username: instructor.username
+                        });
+                    });
+                }
                 if(course._students !== undefined && course._students !== null) {
                     course_payload.students = [];
                     course._students.forEach(function (student) {
                         course_payload.students.push({
                             id: student._id,
                             username: student.username
-                            //TODO: add submissions
+                        });
+                    });
+                }
+                if(course._tas !== undefined && course._tas !== null) {
+                    course_payload.tas = [];
+                    course._tas.forEach(function (ta) {
+                        course_payload.tas.push({
+                            id: ta._id,
+                            username: ta.username
                         });
                     });
                 }
