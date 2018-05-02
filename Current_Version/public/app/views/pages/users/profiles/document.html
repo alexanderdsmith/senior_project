@@ -32,6 +32,11 @@
         <!-- TODO : use ng-show to only show button if user is an instr -->
         <button type="button" ng-click="document.updateGrade()" class="btn btn-primary">Update Grade</button>
     </div>
+    <div id="feedback">
+        Feedback: {{document.feedback}}
+        <button type="button" ng-click="document.updateFeedback()" class="btn btn-primary">Give Feedback</button>
+    </div>
+
     <br/>
     <div id="toolbar"></div>
     <br/>
