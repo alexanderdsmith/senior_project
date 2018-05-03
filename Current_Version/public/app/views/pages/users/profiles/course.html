@@ -90,7 +90,15 @@
             </tr>
             <tr ng-repeat="assignment in course.course_payload.assignments | filter: {pastDue: 'true'}">
                 <td ng-show="course.url.usertype == 'student'">{{assignment.title}}</td>
-                <td ng-show="course.url.usertype != 'student'">{{assignment.title}}</td>
+                <td ng-show="course.url.usertype != 'student'">
+                    <div>
+                        {{assignment.title}}
+                        <select ng-model="document" ng-change="course.openDocument(doc.id, doc.sid, assignment)" ng-options="doc for doc in assignment.documents">
+                            {{doc.student}}
+                        </select>
+                    </div>
+
+                </td>
                 <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a"}}</td>
                 <td ng-show="assignment.grade !== -1">{{assignment.grade}}</td>
                 <td ng-show="!assignment.isGraded">Needs Grading</td>

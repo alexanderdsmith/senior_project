@@ -318,7 +318,11 @@ module.exports = function(router, keys) {
             model: 'Assignment',
             populate: {
                 path: '_submissions',
-                model: 'Document'
+                model: 'Document',
+                populate: {
+                    path: '_student',
+                    model: 'Student'
+                }
             }
         }, {
             path: '_announcements',
@@ -353,15 +357,25 @@ module.exports = function(router, keys) {
                 if(course._assignments !== undefined && course._assignments !== null) {
                     course_payload.assignments = [];
                     course._assignments.forEach(function (assignment) {
-                        if (assignment._submissions !== undefined && course._assignments !== null) {
-                            
-                        }
+                        var documents = [];
+                        console.log(assignment);
+                        /*if (assignment._submissions !== undefined && course._assignments !== null) {
+                            assignment._submissions.forEach(function (document) {
+
+                                documents.push({
+                                    id: document._id,
+                                    sid: document._student._id,
+                                    student: document._student.username
+                                });
+                            });
+                        }*/
                         course_payload.assignments.push({
                             id: assignment._id,
                             title: assignment.title,
                             description: assignment.description,
                             dueDate: assignment.dueDate,
-                            timestamp: assignment.timestamp
+                            timestamp: assignment.timestamp,
+                            documents: documents
                         });
                     });
                 }
@@ -561,6 +575,7 @@ module.exports = function(router, keys) {
                         if(!sendDoc) {
                             var newDoc = new Document();
                             newDoc.timestamp = Date.now();
+                            newDoc._student = student;
                             newDoc.save();
                             assignment._submissions.push(newDoc);
                             student._documents.push(newDoc);
