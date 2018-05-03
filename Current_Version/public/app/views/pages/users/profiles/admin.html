@@ -9,10 +9,14 @@
             <button type="button" style="float: right" data-toggle="modal" data-target="#courseModal">+</button>
         </div>
         <table class="table table-bordered">
-          <tr ng-repeat="course in main.dataPayload.instructor_profile.course_list">
-              <td>{{ course.title }}</a></td>
-              <td>{{course.instructor_list}}</td>
-          </tr>
+            <tr>
+                <td><strong>Course Title</strong></td>
+                <td><strong>Edit Course</strong></td>
+            </tr>
+            <tr ng-repeat="course in main.profile_payload.data.admin_profile.course_list">
+                <td>{{ course.title }}</a></td>
+                <td></td>
+            </tr>
         </table>
     </div>
 </div>

@@ -6,29 +6,13 @@ angular.module('courseController', ['courseServices'])
     if(app.url !== null && app.url !== undefined) {
         Course.getData({id: app.url.id}).then(function (data) {
             app.course_payload = data.data;
-
-
             var assign = app.course_payload.assignments;
-            //console.log(assign);
 
             for(i=0; i<assign.length; i++){
-
-
                 var currDate = new Date(Date.now());
-                console.log(currDate);
-                console.log(Date.parse(currDate));
-                console.log(Date.parse(assign[i].dueDate));
                 var dueTime = Date.parse(assign[i].dueDate);
-
-                if(Date.parse(currDate) > dueTime) {
-                    //console.log(assign[i].title);
-                    app.course_payload.assignments[i].pastDue = true;
-                }
-                else{
-                    app.course_payload.assignments[i].pastDue = false;
-                }
+                app.course_payload.assignments[i].pastDue = Date.parse(currDate) > dueTime;
             }
-
         });
     } else {
         app.course_payload = { errorMessage: "Course not found." };
@@ -36,7 +20,15 @@ angular.module('courseController', ['courseServices'])
 
 
     function reloadRoute() {
-        $window.location.reload();
+        if (app.errorMessage) {
+            alert(app.errorMessage);
+        }
+        if (app.successMessage) {
+            alert(app.successMessage);
+        }
+        $window.setTimeout(function() {
+            $window.location.reload();
+        }, 3000);
     }
 
     // TODO: Instructors & TA's open documents

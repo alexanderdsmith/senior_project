@@ -18,6 +18,10 @@ var DocumentSchema = new Schema({
     graph: {
         elements  : [String],
         undoStack : [String]
+    },
+    _student: {
+        type: Schema.Types.ObjectId,
+        ref: 'Student'
     }
 });
 

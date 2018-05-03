@@ -169,6 +169,26 @@ module.exports = function(router, keys) {
     /***** 'JSONIFIES' DATA *****/
     /****************************/
     router.get('/profileData', function(req, res) {
+        /** SEND PAYLOAD (Structure for payload) **/
+        var profile_payload = {
+            user: {},
+            admin_profile: {
+                id: mongoose.Schema.ObjectId,
+                course_list: []
+            },
+            student_profile: {
+                id: mongoose.Schema.ObjectId,
+                course_list: [],
+                documents_list: []
+            },
+            ta_profile: {
+                id: mongoose.Schema.ObjectId,
+                course_list: []
+            },
+            instructor_profile: {
+                course_list: []
+            }
+        };
 
         Course.find({}).exec(function(err, courses) {
             if(err) throw err;
@@ -191,30 +211,11 @@ module.exports = function(router, keys) {
                     course._tas = uniqueT;
 
                     course.save();
+
+                    profile_payload.admin_profile.course_list.push(course);
                 });
             }
         });
-
-        /** SEND PAYLOAD (Structure for payload) **/
-        var profile_payload = {
-            user: {},
-            admin_profile: {
-                id: mongoose.Schema.ObjectId,
-                course_list: []
-            },
-            student_profile: {
-                id: mongoose.Schema.ObjectId,
-                course_list: [],
-                documents_list: []
-            },
-            ta_profile: {
-                id: mongoose.Schema.ObjectId,
-                course_list: []
-            },
-            instructor_profile: {
-                course_list: []
-            }
-        };
 
         /** BUILD PAYLOAD **/
         // TODO: list ALL existing courses in admin_profile
@@ -502,15 +503,18 @@ module.exports = function(router, keys) {
     });
 
     router.post('/submitDocument', function(req, res) {
-        Document.findById(req.body.doc_id).exec(function(err, document) {
+        Document.findById(req.body.id, function(err, document) {
             if(err) throw err;
             if(document) {
+                document.status = 'submitted';
                 document.submitTime = Date.now();
+                document.save();
+                res.json({success: true, message: 'Document successfully submitted'});
+            } else {
+                res.json({success: false, message: 'No document found to submit!'});
             }
-        })
+        });
     });
-
-    // TODO: Save Document
 
     /** Find, create, open student docs **/
     router.post('/getStudentDocument', function(req, res) {
@@ -518,7 +522,10 @@ module.exports = function(router, keys) {
 
         Assignment.findById(req.body.id).populate([{
             path: '_submissions',
-            model: 'Document'
+            model: 'Document',
+            populate: {
+                path: '_student'
+            }
         }]).exec(function(err, assignment){
             if(err) throw err;
             if(assignment) {

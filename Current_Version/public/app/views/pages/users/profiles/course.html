@@ -25,7 +25,7 @@
         </table>
     </div>
 
-    <div ng-show="course.url.usertype != 'student'" class="panel panel-info">
+    <div ng-show="course.url.usertype !== 'student'" class="panel panel-info">
         <div class="panel-heading" style="text-align: center;">
             <strong>Students</strong>
         </div>
@@ -92,8 +92,8 @@
                 <td ng-show="course.url.usertype == 'student'">{{assignment.title}}</td>
                 <td ng-show="course.url.usertype != 'student'">{{assignment.title}}</td>
                 <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a"}}</td>
-                <td ng-show="assignment.isGraded">{{assignment.grade}}</td>
-                <td ng-show="!assignment.isGraded">No Grade Yet</td>
+                <td ng-show="assignment.grade !== -1">{{assignment.grade}}</td>
+                <td ng-show="!assignment.isGraded">Needs Grading</td>
             </tr>
         </table>
     </div>

@@ -9,8 +9,16 @@ angular.module('documentControllers', ['documentServices'])
     //var contDirty = false;
     var windowListener = false;
 
-    function reloadRoute() {
-        $window.location.reload();
+    function backToCourse() {
+        if (app.errorMessage) {
+            alert(app.errorMessage);
+        }
+        if (app.successMessage) {
+            alert(app.successMessage);
+        }
+        $window.setTimeout(function() {
+            $window.location.reload();
+        }, 3000);
     }
 
     if(app.url !== null && app.url !== undefined) {
@@ -140,7 +148,7 @@ angular.module('documentControllers', ['documentServices'])
         Documents.submit({ id: app.id }).then(function(data) {
             if(data.data.success === true) {
                 app.successMessage = data.data.message;
-                reloadRoute();
+                backToCourse();
             } else {
                 app.errorMessage = data.data.message;
             }

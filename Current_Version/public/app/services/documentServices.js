@@ -14,7 +14,6 @@ angular.module('documentServices', [])
     documentsFactory.updateDocument = function(saveData) {
         //var graphData = {'elements': data.elements, 'undoStack': data.undoStack, 'doc_id': data.doc_id };
         return $http.post('/api/saveDocument', saveData).then(function(data){
-            console.log(data);
             return data;
             /*returnedData.graph.elements = data.elements;
             returnedData.graph.undoStack = data.undoStack;*/
@@ -22,11 +21,14 @@ angular.module('documentServices', [])
             //currDocument.graph.undoStack = returnedData.undoStack;
             /*return returnedData;*/
         }).catch(function(returnedData) {//;
-            //return data;
-            console.log(data);
-            console.log(returnedData);
             return returnedData;
             //return data;
+        });
+    };
+
+    documentsFactory.submit = function(id) {
+        return $http.post('/api/submitDocument', id).then(function(data) {
+            return data;
         });
     };
 
