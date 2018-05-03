@@ -16,7 +16,8 @@ var AssignmentSchema = new Schema({
     _submissions: [{
         type: Schema.Types.ObjectId,
         ref: 'Document'
-    }]
+    }],
+    pastDue: Boolean
 });
 
 /****************************/

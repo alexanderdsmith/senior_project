@@ -6,10 +6,34 @@ angular.module('courseController', ['courseServices'])
     if(app.url !== null && app.url !== undefined) {
         Course.getData({id: app.url.id}).then(function (data) {
             app.course_payload = data.data;
+
+
+            var assign = app.course_payload.assignments;
+            //console.log(assign);
+
+            for(i=0; i<assign.length; i++){
+
+
+                var currDate = new Date(Date.now());
+                console.log(currDate);
+                console.log(Date.parse(currDate));
+                console.log(Date.parse(assign[i].dueDate));
+                var dueTime = Date.parse(assign[i].dueDate);
+
+                if(Date.parse(currDate) > dueTime) {
+                    //console.log(assign[i].title);
+                    app.course_payload.assignments[i].pastDue = true;
+                }
+                else{
+                    app.course_payload.assignments[i].pastDue = false;
+                }
+            }
+
         });
     } else {
         app.course_payload = { errorMessage: "Course not found." };
     }
+
 
     function reloadRoute() {
         $window.location.reload();
@@ -50,13 +74,14 @@ angular.module('courseController', ['courseServices'])
         });
     };
 
-    this.addAssignment = function(title, description, due_date, time, c_id) {
+    this.addAssignment = function(title, description, due_date, time, c_id, past) {
         var assignment = {
             title: title,
             description: description,
             dueDate: due_date,
             time: time,
-            course: c_id
+            course: c_id,
+            pastDue: past
         };
 
         Course.addAssignment(assignment).then(function(data) {
