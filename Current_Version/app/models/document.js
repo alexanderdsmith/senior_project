@@ -9,6 +9,7 @@ var DocumentSchema = new Schema({
         default: -1
     },
     feedback: String,
+    submitTime: Date,
     status: {
         type    : String,
         default : 'unsubmitted',

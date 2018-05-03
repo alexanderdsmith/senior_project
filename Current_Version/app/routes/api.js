@@ -197,11 +197,7 @@ module.exports = function(router, keys) {
 
         /** SEND PAYLOAD (Structure for payload) **/
         var profile_payload = {
-            user: {
-                username: req.decoded.username,
-                email: req.decoded.email,
-                usertypes: req.decoded.usertypes
-            },
+            user: {},
             admin_profile: {
                 id: mongoose.Schema.ObjectId,
                 course_list: []
@@ -219,25 +215,6 @@ module.exports = function(router, keys) {
                 course_list: []
             }
         };
-
-        /*Course.find().populate({
-            path: '_instructors',
-            model: 'Instructor'
-        }, {
-            path: '_students',
-            model: 'Student'
-        }, {
-            path: '_teachers',
-            model: 'Teacher'
-        }).exec(function(err, course) {
-            if(err) throw err;
-            if(course) {
-                profile_payload.admin_profile.course_list.push({
-                    id: course._id,
-                    title: course.title
-                })
-            }
-        });*/
 
         /** BUILD PAYLOAD **/
         // TODO: list ALL existing courses in admin_profile
@@ -276,6 +253,8 @@ module.exports = function(router, keys) {
                 profile_payload.user.username = user.username;
                 profile_payload.user.name = user.givenname;
                 profile_payload.user.email = user.email;
+                console.log(user.usertypes.filter(function(a){return a !== ''}));
+                profile_payload.user.usertypes = user.usertypes.filter(function(a){return a !== ''});
 
                 if(user._admin !== undefined && user._admin !== null) {
                     profile_payload.admin_profile.id = user._admin._id;
@@ -519,6 +498,15 @@ module.exports = function(router, keys) {
                 res.json({success: false, message: 'Document failed to save...'});
             }
         });
+    });
+
+    router.post('/submitDocument', function(req, res) {
+        Document.findById(req.body.doc_id).exec(function(err, document) {
+            if(err) throw err;
+            if(document) {
+                document.submitTime = Date.now();
+            }
+        })
     });
 
     // TODO: Save Document

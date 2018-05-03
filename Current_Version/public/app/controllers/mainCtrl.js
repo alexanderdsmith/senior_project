@@ -14,7 +14,7 @@ angular.module('mainController', ['authServices', 'profileServices'])
                 app.username = data.data.username;
                 app.givenname = data.data.givenname;
                 app.email = data.data.email;
-                app.usertypes = data.data.usertypes;
+                //app.usertypes = data.data.usertypes;
                 app.loadme = true;
             });
 
@@ -23,7 +23,9 @@ angular.module('mainController', ['authServices', 'profileServices'])
             });
             promise.then(function () {
                 Profile.getProfileInfo({ user_info: promise.$$state.value }).then(function (dataPayload) {
+                    console.log(dataPayload);
                     app.profile_payload = dataPayload;
+                    app.usertypes = dataPayload.data.user.usertypes;
                 });
             });
 
@@ -34,6 +36,12 @@ angular.module('mainController', ['authServices', 'profileServices'])
             app.loadme = true;
         }
     });
+
+    this.initializeProf = function(usertypes) {
+        if(usertypes.length === 1) {
+            $location.path('/' + usertypes[0]);
+        }
+    };
 
     this.google = function() {
         $window.location = $window.location.protocol + '//' + $window.location.host + '/auth/google';

@@ -15,16 +15,12 @@ angular.module('documentControllers', ['documentServices'])
 
     if(app.url !== null && app.url !== undefined) {
         Documents.getDocument({ id: app.url.id }).then(function(data) {
-            //console.log(data);
             app.document = data.data;
             app.id = app.document.id;
             app.grade = app.document.grade;
             app.status = app.document.status;
-            // these two lines for readonly testing
-            //app.isReadOnly = true;
-            //app.isReadOnly = false;
+            app.submitTime = app.document.submitTime;
             app.isReadOnly = app.document.status !== 'unsubmitted';
-            //loadCytoscape(app.isReadOnly, app.document.graph);
             loadCytoscape(app.isReadOnly, app.document.graph, setDirtyBit);
         });
     } else {
@@ -129,10 +125,15 @@ angular.module('documentControllers', ['documentServices'])
         var feedback = prompt("Please leave feedback: ", "Feedback");
         var grade = prompt("Please enter grade: ", "Grade");
 
-        Documents.feedback();
-
-        app.grade = grade;
-        app.feedback = feedback;
+        Documents.feedback({ id: app.id, feedback: feedback, grade: grade }).then(function(data) {
+            if(data.data.success === true) {
+                app.successMessage = data.data.message;
+                app.grade = grade;
+                app.feedback = feedback;
+            } else {
+                app.errorMessage = data.data.message;
+            }
+        });
     };
 
     this.submitDoc = function() {

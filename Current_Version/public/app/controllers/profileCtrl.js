@@ -10,7 +10,7 @@ angular.module('profileController', ['authServices', 'profileServices'])
         };
         Profile.passFile(file).then(function(data) {
             if(data.data.success === true) {
-                app.successMessage = data.data.message;
+                app.successMessage = data.data.message + '\nLog out to access personal courses';
             } else {
                 app.errorMessage = data.data.message;
             }
@@ -37,7 +37,6 @@ angular.module('profileController', ['authServices', 'profileServices'])
         });
     };
 
-    // TODO: ensure that only ADMINS can do this...
     this.addCourse = function(name) {
         Profile.addCourse(name).then(function(data) {
            if (data.data.success === true) {
