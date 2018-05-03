@@ -447,6 +447,7 @@ module.exports = function(router, keys) {
         var t = new Date(req.body.time);
         assignment.dueDate = dd.setHours(t.getHours());
         assignment.dueDate.setMinutes(t.getMinutes());
+        assignment.pastDue = false;
 
         Course.findById(req.body.course).exec(function(err, course) {
             if(err) throw err;

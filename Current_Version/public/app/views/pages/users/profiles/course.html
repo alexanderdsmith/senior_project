@@ -69,7 +69,7 @@
                 <td><strong>Assigned</strong></td>
                 <td><strong>Due Date</strong></td>
             </tr>
-            <tr ng-repeat="assignment in course.course_payload.assignments">
+            <tr ng-repeat="assignment in course.course_payload.assignments | filter: {pastDue: 'false'}">
                 <td ng-show="course.url.usertype === 'student'"><a ng-click="course.openDocument(assignment.id, main.profile_payload.data.student_profile.id, assignment)">{{assignment.title}}</a></td>
                 <td ng-show="course.url.usertype !== 'student'">{{assignment.title}}</td>
                 <td>{{assignment.timestamp | date : "MM/dd/yyyy 'at' h:mm a" }}</td>
@@ -88,7 +88,7 @@
                 <td><strong>Due Date</strong></td>
                 <td><strong>Grade</strong></td>
             </tr>
-            <tr ng-repeat="assignment in course.course_payload.assignments">
+            <tr ng-repeat="assignment in course.course_payload.assignments | filter: {pastDue: 'true'}">
                 <td ng-show="course.url.usertype == 'student'">{{assignment.title}}</td>
                 <td ng-show="course.url.usertype != 'student'">{{assignment.title}}</td>
                 <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a"}}</td>
