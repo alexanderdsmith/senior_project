@@ -8,7 +8,7 @@
     "expiration": "24h"
   },
   "mongodb": {
-    "dbURI": "mongodb://asmithslu:pass@ds155278.mlab.com:55278/concept-maps"
+    "dbURI": "mongodb://asmithslu:pass@ds113870.mlab.com:13870/conceptmaps"
   },
   "admins": ["alexanderdsmith", "khanim", "conlonej"],
   "URL": "http://localhost:8080"

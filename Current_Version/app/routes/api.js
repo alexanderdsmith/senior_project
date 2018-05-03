@@ -264,7 +264,6 @@ module.exports = function(router, keys) {
                 if(user._student !== undefined && user._student !== null) {
                     profile_payload.student_profile.id = user._student._id;
                     user._student._courses.forEach(function (course) {
-
                         profile_payload.student_profile.course_list.push({
                             id: course._id,
                             title: course.title
@@ -315,15 +314,7 @@ module.exports = function(router, keys) {
         Course.findById(req.body.id)
         .populate([{
             path: '_assignments',
-            model: 'Assignment',
-            populate: {
-                path: '_submissions',
-                model: 'Document',
-                populate: {
-                    path: '_student',
-                    model: 'Student'
-                }
-            }
+            model: 'Assignment'
         }, {
             path: '_announcements',
             model: 'Announcement'
