@@ -129,7 +129,7 @@ module.exports = function(app, passport, keys) {
                     Student.findOne({ username: newUser.username }).exec(function(err, student) {
                         if(err) throw err;
                         if(student) {
-                            newUser._instructor = student;
+                            newUser._student = student;
                             newUser.usertypes = ['','','student',''];
                             newUser.save();
                         }
@@ -137,7 +137,7 @@ module.exports = function(app, passport, keys) {
                     Ta.findOne({ username: newUser.username }).exec(function(err, ta) {
                         if(err) throw err;
                         if(ta) {
-                            newUser._instructor = ta;
+                            newUser._ta = ta;
                             newUser.usertypes = ['','','','ta'];
                             newUser.save();
                         }
