@@ -16,9 +16,7 @@ angular.module('documentControllers', ['documentServices'])
         if (app.successMessage) {
             alert(app.successMessage);
         }
-        $window.setTimeout(function() {
-            $window.location.reload();
-        }, 3000);
+        $window.history.back();
     }
 
     if(app.url !== null && app.url !== undefined) {
