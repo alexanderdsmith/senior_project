@@ -55,7 +55,6 @@ angular.module('mainController', ['authServices', 'profileServices'])
                     app.successMessage = false;
                 }, 2000);
             } else {
-                // error message
                 app.loading = false;
                 app.errorMessage = data.data.message;
             }

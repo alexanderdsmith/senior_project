@@ -26,9 +26,7 @@ angular.module('courseController', ['courseServices'])
         if (app.successMessage) {
             alert(app.successMessage);
         }
-        $window.setTimeout(function() {
-            $window.location.reload();
-        }, 3000);
+        $window.location.reload();
     }
 
     // TODO: Instructors & TA's open documents
