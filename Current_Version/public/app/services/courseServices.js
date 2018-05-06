@@ -3,14 +3,38 @@ angular.module('courseServices', [])
 .factory('Course', ['$http', function($http) {
     var courseFactory = {};
 
-    courseFactory.addAnnouncement = function(text) {
-        return $http.post('api/addAnnouncement', text).then(function(data) {
+    courseFactory.addAnnouncement = function(announcement) {
+        return $http.post('api/addAnnouncement', announcement).then(function(data) {
+            return data;
+        });
+    };
+
+    courseFactory.editAnnouncement = function(announcement) {
+        return $http.post('api/editAnnouncement', announcement).then(function(data) {
+            return data;
+        });
+    };
+
+    courseFactory.deleteAnnouncement = function(announcement) {
+        return $http.post('api/deleteAnnouncement', announcement).then(function(data) {
             return data;
         });
     };
 
     courseFactory.addAssignment = function(assignment) {
         return $http.post('/api/addAssignment', assignment).then(function(data) {
+            return data;
+        });
+    };
+
+    courseFactory.editAssignment = function(assignment) {
+        return $http.post('/api/editAssignment', assignment).then(function(data) {
+            return data;
+        });
+    };
+
+    courseFactory.deleteAssignment = function(assignment) {
+        return $http.post('/api/deleteAssignment', assignment).then(function(data) {
             return data;
         });
     };

@@ -403,7 +403,6 @@ module.exports = function(router, keys) {
     });
 
     router.post('/addAnnouncement', function(req, res) {
-        console.log(req.body);
         var announcement = new Announcement();
         announcement.description = req.body.text;
         announcement.timestamp = Date.now();
@@ -420,10 +419,36 @@ module.exports = function(router, keys) {
                 res.json({success: false, message: 'Announcement upload failed'});
             }
         });
+
+    });
+
+    router.post('/editAnnouncement', function(req, res) {
+        Announcement.findById(req.body.id).exec(function(err, announcement) {
+            if(err) throw err;
+            if(announcement) {
+                if(req.body.description) {
+                    announcement.description = req.body.description;
+                }
+                announcement.save();
+                res.json({success: true, message: 'Announcement successfully updated'});
+            } else {
+                res.json({success: false, message: 'Announcement failed to update'})
+            }
+        });
+    });
+
+    router.delete('/deleteAnnouncement', function(req, res) {
+        Announcement.findByIdAndRemove(req.body.id, function(err) {
+            if(err) throw err;
+            if(!err) {
+                res.json({success: true, message: 'Announcement successfully deleted'});
+            } else {
+                res.json({success: false, message: 'Announcement deletion failed'});
+            }
+        });
     });
 
     router.post('/addAssignment', function(req, res) {
-        console.log(req.body);
         var assignment = new Assignment();
         assignment.title = req.body.title;
         assignment.description = req.body.description;
@@ -442,7 +467,42 @@ module.exports = function(router, keys) {
                 assignment.save();
                 res.json({success: true, message: 'Assignment successfully created'});
             } else {
-                res.json({success: false, message: 'Assignment upload failed'});
+                res.json({success: false, message: 'Assignment update failed'});
+            }
+        });
+    });
+
+    router.post('/editAssignment', function(req, res) {
+        Assignment.findById(req.body.id).exec(function(err, assignment) {
+            if(err) throw err;
+            if(assignment) {
+                if(req.body.title) {
+                    assignment.title = req.body.title;
+                }
+                if(req.body.description) {
+                    assignment.description = req.body.description;
+                }
+                if(req.body.dueDate) {
+                    var dd = new Date(req.body.dueDate);
+                    var t = new Date(req.body.time);
+                    assignment.dueDate = dd.setHours(t.getHours());
+                    assignment.dueDate.setMinutes(t.getMinutes());
+                }
+                assignment.save();
+                res.json({success: true, message: 'Assignment successfully updated'});
+            } else {
+                res.json({success: false, message: 'Assignment update failed'});
+            }
+        });
+    });
+
+    router.delete('/deleteAssignment', function(req, res) {
+        Assignment.findByIdAndRemove(req.body.id, function(err) {
+            if(err) throw err;
+            if(!err) {
+                res.json({success: true, message: 'Assignment successfully deleted'});
+            } else {
+                res.json({success: false, message: 'Assignment deletion failed'});
             }
         });
     });

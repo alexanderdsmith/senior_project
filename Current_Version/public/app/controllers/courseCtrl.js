@@ -18,7 +18,6 @@ angular.module('courseController', ['courseServices'])
         app.course_payload = { errorMessage: "Course not found." };
     }
 
-
     function reloadRoute() {
         if (app.errorMessage) {
             alert(app.errorMessage);
@@ -64,17 +63,77 @@ angular.module('courseController', ['courseServices'])
         });
     };
 
-    this.addAssignment = function(title, description, due_date, time, c_id, past) {
+    this.editAnnouncement = function(id, description) {
+        Course.editAnnouncement({id: id, description: description}).then(function(data) {
+            if (data.data.success === true) {
+                app.successMessage = data.data.message;
+                reloadRoute();
+            }
+            else {
+                app.errorMessage = data.data.message;
+            }
+        });
+    };
+
+    this.deleteAnnouncement = function(id) {
+        Course.deleteAnnouncement({id: id}).then(function(data) {
+            if (data.data.success === true) {
+                app.successMessage = data.data.message;
+                reloadRoute();
+            }
+            else {
+                app.errorMessage = data.data.message;
+            }
+        });
+    };
+
+    this.addAssignment = function(title, description, due_date, time, c_id) {
         var assignment = {
             title: title,
             description: description,
             dueDate: due_date,
             time: time,
-            course: c_id,
-            pastDue: past
+            course: c_id
         };
 
         Course.addAssignment(assignment).then(function(data) {
+            if (data.data.success === true) {
+                app.successMessage = data.data.message;
+                reloadRoute();
+            }
+            else {
+                app.errorMessage = data.data.message;
+            }
+        });
+    };
+
+    this.editAssignment = function(id, title, description, due_date, time) {
+        console.log('testing');
+        var assignment = {
+            id: id,
+            title: title,
+            description: description,
+            dueDate: due_date,
+            time: time
+        };
+
+        Course.editAssignment(assignment).then(function(data) {
+            if (data.data.success === true) {
+                app.successMessage = data.data.message;
+                reloadRoute();
+            }
+            else {
+                app.errorMessage = data.data.message;
+            }
+        });
+    };
+
+    this.deleteAssignment = function(id) {
+        var assignment = {
+            id: id
+        };
+
+        Course.deleteAssignment(assignment).then(function(data) {
             if (data.data.success === true) {
                 app.successMessage = data.data.message;
                 reloadRoute();

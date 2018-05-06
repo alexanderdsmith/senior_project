@@ -46,14 +46,43 @@
         <table class="table table-bordered">
             <tr>
                 <td><strong>Posted By</strong></td>
-                <td><strong>Summary</strong></td>
+                <td><strong>Description</strong></td>
                 <td><strong>Time</strong></td>
             </tr>
             <tr ng-repeat="announcement in course.course_payload.announcements">
                 <td>{{announcement.postedBy}}</td>
                 <td>{{announcement.description}}</td>
-                <td>{{announcement.timestamp | date : "MM/dd/yyyy 'at' h:mm a" }}</td> <!-- TODO: add due date correctly! -->
-                <!-- <td ng-show="!assignment.isSubmitted"><button type="button" class="btn btn-primary">Submit</button></td> -->
+                <td>
+                    {{announcement.timestamp | date : "MM/dd/yyyy 'at' h:mm a" }}
+                    <button ng-show="course.url.usertype !== 'student'" type="button" style="float: right; background: lightblue;" data-toggle="modal" data-target="#EditAnnouncementsModal{{announcement.id}}"><b>=</b></button>
+
+                    <div>
+                        <div class="modal fade" id="EditAnnouncementsModal{{announcement.id}}" tabindex="-1" role="dialog" aria-labelledby="EditAnnouncementsModalLabel{{announcement.id}}">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="EditAnnouncementsModalLabel">Edit Announcement</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form ng-submit="course.editAnnouncement(announcement.id, description)">
+                                            <div class="form-group">
+                                                <label for="assignmentDescription" class="control-label">Assignment Description</label>
+                                                <textarea name="description" ng-value="announcement.description" class="form-control" id="editAnnouncementDescription" ng-model="description"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Edit Announcement</button>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" ng-click="deleteAnnouncement(announcement.id)">Delete</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
             </tr>
         </table>
     </div>
@@ -68,18 +97,52 @@
                 <td><strong>Assignment</strong></td>
                 <td><strong>Assigned</strong></td>
                 <td><strong>Due Date</strong></td>
-                <td></td>
             </tr>
             <tr ng-repeat="assignment in course.course_payload.assignments | filter: {pastDue: 'false'}">
                 <td ng-show="course.url.usertype === 'student'"><a ng-click="course.openDocument(assignment.id, main.profile_payload.data.student_profile.id, assignment)">{{assignment.title}}</a></td>
                 <td ng-show="course.url.usertype !== 'student'">{{assignment.title}}</td>
                 <td>{{assignment.timestamp | date : "MM/dd/yyyy 'at' h:mm a" }}</td>
-                <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a" }}</td> <!-- TODO: add due date correctly! -->
                 <td>
-                    <button class="btn btn-primary">Edit</button>
-                    <button class="btn btn-danger" ng-show="course.url.usertype === 'instructor'">x</button>
+                    {{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a" }}
+                    <button ng-show="course.url.usertype === 'instructor'" type="button" style="float: right; background: lightblue;" data-toggle="modal" data-target="#EditAssignmentsModal{{assignment.id}}"><b>=</b></button>
+
+                    <div>
+                        <div class="modal fade" id="EditAssignmentsModal{{assignment.id}}" tabindex="-1" role="dialog" aria-labelledby="EditAssignmentsModalLabel{{assignment.id}}">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="EditAssignmentsModalLabel">Edit Assignment</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form ng-submit="course.editAssignment(assignment.id, title, description, dueDate, time)">
+                                            <div class="form-group">
+                                                <label for="assignmentTitle" class="control-label">Assignment Title</label>
+                                                <input name="title" ng-value="assignment.title" type="text" class="form-control" id="editAssignmentTitle" ng-model="title">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="assignmentDescription" class="control-label">Assignment Description</label>
+                                                <textarea name="description" ng-value="assignment.description" class="form-control" id="editAssignmentDescription" ng-model="description"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="assignmentDate" class="control-label">Current Due Date: {{assignment.dueDate | date : 'MM/dd/yyyy'}}</label>
+                                                <input name="dueDate" type="date" class="form-control" id="editAssignmentDate" ng-model="dueDate" ng-required="time">
+                                                <label for="assignmentTime" class="control-label">Current Time Due: {{assignment.dueDate | date : 'hh:mm a'}}</label>
+                                                <input name="time" type="time" class="form-control" id="editAssignmentTime" ng-model="time" ng-required="dueDate">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Update Assignment</button>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" ng-click="deleteAssignment(assignment.id)">Delete</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </td>
-                <!-- <td ng-show="!assignment.isSubmitted"><button type="button" class="btn btn-primary">Submit</button></td> -->
             </tr>
         </table>
     </div>
@@ -102,10 +165,9 @@
                             {{doc.student}}
                         </select>
                     </div>
-
                 </td>
                 <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a"}}</td>
-                <td ng-show="assignment.grade !== -1">{{assignment.grade}}</td>
+                <td ng-show="assignment.grade">{{assignment.grade}}</td>
                 <td ng-show="!assignment.isGraded">Needs Grading</td>
             </tr>
         </table>
@@ -162,38 +224,6 @@
                             <input name="time" type="time" class="form-control" id="assignmentTime" ng-model="time" ng-required="true">
                         </div>
                         <button type="submit" class="btn btn-primary">Create Assignment</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div> <!-- TODO : Not sure about this for checking if teacher -->
-    <div class="modal fade" id="EditAssignmentsModal" tabindex="-1" role="dialog" aria-labelledby="EditAssignmentsModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="EditAssignmentsModalLabel">Edit Assignment</h4>
-                </div>
-                <div class="modal-body">
-                    <form ng-submit="course.addAssignment(title, description, dueDate, time, course.course_payload.id)">
-                        <div class="form-group">
-                            <label for="assignmentTitle" class="control-label">Assignment Title</label>
-                            <input name="title" type="text" class="form-control" id="editTitle" ng-model="title">
-                        </div>
-                        <div class="form-group">
-                            <label for="assignmentDescription" class="control-label">Assignment Description</label>
-                            <textarea name="description" class="form-control" id="editDescription" ng-model="description"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="assignmentDate" class="control-label">Assignment Due Date</label>
-                            <input name="dueDate" type="date" class="form-control" id="editDate" ng-model="dueDate" ng-required="true">
-                            <label for="assignmentTime" class="control-label">Time Due</label>
-                            <input name="time" type="time" class="form-control" id="editTime" ng-model="time" ng-required="true">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Edit Assignment</button>
                     </form>
                 </div>
             </div>
