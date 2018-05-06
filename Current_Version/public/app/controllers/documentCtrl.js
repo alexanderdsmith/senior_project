@@ -1,4 +1,4 @@
-angular.module('documentControllers', ['documentServices'/*, require('../public/assets/js/cytoscape'), require('../public/assets/js/cytoscape-cytoscape.js-edgehandles-25e5317/cytoscape-edgehandles')*/])
+angular.module('documentControllers', ['documentServices'])
 
 .controller('documentCtrl', ['Documents', '$routeParams', '$window', '$scope', function(Documents, $routeParams, $window, $scope) {
     var app = this;
@@ -6,7 +6,6 @@ angular.module('documentControllers', ['documentServices'/*, require('../public/
     app.title = app.url.title;
     app.description = app.url.description;
     app.dirty = false;
-    //var contDirty = false;
     var windowListener = false;
 
 
@@ -122,14 +121,17 @@ angular.module('documentControllers', ['documentServices'/*, require('../public/
     };
 
     this.submitDoc = function() {
-        Documents.submit({ id: app.id }).then(function(data) {
-            if(data.data.success === true) {
-                app.successMessage = data.data.message;
-                backToCourse();
-            } else {
-                app.errorMessage = data.data.message;
-            }
-        });
+        var submit = $window.confirm('Are you sure you want to submit this model?');
+        if(submit) {
+            Documents.submit({id: app.id}).then(function (data) {
+                if (data.data.success === true) {
+                    app.successMessage = data.data.message;
+                    backToCourse();
+                } else {
+                    app.errorMessage = data.data.message;
+                }
+            });
+        }
     };
 
 
@@ -261,9 +263,6 @@ angular.module('documentControllers', ['documentServices'/*, require('../public/
 
         var undoStack = new Array();
 
-
-
-
         /**************************/
         /***** GET TEXT WIDTH *****/
         /**************************/
@@ -289,12 +288,8 @@ angular.module('documentControllers', ['documentServices'/*, require('../public/
             }
         }
 
-
-
-
-
         // for edge handles, the values of each option are outlined below:
-        let edgehandle_values = {
+        var edgehandle_values = {
             preview: true, // whether to show added edges preview before releasing selection
             hoverDelay: 150, // time spent hovering over a target node before it is considered selected
             handleNodes: 'node', // selector/filter function for whether edges can be made from a given node
@@ -367,7 +362,7 @@ angular.module('documentControllers', ['documentServices'/*, require('../public/
         };
 
 
-        let eh = cy.edgehandles(edgehandle_values);
+        var eh = cy.edgehandles(edgehandle_values);
         var drawMode = 1; //default for drawMode on
 
 

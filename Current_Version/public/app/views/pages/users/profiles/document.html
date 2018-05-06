@@ -7,14 +7,17 @@
 
         #cy {
             /*changed size to leave room for toolbar*/
-            width: 79%;
-            height: 70%;
-            position: absolute;
-            background: #0f0f0f;
+            width: 90rem; /* 79% */
+            height: 45rem; /* 70% */
+            /*position: absolute;*/
+            background: #f4f8ff;
+            border: 2px solid #212523;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
             /*background: #f4f8ff;*/
-            top: 540px;/*top: 400px;*/
-            left: 150px;
-            margin-bottom: 100px;
+            /*top: 540px;/*top: 400px;*/
+            /*left: 150px;*/
         }
 
         #toolbar {
@@ -51,7 +54,9 @@
     <div>
         <div id="toolbar"></div>
         <br/>
-        <div id="cy"></div>
+        <div id="cyWrapper" style="position: relative; margin-bottom: 100px">
+            <div id="cy"></div>
+        </div>
         <br/>
     </div>
 

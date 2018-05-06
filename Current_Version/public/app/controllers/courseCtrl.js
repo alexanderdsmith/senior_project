@@ -5,10 +5,11 @@ angular.module('courseController', ['courseServices'])
     app.url = JSON.parse('{"' + decodeURI(atob($routeParams.param)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     if(app.url !== null && app.url !== undefined) {
         Course.getData({id: app.url.id}).then(function (data) {
+            console.log(data.data);
             app.course_payload = data.data;
             var assign = app.course_payload.assignments;
 
-            for(i=0; i<assign.length; i++){
+            for(var i=0; i<assign.length; i++){
                 var currDate = new Date(Date.now());
                 var dueTime = Date.parse(assign[i].dueDate);
                 app.course_payload.assignments[i].pastDue = Date.parse(currDate) > dueTime;
@@ -129,6 +130,7 @@ angular.module('courseController', ['courseServices'])
     };
 
     this.deleteAssignment = function(id) {
+        console.log('delete');
         var assignment = {
             id: id
         };

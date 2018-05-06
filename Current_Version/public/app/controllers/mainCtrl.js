@@ -22,7 +22,6 @@ angular.module('mainController', ['authServices', 'profileServices'])
             });
             promise.then(function () {
                 Profile.getProfileInfo({ user_info: promise.$$state.value }).then(function (dataPayload) {
-                    console.log(dataPayload);
                     app.profile_payload = dataPayload;
                     app.usertypes = dataPayload.data.user.usertypes;
                 });

@@ -9,6 +9,11 @@ angular.module('documentServices', [])
         });
     };
 
+    documentsFactory.feedback = function(data) {
+        return $http.post('/api/feedbackDocument', data).then(function(data) {
+            return data;
+        });
+    };
 
     // Saves changes to a specific graph
     documentsFactory.updateDocument = function(saveData) {

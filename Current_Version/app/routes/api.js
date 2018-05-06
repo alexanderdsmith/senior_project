@@ -254,7 +254,6 @@ module.exports = function(router, keys) {
                 profile_payload.user.username = user.username;
                 profile_payload.user.name = user.givenname;
                 profile_payload.user.email = user.email;
-                console.log(user.usertypes.filter(function(a){return a !== ''}));
                 profile_payload.user.usertypes = user.usertypes.filter(function(a){return a !== ''});
 
                 if(user._admin !== undefined && user._admin !== null) {
@@ -314,7 +313,15 @@ module.exports = function(router, keys) {
         Course.findById(req.body.id)
         .populate([{
             path: '_assignments',
-            model: 'Assignment'
+            model: 'Assignment',
+            populate: {
+                path: '_submissions',
+                model: 'Document',
+                populate: {
+                    path: '_student',
+                    model: 'Student'
+                }
+            }
         }, {
             path: '_announcements',
             model: 'Announcement'
@@ -349,17 +356,18 @@ module.exports = function(router, keys) {
                     course_payload.assignments = [];
                     course._assignments.forEach(function (assignment) {
                         var documents = [];
-                        console.log(assignment);
-                        /*if (assignment._submissions !== undefined && course._assignments !== null) {
+                        if (assignment._submissions !== undefined && course._assignments !== null) {
                             assignment._submissions.forEach(function (document) {
 
                                 documents.push({
                                     id: document._id,
                                     sid: document._student._id,
-                                    student: document._student.username
+                                    student: document._student.username,
+                                    status: document.status,
+                                    grade: document.grade
                                 });
                             });
-                        }*/
+                        }
                         course_payload.assignments.push({
                             id: assignment._id,
                             title: assignment.title,
@@ -437,7 +445,7 @@ module.exports = function(router, keys) {
         });
     });
 
-    router.delete('/deleteAnnouncement', function(req, res) {
+    router.post('/deleteAnnouncement', function(req, res) {
         Announcement.findByIdAndRemove(req.body.id, function(err) {
             if(err) throw err;
             if(!err) {
@@ -496,7 +504,7 @@ module.exports = function(router, keys) {
         });
     });
 
-    router.delete('/deleteAssignment', function(req, res) {
+    router.post('/deleteAssignment', function(req, res) {
         Assignment.findByIdAndRemove(req.body.id, function(err) {
             if(err) throw err;
             if(!err) {
@@ -540,21 +548,18 @@ module.exports = function(router, keys) {
                 document_payload.grade = document.grade;
                 document_payload.status = document.status;
                 document_payload.graph = document.graph;
-                console.log(document_payload);
                 res.send(document_payload);
+            } else {
+                res.json({success: false, message: 'Document loading failure!'});
             }
         });
     });
 
-
-    // TODO: Save document
     router.post('/saveDocument', function(req, res){
-        console.log(req.body.doc_id);
         var graph = {
             elements: req.body.elements,
             undoStack: req.body.undoStack
         };
-        // TODO: Need to get current document to save the graph to
         Document.findById(req.body.doc_id).exec(function(err, document) {
             if(err) throw err;
             if(document) {
@@ -563,6 +568,20 @@ module.exports = function(router, keys) {
                 res.json({success: true, message: 'Document successfully saved'});
             } else {
                 res.json({success: false, message: 'Document failed to save...'});
+            }
+        });
+    });
+
+    router.post('/feedbackDocument', function(req, res) {
+        Document.findById(req.body.id).exec(function(err, document) {
+            if(err) throw err;
+            if(document) {
+                document.feedback = req.body.feedback;
+                document.grade = req.body.grade;
+                document.save();
+                res.json({success: true, message: 'Document feedback successfully given'});
+            } else {
+                res.json({success: false, message: 'Document failed to update...'});
             }
         });
     });
@@ -603,7 +622,6 @@ module.exports = function(router, keys) {
                         var sendDoc = false;
                         assignment._submissions.forEach(function (doc1) {
                             student._documents.forEach(function (doc2) {
-                                console.log(doc1._id.equals(doc2._id));
                                 if (doc1._id.equals(doc2._id)) {
                                     sendDoc = true;
                                     /**  If document exists send,  **/
@@ -611,7 +629,6 @@ module.exports = function(router, keys) {
                                     Document.findById(doc1._id).exec(function (err, document) {
                                         if (err) throw err;
                                         if (document) {
-                                            console.log(document._id);
                                             document_payload.id = document._id;
                                             document_payload.grade = document.grade;
                                             document_payload.status = document.status;

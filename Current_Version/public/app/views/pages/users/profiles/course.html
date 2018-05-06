@@ -74,7 +74,7 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" ng-click="deleteAnnouncement(announcement.id)">Delete</button>
+                                        <button type="button" class="btn btn-danger" ng-click="course.deleteAnnouncement(announcement.id)">Delete</button>
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
@@ -134,7 +134,7 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" ng-click="deleteAssignment(assignment.id)">Delete</button>
+                                        <button type="button" class="btn btn-danger" ng-click="course.deleteAssignment(assignment.id)">Delete</button>
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
@@ -157,18 +157,47 @@
                 <td><strong>Grade</strong></td>
             </tr>
             <tr ng-repeat="assignment in course.course_payload.assignments | filter: {pastDue: 'true'}">
-                <td ng-show="course.url.usertype == 'student'">{{assignment.title}}</td>
-                <td ng-show="course.url.usertype != 'student'">
-                    <div>
-                        {{assignment.title}}
-                        <select ng-model="document" ng-change="course.openDocument(doc.id, doc.sid, assignment)" ng-options="doc for doc in assignment.documents">
-                            {{doc.student}}
-                        </select>
-                    </div>
-                </td>
+                <td>{{assignment.title}}</td>
                 <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a"}}</td>
-                <td ng-show="assignment.grade">{{assignment.grade}}</td>
-                <td ng-show="!assignment.isGraded">Needs Grading</td>
+                <td ng-show="course.url.usertype !== 'student'">
+                    Needs Grading
+
+                    <button type="button" style="float: right; background: lightblue;" data-toggle="modal" data-target="#GradeAssignmentsModal{{assignment.id}}"><b>=</b></button>
+
+                    <div>
+                        <div class="modal fade" id="GradeAssignmentsModal{{assignment.id}}" tabindex="-1" role="dialog" aria-labelledby="GradeAssignmentsModalLabel{{assignment.id}}">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="GradeAssignmentsModalLabel">Grade Assignments</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="panel-heading" style="text-align: center;">Documents to Grade</div>
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td><strong>Student</strong></td>
+                                                <td><strong>Grade</strong></td>
+                                            </tr>
+                                            <tr ng-repeat="doc in assignment.documents">
+                                                <td><a ng-click="course.openDocument(assignment.id, doc.sid, assignment)">{{doc.student}}</a></td>
+                                                <td>Needs Grading</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" ng-click="course.deleteAssignment(assignment.id)">Delete</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+                <td ng-show="course.url.usertype === 'student'">
+                    Graded? <!-- TODO: modal popup that lets student know what feedback they got -->
+                </td>
             </tr>
         </table>
     </div>
