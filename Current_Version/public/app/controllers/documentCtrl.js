@@ -294,7 +294,7 @@ angular.module('documentControllers', ['documentServices'/*, require('../public/
 
 
         // for edge handles, the values of each option are outlined below:
-        let edgehandle_values = {
+        var edgehandle_values = {
             preview: true, // whether to show added edges preview before releasing selection
             hoverDelay: 150, // time spent hovering over a target node before it is considered selected
             handleNodes: 'node', // selector/filter function for whether edges can be made from a given node
@@ -367,8 +367,7 @@ angular.module('documentControllers', ['documentServices'/*, require('../public/
         };
 
 
-        let eh = cy.edgehandles(edgehandle_values);
-        var drawMode = 1; //default for drawMode on
+        var eh = cy.edgehandles(edgehandle_values);
 
 
         /****************************************************/
@@ -464,8 +463,9 @@ angular.module('documentControllers', ['documentServices'/*, require('../public/
 
 
         if(readOnly){
+            eh.disable();
+            cy.autoungrabify(true);
             cy.autounselectify(true);
-            cy.nodes().ungrabify();
             tb.disable("addNode", "addEdge", "editLabel", "delete", "save", "undo", "redo", "enableDraw", "disableDraw");
         }
 
