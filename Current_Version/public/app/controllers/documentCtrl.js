@@ -363,7 +363,10 @@ angular.module('documentControllers', ['documentServices'])
 
 
         var eh = cy.edgehandles(edgehandle_values);
+<<<<<<< HEAD
         var drawMode = 1; //default for drawMode on
+=======
+>>>>>>> 31438bf32ed9511a4f120f022d61807f485e4f2f
 
 
         /****************************************************/
@@ -459,8 +462,9 @@ angular.module('documentControllers', ['documentServices'])
 
 
         if(readOnly){
+            eh.disable();
+            cy.autoungrabify(true);
             cy.autounselectify(true);
-            cy.nodes().ungrabify();
             tb.disable("addNode", "addEdge", "editLabel", "delete", "save", "undo", "redo", "enableDraw", "disableDraw");
         }
 
