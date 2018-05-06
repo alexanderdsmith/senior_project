@@ -1,4 +1,4 @@
-angular.module('documentControllers', ['documentServices'])
+angular.module('documentControllers', ['documentServices'/*, require('../public/assets/js/cytoscape'), require('../public/assets/js/cytoscape-cytoscape.js-edgehandles-25e5317/cytoscape-edgehandles')*/])
 
 .controller('documentCtrl', ['Documents', '$routeParams', '$window', '$scope', function(Documents, $routeParams, $window, $scope) {
     var app = this;
@@ -9,6 +9,7 @@ angular.module('documentControllers', ['documentServices'])
     //var contDirty = false;
     var windowListener = false;
 
+
     function backToCourse() {
         if (app.errorMessage) {
             alert(app.errorMessage);
@@ -17,6 +18,7 @@ angular.module('documentControllers', ['documentServices'])
             alert(app.successMessage);
         }
         $window.history.back();
+
     }
 
     if(app.url !== null && app.url !== undefined) {
@@ -83,29 +85,6 @@ angular.module('documentControllers', ['documentServices'])
     }
 
 
-
-    /*var confirmFunc = function(e) {
-        var confirmationMessage = "All unsaved changes will be lost";
-
-        (e || window.event).returnValue = confirmationMessage;
-        return confirmationMessage;
-    };
-
-    function setDirtyBit(dirty){
-        if(dirty){
-            //window.addEventListener("beforeunload", confirmFunc);
-            window.addEventListener("beforeunload", confirmFunc);
-            //app.document.addEventListener("beforeunload", confirmFunc);
-        }
-        else{
-            //window.removeEventListener("beforeunload", confirmFunc);
-            window.removeEventListener("beforeunload", confirmFunc);
-            //app.document.removeEventListener("beforeunload", confirmFunc);
-        }
-        app.dirty = dirty;
-        //contDirty=dirty;
-    }*/
-
     //Updates the grade for the document
     this.updateGrade = function() {
         var newGrade = prompt("Enter a Grade", "");
@@ -153,25 +132,7 @@ angular.module('documentControllers', ['documentServices'])
         });
     };
 
-    // TODO: this is not used
-    this.saveDocument = function(data){
-        var graphData = {
-            doc_id: app.url.id,
-            elements: data.elements,
-            undoStack: data.undoStack
-        };
 
-        Documents.saveDocument(graphData).then(function(data) {
-            if (data.data.success === true) {
-                app.successMessage = data.data.message;
-            }
-            else {
-                app.errorMessage = data.data.message;
-            }
-        });
-
-        console.log("Document Saved!");
-    };
 
     function updateDocument(graphData) {
         //var graphData = {
@@ -180,55 +141,19 @@ angular.module('documentControllers', ['documentServices'])
         //};
         graphData.doc_id = app.url.id;
 
-        //Documents.updateDocument(currDocument, graphData).then(function(data) {
-        Documents.updateDocument(graphData);
-
-
-        /*Documents.updateDocument(currDocument, graphData).then(function(data) {
-            if(data.data.success === true) {
+        Documents.updateDocument(graphData).then(function(data) {
+            if (data.data.success === true) {
                 app.successMessage = data.data.message;
+                console.log(app.successMessage);
             }
             else {
                 app.errorMessage = data.data.message;
             }
         });
-        console.log("Graph updated Controller");*/
 
-
-        //Document.updateGraph(document, graphData)/*.then(function(data) {
-        /*   if(data.data.success === true) {
-                app.successMessage = data.data.message;
-            }
-            else {
-                app.errorMessage = data.data.message;
-            }
-        });*/
-        //document.graph.elements = data.elements;
-        //document.graph.undoStack = data.undoStack;
-        //console.log("Graph updated Controller");
-        //return graphData;
     }
 
-    // this.updateDocument = function(graphData) {
-    //     console.log("Updating now");
-    //     //var graphData = {
-    //     //    elements: data.elements,
-    //     //    undoStack: data.undoStack
-    //     //};
-    //     Document.updateDocument(this.document, graphData)
-    //     //Document.updateGraph(document, graphData)/*.then(function(data) {
-    //         if(data.data.success === true) {
-    //             app.successMessage = data.data.message;
-    //         }
-    //         else {
-    //             app.errorMessage = data.data.message;
-    //         }
-    //     });
-    //     //document.graph.elements = data.elements;
-    //     //document.graph.undoStack = data.undoStack;
-    //     console.log("Graph updated Controller");
-    //     //return graphData;
-    // };
+
 
     this.updateTitle = function() {
         var newTitle = prompt("Enter a Title", "");
@@ -254,9 +179,7 @@ angular.module('documentControllers', ['documentServices'])
     }
     */
 
-    // this.createCytoscape = function() {
 
-    //     loadCytoScape();
 
     /*function loadCytoscape(readOnly, docData) {*/
     function loadCytoscape(readOnly, docData, setDirtyBit) {
@@ -288,6 +211,34 @@ angular.module('documentControllers', ['documentServices'])
                         'text-outline-width': 1.5,
                         "text-outline-color": "#f4f8ff"
                     }
+                },
+                {
+                    //styling for edge handle extension
+                    selector: '.eh-handle',
+                    style: {
+                        'background-color': 'orange',
+                        'width': 12,
+                        'height': 12,
+                        'border-width': 12,
+                        'border-opacity': 0
+                    }
+                },
+                {
+                    //Selector for the source node
+                    selector: '.eh-source',
+                    style: {
+                        'border-width': 2//,
+                        //'border-color': 'red'
+                    }
+                /*},
+                {
+                    selector: '.eh-preview',
+                    style: {
+                        'background-color': 'red',
+                        'line-color': 'red',
+                        'target-arrow-color': 'red',
+                        'source-arrow-color': 'red'
+                    }*/
                 }],
 
             elements: [
@@ -309,6 +260,8 @@ angular.module('documentControllers', ['documentServices'])
         var graph = document.getElementById("cy");
 
         var undoStack = new Array();
+
+
 
 
         /**************************/
@@ -337,6 +290,147 @@ angular.module('documentControllers', ['documentServices'])
         }
 
 
+
+
+
+        // for edge handles, the values of each option are outlined below:
+        let edgehandle_values = {
+            preview: true, // whether to show added edges preview before releasing selection
+            hoverDelay: 150, // time spent hovering over a target node before it is considered selected
+            handleNodes: 'node', // selector/filter function for whether edges can be made from a given node
+            handlePosition: function( node ){
+                return 'middle top'; // sets the position of the handle in the format of "X-AXIS Y-AXIS" such as "left top", "middle top"
+            },
+            handleInDrawMode: false, // whether to show the handle in draw mode
+            edgeType: function( sourceNode, targetNode ){
+                // can return 'flat' for flat edges between nodes or 'node' for intermediate node between them
+                // returning null/undefined means an edge can't be added between the two nodes
+                return 'flat';
+            },
+            loopAllowed: function( node ){
+                // for the specified node, return whether edges from itself to itself are allowed
+                return false;
+            },
+            nodeLoopOffset: -50, // offset for edgeType: 'node' loops
+            nodeParams: function( sourceNode, targetNode ){
+                // for edges between the specified source and target
+                // return element object to be passed to cy.add() for intermediary node
+                return {};
+            },
+            edgeParams: function( sourceNode, targetNode, i ){
+                // for edges between the specified source and target
+                // return element object to be passed to cy.add() for edge
+                // NB: i indicates edge index in case of edgeType: 'node'
+                return {};
+            },
+            show: function( sourceNode ){
+                // fired when handle is shown
+            },
+            hide: function( sourceNode ){
+                // fired when the handle is hidden
+            },
+            start: function( sourceNode ){
+                // fired when edgehandles interaction starts (drag on handle)
+            },
+            complete: function( sourceNode, targetNode, addedEles ){
+                // fired when edgehandles is done and elements are added
+                cy.remove(addedEles); //once edge handle complete, remove then add again
+                var source = sourceNode.id();
+                var target = targetNode.id();
+                addEdge(source, target); //using addEdge for save and undo functionality
+
+            },
+            stop: function( sourceNode ){
+                // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
+            },
+            cancel: function( sourceNode, cancelledTargets ){
+                // fired when edgehandles are cancelled (incomplete gesture)
+            },
+            hoverover: function( sourceNode, targetNode ){
+                // fired when a target is hovered
+            },
+            hoverout: function( sourceNode, targetNode ){
+                // fired when a target isn't hovered anymore
+            },
+            previewon: function( sourceNode, targetNode, previewEles ){
+                // fired when preview is shown
+            },
+            previewoff: function( sourceNode, targetNode, previewEles ){
+                // fired when preview is hidden
+            },
+            drawon: function(){
+                // fired when draw mode enabled
+            },
+            drawoff: function(){
+                // fired when draw mode disabled
+            }
+        };
+
+
+        let eh = cy.edgehandles(edgehandle_values);
+        var drawMode = 1; //default for drawMode on
+
+
+        /****************************************************/
+        /***** HANDLE GRAY-OUT OF EDIT LABEL AND DELETE *****/
+        /****************************************************/
+        cy.on("select", toolbarSelectHandler);
+        cy.on("unselect", toolbarUnselectHandler);
+
+        function toolbarSelectHandler(event) {
+            tb.enable("editLabel");
+            tb.enable("delete");
+        }
+
+        function toolbarUnselectHandler(event) {
+            tb.disable("editLabel");
+            tb.disable("delete");
+        }
+
+
+
+
+
+        /**********************************/
+        /***** TOOLBAR EVENT HANDLERS *****/
+        /**********************************/
+        function addNode_Listener(event) {
+            // if the click was on the canvas, add node at the click position
+            if (!(event.target.length > 0)) {
+                addNode(event.renderedPosition.x, event.renderedPosition.y);
+            }
+        }
+
+        var source;
+        var dest;
+
+        function addEdge_Listener(event) {
+            if (source == "") { // if there isn't a source node yet
+                source = this.id();
+            }
+            else { // else there is already a source node
+                dest = this.id();
+                addEdge(source, dest);
+
+                source = "";
+                dest = "";
+            }
+        }
+
+        function editLabel_Handler() {
+            // ensuring only one element is selected
+            var selectedElems = cy.$(':selected');
+            if (selectedElems.length == 1) {
+                editLabel(selectedElems[0]);
+            }
+            else if (selectedElems.length > 1) {
+                alert("You can only edit one label at a time!");
+            }
+        }
+
+
+
+
         if(w2ui.hasOwnProperty('toolbar')){
             w2ui['toolbar'].destroy();
         }
@@ -346,7 +440,7 @@ angular.module('documentControllers', ['documentServices'])
             name: 'toolbar',
             items: [
                 {type: 'button', id: 'addNode', text: 'Add Box'},
-                {type: 'button', id: 'addEdge', text: 'Add Arrow'},
+                {type: 'button', id: 'addEdge', text: 'Add Arrow', disabled: true},
                 {type: 'break'},
                 {type: 'button', id: 'editLabel', text: 'Edit Label', disabled: true},
                 {type: 'button', id: 'delete', text: 'Delete', disabled: true},
@@ -355,7 +449,9 @@ angular.module('documentControllers', ['documentServices'])
                 { type: 'button', id: 'undo', text: 'Undo'},
                 { type: 'button', id: 'redo', text: 'Redo', disabled: true},
                 { type: 'break'},
-                { type: 'button', id: 'autofit', text: 'Auto-Fit'}
+                { type: 'button', id: 'autofit', text: 'Auto-Fit'},
+                { type: 'button', id: 'enableDraw', text: 'Enable Drawing', disabled: true},
+                { type: 'button', id: 'disableDraw', text: 'Disable Drawing'}
             ],
             //onClick: function (event) {
             //    console.log('Target: '+ event.target, event);
@@ -366,10 +462,11 @@ angular.module('documentControllers', ['documentServices'])
         var tb = w2ui['toolbar'];
         var items = tb['items'];
 
+
         if(readOnly){
             cy.autounselectify(true);
             cy.nodes().ungrabify();
-            tb.disable("addNode", "addEdge", "editLabel", "delete", "save", "undo", "redo");
+            tb.disable("addNode", "addEdge", "editLabel", "delete", "save", "undo", "redo", "enableDraw", "disableDraw");
         }
 
 
@@ -429,88 +526,99 @@ angular.module('documentControllers', ['documentServices'])
         }
 
 
-        //cy.add({
-        //    data: { id: 'node' }
-        //})
 
 
-        // TODO : Load the graph
 
-        /*loadGraph(docArg.graph);
-        function loadGraph(graph) {
-            if(graph.elements != "") {
-                cy.add(JSON.parse(graph.elements));
+
+        /***************************/
+        /***** TOOLBAR ONCLICK *****/
+        /***************************/
+        // Handles clicking buttons on the toolbar
+        w2ui.toolbar.on('click', function (event) {
+            var targ = tb.get(event.target); // get the clicked button
+
+            // Any time a button is clicked, turn off any listeners that may have
+            // previously been created
+            cy.off('click', addNode_Listener);
+            cy.off('click', 'node', addEdge_Listener);
+
+            // making sure only one button can be checked at a time
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].id != event.target) {
+                    tb.uncheck(items[i].id);
+                }
             }
 
-            //Handle undo stack
-            var undoItems = graph.undoStack;
-            var deletedElems = [];
+            if (targ.checked != true) {
+                switch (event.target) {
+                    case ("addNode"): // Add Node
+                        var selectedElements = cy.$('node:selected, edge:selected');
+                        selectedElements.unselect();
 
-            // TODO : Still need more code for loading the graph
-        }*/
+                        cy.on('click', addNode_Listener);
+                        break;
+                    case ("addEdge"): // Add Edge
+                        var selectedElements = cy.$('node:selected, edge:selected');
+                        selectedElements.unselect();
 
+                        source = "";
+                        dest = "";
 
-        /****************************************************/
-        /***** HANDLE GRAY-OUT OF EDIT LABEL AND DELETE *****/
-        /****************************************************/
-        cy.on("select", toolbarSelectHandler);
-        cy.on("unselect", toolbarUnselectHandler);
-
-        function toolbarSelectHandler(event) {
-            tb.enable("editLabel");
-            tb.enable("delete");
-        }
-
-        function toolbarUnselectHandler(event) {
-            tb.disable("editLabel");
-            tb.disable("delete");
-        }
-
-
-        /**********************************/
-        /***** TOOLBAR EVENT HANDLERS *****/
-
-        /**********************************/
-        function addNode_Listener(event) {
-            // if the click was on the canvas, add node at the click position
-            if (!(event.target.length > 0)) {
-                addNode(event.renderedPosition.x, event.renderedPosition.y);
+                        cy.on('click', 'node', addEdge_Listener);
+                        break;
+                    case ("editLabel"): // Edit Label
+                        editLabel_Handler();
+                        break;
+                    case ("delete"): // Delete Selected
+                        deleteSelected();
+                        break;
+                    case ("undo"): // Undo
+                        undo();
+                        break;
+                    case ("redo"): // Redo
+                        redo();
+                        break;
+                    case ("save"): // Save
+                        saveGraph();
+                        break;
+                    case ("autofit"): // Fit
+                        cy.fit(cy.$('node'), 100);
+                        break;
+                    case ("enableDraw"):
+                        eh.enable(); //enable edge handles (drawing edges)
+                        //eh.enableDrawMode();
+                        tb.disable("enableDraw");
+                        tb.disable("addEdge");
+                        tb.enable("disableDraw");
+                        break;
+                    case ("disableDraw"):
+                        //console.log("Disabling drawing edges");
+                        tb.enable("addEdge");
+                        eh.disable(); //disable edge handles (disable drawing edges)
+                        cy.remove('node.eh-handle');
+                        tb.disable("disableDraw");
+                        tb.enable("enableDraw");
+                        break;
+                    //case ("item9"): // Print Undo stack
+                    //    for (var i = 0; i < undoStack.length; i++) {
+                    //        console.log(undoStack[i]);
+                    //    }
+                    //    break;
+                }
             }
-        }
-
-        var source;
-        var dest;
-
-        function addEdge_Listener(event) {
-            if (source == "") { // if there isn't a source node yet
-                source = this.id();
+            else { // if unchecking an item
+                switch (event.target) {
+                    case ("addNode"): // Add Node
+                        cy.off('click', addNode_Listener);
+                        break;
+                    case ("addEdge"): // Add Edge
+                        cy.off('click', 'node', addEdge_Listener);
+                        break;
+                }
             }
-            else { // else there is already a source node
-                dest = this.id();
-                addEdge(source, dest);
+        });
 
-                source = "";
-                dest = "";
-            }
-        }
 
-        function editLabel_Handler() {
-            // ensuring only one element is selected
-            var selectedElems = cy.$(':selected');
-            if (selectedElems.length == 1) {
-                editLabel(selectedElems[0]);
-            }
-            else if (selectedElems.length > 1) {
-                alert("You can only edit one label at a time!");
-            }
-        }
-
-        // used for editing labels with double click
-        //not being used currently
-        function editLabel_ListenerDBL(event) {
-            var targ = event.target;
-            editLabel(targ);
-        }
 
         /**********************/
         /***** LOAD GRAPH *****/
@@ -594,84 +702,8 @@ angular.module('documentControllers', ['documentServices'])
             }
         };
 
-        
-        //if(readOnly){
-        //    cy.nodes().ungrabify();
-        //}
 
 
-        /***************************/
-        /***** TOOLBAR ONCLICK *****/
-        /***************************/
-        // Handles clicking buttons on the toolbar
-        w2ui.toolbar.on('click', function (event) {
-            var targ = tb.get(event.target); // get the clicked button
-
-            // Any time a button is clicked, turn off any listeners that may have
-            // previously been created
-            cy.off('click', addNode_Listener);
-            cy.off('click', 'node', addEdge_Listener);
-
-            // making sure only one button can be checked at a time
-            for (var i = 0; i < items.length; i++) {
-                if (items[i].id != event.target) {
-                    tb.uncheck(items[i].id);
-                }
-            }
-
-            if (targ.checked != true) {
-                switch (event.target) {
-                    case ("addNode"): // Add Node
-                        var selectedElements = cy.$('node:selected, edge:selected');
-                        selectedElements.unselect();
-
-                        cy.on('click', addNode_Listener);
-                        break;
-                    case ("addEdge"): // Add Edge
-                        var selectedElements = cy.$('node:selected, edge:selected');
-                        selectedElements.unselect();
-
-                        source = "";
-                        dest = "";
-
-                        cy.on('click', 'node', addEdge_Listener);
-                        break;
-                    case ("editLabel"): // Edit Label
-                        editLabel_Handler();
-                        break;
-                    case ("delete"): // Delete Selected
-                        deleteSelected();
-                        break;
-                    case ("undo"): // Undo
-                        undo();
-                        break;
-                    case ("redo"): // Redo
-                        redo();
-                        break;
-                    case ("save"): // Save
-                        saveGraph();
-                        break;
-                    case ("autofit"): // Fit
-                        cy.fit(cy.$('node'), 100);
-                        break;
-                    //case ("item9"): // Print Undo stack
-                    //    for (var i = 0; i < undoStack.length; i++) {
-                    //        console.log(undoStack[i]);
-                    //    }
-                    //    break;
-                }
-            }
-            else { // if unchecking an item
-                switch (event.target) {
-                    case ("addNode"): // Add Node
-                        cy.off('click', addNode_Listener);
-                        break;
-                    case ("addEdge"): // Add Edge
-                        cy.off('click', 'node', addEdge_Listener);
-                        break;
-                }
-            }
-        });
 
         var dirty;
         setClean();
@@ -706,42 +738,23 @@ angular.module('documentControllers', ['documentServices'])
                 undoStack: data.undoStack
             };
             console.log(graphData);
-            //Document.updateGraph(app.document, graphData).then(function(data) {
-            //updateDocument(this.document, graphData);//.then(function(data) {
-            //updateDocument(Profile.getDocument(), graphData);
-            //TODO : Check where to get current document working on (Maybe)
+
+            //send graph data to controller function to save
             updateDocument(graphData);
-            //updatingDocument(app.document, graphData).then(function(data) {//;//.then(function(data){
-            //    console.log(data);
-            //});
-            //Document.updateDocument(this.document, graphData);
-                //if(data.data.success === true) {
-                //    app.successMessage = data.data.message;
-                //}
-                //else {
-                //    app.errorMessage = data.data.message;
-                //}
-            //});
-            //document.graph.elements = data.elements;
-            //document.graph.undoStack = data.undoStack;
+
+
             console.log("Graph updated Controller cytoscape");
-            //return graphData;
         };
 
 
         function saveGraph() {
             var selectedElements = cy.$('node:selected, edge:selected');
+            cy.remove('node.eh-handle'); //remove all edge handles before save
             selectedElements.unselect();
-            //console.log(undoStack);
 
             var undoStackJSON = [];
 
             for(var i=0; i<undoStack.length; i++) {
-                //console.log(cy.json());
-                //console.log(undoStack[i]);
-                //console.log(undoStack[i].target);
-                //console.log(JSON.stringify(undoStack[i].target[1]));
-                //console.log(undoStack[i].target._private);
                 undoStackJSON[i] = {};
                 undoStackJSON[i].type = undoStack[i].type;
                 undoStackJSON[i].time = undoStack[i].time;
@@ -750,9 +763,6 @@ angular.module('documentControllers', ['documentServices'])
                 if (undoStackJSON[i].type == "deleteSelected") {
                     undoStackJSON[i].target = "";
                     for (var j=0; j<undoStack[i].target.length; j++){
-                        //console.log(i);
-                        //console.log(j);
-                        //console.log(undoStack[i].target[j]);
                         undoStackJSON[i].target += JSON.stringify(undoStack[i].target[j].json());
                         if (j!=undoStack[i].target.length-1) {
                             undoStackJSON[i].target += "<newelem>";
@@ -772,28 +782,18 @@ angular.module('documentControllers', ['documentServices'])
                 undoStackJSON[i] = JSON.stringify(undoStackJSON[i]); //stringify JSON
             }
 
-            //console.log(undoStackJSON);
 
-            //o.updateGraph(docArg, { elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
-            //updateGraph( { elements: JSON.stringify(cy.data())})
 
+            //Sending graph data to controller through updateGraph function
             updateGraph({ elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
 
-
-            /*console.log(cy.elements().jsons());
-            console.log(JSON.stringify(cy.elements().jsons()));
-            var elems = JSON.stringify(cy.elements().jsons());
-            var undoing = undoStackJSON;
-            updateGraph({ elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
-*/
-
-            //this.updateGraph(elems, undoing);
-            //updateGraph( { elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
-            //this.updateGraph(docArg, { elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
 
             //Handle Dirty bit
             setClean();
         }
+
+
+
 
         /* UNDO */
         var lastEvent;
@@ -889,6 +889,8 @@ angular.module('documentControllers', ['documentServices'])
             }
         }
 
+
+
         /***** ADD NODE *****/
         function addNode(posX, posY) {
             incrementNodeID();
@@ -915,8 +917,11 @@ angular.module('documentControllers', ['documentServices'])
             setDirty();
         }
 
+
         /***** ADD EDGE *****/
         function addEdge(src, dst) {
+            //console.log(cy.edges().length);
+            //console.log(globalEdgeID);
             incrementEdgeID();
             cy.add({
                 group: "edges",
@@ -1011,6 +1016,7 @@ angular.module('documentControllers', ['documentServices'])
             console.log("Document Saved!");
         }*/
 
-    // };
     };
+
 }]);
+

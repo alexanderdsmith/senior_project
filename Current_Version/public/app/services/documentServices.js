@@ -9,37 +9,19 @@ angular.module('documentServices', [])
         });
     };
 
-    // All $http requests are accessing the routes that are set up in the "routes" folder
 
+    // Saves changes to a specific graph
     documentsFactory.updateDocument = function(saveData) {
-        //var graphData = {'elements': data.elements, 'undoStack': data.undoStack, 'doc_id': data.doc_id };
         return $http.post('/api/saveDocument', saveData).then(function(data){
             return data;
-            /*returnedData.graph.elements = data.elements;
-            returnedData.graph.undoStack = data.undoStack;*/
-            //currDocument.graph.elements = returnedData.elements;
-            //currDocument.graph.undoStack = returnedData.undoStack;
-            /*return returnedData;*/
-        }).catch(function(returnedData) {//;
+        }).catch(function(returnedData) {
             return returnedData;
-            //return data;
         });
     };
 
     documentsFactory.submit = function(id) {
         return $http.post('/api/submitDocument', id).then(function(data) {
             return data;
-        });
-    };
-
-    // Saves changes to a specific graph
-    documentsFactory.updateGraph = function(document, data) {
-        return $http.put('/api/student/saveDocument' + document._id + '/graph', data, {
-            //headers: {Authorization: 'Bearer '+AuthToken.getToken()}
-        }).then(function(returnedData) {
-            document.graph.elements = returnedData.elements;
-            document.graph.undoStack = returnedData.undoStack;
-            return returnedData;
         });
     };
 
