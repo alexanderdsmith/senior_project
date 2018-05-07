@@ -5,8 +5,6 @@ angular.module('mainController', ['authServices', 'profileServices'])
 
     app.loadme = false;
 
-    $window.onbeforeunload = Auth.logout();
-
     // Updates user parameters on reload
     $rootScope.$on('$routeChangeStart', function() {
         if(Auth.isLoggedIn()) {
