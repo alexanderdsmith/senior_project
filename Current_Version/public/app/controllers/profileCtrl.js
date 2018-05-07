@@ -3,6 +3,16 @@ angular.module('profileController', ['authServices', 'profileServices'])
 .controller('profileCtrl', ['Profile', '$window', '$location', function(Profile, $window, $location) {
     var app = this;
 
+    function reloadRoute() {
+        if (app.errorMessage) {
+            alert(app.errorMessage);
+        }
+        if (app.successMessage) {
+            alert(app.successMessage);
+        }
+        $window.location.reload();
+    }
+
     this.uploadFile = function(title, csv) {
         var file = {
             title: title,
@@ -37,22 +47,16 @@ angular.module('profileController', ['authServices', 'profileServices'])
         });
     };
 
-    this.addCourse = function(name) {
-        Profile.addCourse(name).then(function(data) {
-           if (data.data.success === true) {
-               app.successMessage = data.data.message;
-           }
-           else {
-               app.errorMessage = data.data.message;
-           }
-        });
-    };
-
-    // add in future update
-    this.removeAssignment = function(assignment) {
-    };
-
-    this.removeAnnouncement = function(announcement) {
+    this.deleteCourse = function(id) {
+        Profile.deleteCourse({id: id}).then(function(data) {
+            if (data.data.success === true) {
+                app.successMessage = data.data.message;
+                reloadRoute();
+            }
+            else {
+                app.errorMessage = data.data.message;
+            }
+        })
     };
 
 }]);
