@@ -5,7 +5,6 @@ angular.module('courseController', ['courseServices'])
     app.url = JSON.parse('{"' + decodeURI(atob($routeParams.param)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     if(app.url !== null && app.url !== undefined) {
         Course.getData({id: app.url.id}).then(function (data) {
-            console.log(data.data);
             app.course_payload = data.data;
             var assign = app.course_payload.assignments;
 
@@ -120,7 +119,6 @@ angular.module('courseController', ['courseServices'])
     };
 
     this.editAssignment = function(id, title, description, due_date, time) {
-        console.log('testing');
         var assignment = {
             id: id,
             title: title,
@@ -141,7 +139,6 @@ angular.module('courseController', ['courseServices'])
     };
 
     this.deleteAssignment = function(id) {
-        console.log('delete');
         var assignment = {
             id: id
         };
