@@ -105,25 +105,27 @@ angular.module('documentControllers', ['documentServices'])
         });
     };
 
-    this.submitDoc = function() {
-        var submit = $window.confirm('Are you sure you want to submit this model?');
-        if(submit) {
-            Documents.submit({id: app.id}).then(function (data) {
-                if (data.data.success === true) {
-                    app.successMessage = data.data.message;
-                    backToCourse();
-                } else {
-                    app.errorMessage = data.data.message;
+    function submitDoc(graphData) {
+        graphData.doc_id = app.url.id;
+
+        Documents.updateDocument(graphData).then(function(ddata) {
+            if (ddata.data.success) {
+                var submit = $window.confirm('Are you sure you want to submit this model?');
+                if (submit) {
+                    Documents.submit({id: app.id}).then(function (data) {
+                        if (data.data.success === true) {
+                            app.successMessage = data.data.message;
+                            backToCourse();
+                        } else {
+                            app.errorMessage = data.data.message;
+                        }
+                    });
                 }
-            });
-        }
-    };
+            }
+        });
+    }
 
     function updateDocument(graphData) {
-        //var graphData = {
-        //    elements: data.elements,
-        //    undoStack: data.undoStack
-        //};
         graphData.doc_id = app.url.id;
 
         Documents.updateDocument(graphData).then(function(data) {
@@ -718,7 +720,6 @@ angular.module('documentControllers', ['documentServices'])
 
             //send graph data to controller function to save
             updateDocument(graphData);
-
 
             console.log("Graph updated Controller cytoscape");
         };
