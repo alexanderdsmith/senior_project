@@ -546,6 +546,7 @@ module.exports = function(router, keys) {
                 document_payload.id = document._id;
                 document_payload.timestamp = document.timestamp;
                 document_payload.grade = document.grade;
+                document_payload.feedback = document.feedback;
                 document_payload.status = document.status;
                 document_payload.graph = document.graph;
                 res.send(document_payload);

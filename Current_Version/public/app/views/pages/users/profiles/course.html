@@ -157,10 +157,11 @@
                 <td><strong>Grade</strong></td>
             </tr>
             <tr ng-repeat="assignment in course.course_payload.assignments | filter: {pastDue: 'true'}">
-                <td>{{assignment.title}}</td>
+                <td ng-show="course.url.usertype === 'student'"><a ng-click="course.openDocument(assignment.id, main.profile_payload.data.student_profile.id, assignment)">{{assignment.title}}</a></td>
+                <td ng-show="course.url.usertype !== 'student'">{{assignment.title}}</td>
                 <td>{{assignment.dueDate | date : "MM/dd/yyyy 'at' h:mm a"}}</td>
                 <td ng-show="course.url.usertype !== 'student'">
-                    Needs Grading
+                    {{assignment.allgraded}} More to Grade
 
                     <button type="button" style="float: right; background: lightblue;" data-toggle="modal" data-target="#GradeAssignmentsModal{{assignment.id}}"><b>=</b></button>
 
@@ -173,20 +174,22 @@
                                         <h4 class="modal-title" id="GradeAssignmentsModalLabel">Grade Assignments</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="panel-heading" style="text-align: center;">Documents to Grade</div>
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <td><strong>Student</strong></td>
-                                                <td><strong>Grade</strong></td>
-                                            </tr>
-                                            <tr ng-repeat="doc in assignment.documents">
-                                                <td><a ng-click="course.openDocument(assignment.id, doc.sid, assignment)">{{doc.student}}</a></td>
-                                                <td>Needs Grading</td>
-                                            </tr>
-                                        </table>
+                                            <div class="panel panel-default">
+                                            <div class="panel-heading" style="text-align: center;"><strong>Documents to Grade</strong></div>
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td><strong>Student</strong></td>
+                                                    <td><strong>Status</strong></td>
+                                                </tr>
+                                                <tr ng-repeat="doc in assignment.documents">
+                                                    <td><a data-dismiss="modal" ng-click="course.openDocument(assignment.id, doc.sid, assignment)">{{doc.student}}</a></td>
+                                                    <td ng-show="doc.grade === -1">Needs Grading</td>
+                                                    <td ng-show="doc.grade !== -1">Graded</td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" ng-click="course.deleteAssignment(assignment.id)">Delete</button>
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
@@ -195,9 +198,7 @@
                     </div>
 
                 </td>
-                <td ng-show="course.url.usertype === 'student'">
-                    Graded? <!-- TODO: modal popup that lets student know what feedback they got -->
-                </td>
+                <td ng-show="course.url.usertype === 'student'">{{}}</td>
             </tr>
         </table>
     </div>

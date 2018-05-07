@@ -9,12 +9,23 @@ angular.module('courseController', ['courseServices'])
             app.course_payload = data.data;
             var assign = app.course_payload.assignments;
 
-            for(var i=0; i<assign.length; i++){
+            for(var i = 0; i < assign.length; i++){
                 var currDate = new Date(Date.now());
                 var dueTime = Date.parse(assign[i].dueDate);
                 app.course_payload.assignments[i].pastDue = Date.parse(currDate) > dueTime;
             }
-        });
+
+            app.course_payload.assignments.forEach(function(assignment) {
+                var allg = 0;
+                assignment.documents.forEach(function(document) {
+                    if(document.grade === -1) {
+                        allg++;
+                    }
+                });
+
+                assignment.allgraded = allg;
+            });
+        })
     } else {
         app.course_payload = { errorMessage: "Course not found." };
     }

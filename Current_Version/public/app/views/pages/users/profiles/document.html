@@ -40,10 +40,10 @@
     </div>
 
     <div id="modals" ng-show="document.status !== 'unsubmitted'">
-        <h3 ng-show="document.feedback">Feedback:</h3>
-        <h5 ng-show="document.feedback">{{document.feedback}}</h5><h5 ng-show="!document.feedback">Awaiting Feedback</h5>
-        <h3 ng-show="document.grade !== -1">Grade:</h3>
-        <h5 ng-show="document.grade !== -1">{{document.grade}}</h5><h5 ng-show="document.grade === -1">Awaiting Grade</h5>
+        <h3 ng-show="document.feedback">Feedback: {{document.feedback}}</h3>
+        <h5 ng-show="!document.feedback">Awaiting Feedback</h5>
+        <h3 ng-show="document.grade !== -1">Grade: {{document.grade}}/100</h3>
+        <h5 ng-show="document.grade === -1">Awaiting Grade</h5>
     </div>
 
     <div id="feedback" ng-show="document.url.usertype !== 'student'">

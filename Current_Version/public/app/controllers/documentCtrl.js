@@ -25,6 +25,7 @@ angular.module('documentControllers', ['documentServices'])
             app.document = data.data;
             app.id = app.document.id;
             app.grade = app.document.grade;
+            app.feedback = app.document.feedback;
             app.status = app.document.status;
             app.submitTime = app.document.submitTime;
             app.isReadOnly = app.document.status !== 'unsubmitted';
@@ -83,31 +84,15 @@ angular.module('documentControllers', ['documentServices'])
         app.dirty = dirty;
     }
 
-
-    //Updates the grade for the document
-    this.updateGrade = function() {
-        var newGrade = prompt("Enter a Grade", "");
-        if(newGrade === '' || isNaN(newGrade)) {
-            alert("Invalid grade.");
-            return;
-        }
-
-        this.grade = newGrade;
-
-        //then passing the data to factory, interfaces with the backend
-        Documents.updateGrade(app.document, newGrade).then(function(data) {
-            if(data.data.success === true) {
-                app.successMessage = data.data.message;
-            } else {
-                app.errorMessage = data.data.message;
-            }
-        });
-    };
-
-    //TODO: database
     this.updateFeedback = function() {
         var feedback = prompt("Please leave feedback: ", "Feedback");
-        var grade = prompt("Please enter grade: ", "Grade");
+        if(feedback === '')
+            feedback = 'No feedback given.';
+        var grade = parseInt(prompt("Please enter grade: ", "Grade"));
+        if(grade === '' || isNaN(grade)) {
+            alert('Please enter a grade!');
+            return;
+        }
 
         Documents.feedback({ id: app.id, feedback: feedback, grade: grade }).then(function(data) {
             if(data.data.success === true) {
@@ -134,8 +119,6 @@ angular.module('documentControllers', ['documentServices'])
         }
     };
 
-
-
     function updateDocument(graphData) {
         //var graphData = {
         //    elements: data.elements,
@@ -154,8 +137,6 @@ angular.module('documentControllers', ['documentServices'])
         });
 
     }
-
-
 
     this.updateTitle = function() {
         var newTitle = prompt("Enter a Title", "");
@@ -363,10 +344,7 @@ angular.module('documentControllers', ['documentServices'])
 
 
         var eh = cy.edgehandles(edgehandle_values);
-<<<<<<< HEAD
         var drawMode = 1; //default for drawMode on
-=======
->>>>>>> 31438bf32ed9511a4f120f022d61807f485e4f2f
 
 
         /****************************************************/
