@@ -22,8 +22,8 @@ angular.module('profileServices', [])
         });
     };
 
-    profileFactory.addCourse = function(name) {
-        return $http.post('api/addCourse', name).then(function(data) {
+    profileFactory.deleteCourse = function(id) {
+        return $http.post('/api/deleteCourse', id).then(function(data) {
             return data;
         });
     };

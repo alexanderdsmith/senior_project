@@ -410,6 +410,17 @@ module.exports = function(router, keys) {
         });
     });
 
+    router.post('/deleteCourse', function(req, res) {
+        Course.findByIdAndRemove(req.body.id, function(err) {
+            if(err) throw err;
+            if(!err) {
+                res.json({success: true, message: 'Assignment successfully deleted'});
+            } else {
+                res.json({success: false, message: 'Assignment deletion failed'});
+            }
+        });
+    });
+
     router.post('/addAnnouncement', function(req, res) {
         var announcement = new Announcement();
         announcement.description = req.body.text;
