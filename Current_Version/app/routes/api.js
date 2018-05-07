@@ -410,13 +410,14 @@ module.exports = function(router, keys) {
         });
     });
 
+    // TODO: clean up course data
     router.post('/deleteCourse', function(req, res) {
         Course.findByIdAndRemove(req.body.id, function(err) {
             if(err) throw err;
             if(!err) {
-                res.json({success: true, message: 'Assignment successfully deleted'});
+                res.json({success: true, message: 'Course successfully deleted'});
             } else {
-                res.json({success: false, message: 'Assignment deletion failed'});
+                res.json({success: false, message: 'Course deletion failed'});
             }
         });
     });

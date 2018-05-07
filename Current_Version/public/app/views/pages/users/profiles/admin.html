@@ -13,8 +13,7 @@
                 <td><strong>Course Title</strong></td>
             </tr>
             <tr ng-repeat="course in main.profile_payload.data.admin_profile.course_list">
-                <td>
-                    {{ course.title }}
+                <td>{{ course.title }}
 
                     <button type="button" style="float: right; background: lightblue;" data-toggle="modal" data-target="#EditCourseModal{{course.id}}"><b>=</b></button>
 
@@ -30,7 +29,7 @@
 
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" ng-click="profile.deleteCourse(course.id)">Delete</button>
+                                        <button type="button" class="btn btn-danger" ng-click="profile.deleteCourse(course._id)">Delete</button>
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>

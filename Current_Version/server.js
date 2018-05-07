@@ -14,7 +14,7 @@ var social     = require('./app/config/passport')(app, passport, keys);
 
 
 // MIDDLEWARE
-app.use(morgan('dev'));
+app.use(morgan('common', { skip: function(req, res) { return res.statusCode < 400 }, stream: __dirname + '/../morgan.log' }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended : true }));
 app.use(express.static(__dirname + '/public'));
