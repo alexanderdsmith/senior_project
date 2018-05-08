@@ -4,7 +4,7 @@ angular.module('documentControllers', ['documentServices'])
     var app = this;
     app.url = JSON.parse('{"' + decodeURI(atob($routeParams.param)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     app.title = app.url.title;
-    app.description = app.url.description.replace(/%2C/g, '').replace(/%3A/g, '":"');
+    app.description = app.url.description.replace(/%2C/g, '').replace(/%3A/g, ':');
     console.log(app.description);
     app.dirty = false;
     var windowListener = false;
