@@ -12,6 +12,11 @@ angular.module('courseController', ['courseServices'])
                 var currDate = new Date(Date.now());
                 var dueTime = Date.parse(assign[i].dueDate);
                 app.course_payload.assignments[i].pastDue = Date.parse(currDate) > dueTime;
+                if(app.course_payload.assignments[i].pastDue) {
+                    Course.forceSubmit(app.course_payload.assignments[i]).then(function(data) {
+                        console.log(data.data);
+                    });
+                }
             }
 
             app.course_payload.assignments.forEach(function(assignment) {

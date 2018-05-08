@@ -114,7 +114,7 @@ module.exports = function(app, passport, keys) {
                         if(err) throw err;
                         if(admin) {
                             newUser._admin = admin;
-                            newUser.usertypes = ['admin','','',''];
+                            newUser.usertypes.set(0, 'admin');
                             newUser.save();
                         }
                     });
@@ -122,7 +122,7 @@ module.exports = function(app, passport, keys) {
                         if(err) throw err;
                         if(instructor) {
                             newUser._instructor = instructor;
-                            newUser.usertypes = ['','instructor','',''];
+                            newUser.usertypes.set(1, 'instructor');
                             newUser.save();
                         }
                     });
@@ -130,7 +130,7 @@ module.exports = function(app, passport, keys) {
                         if(err) throw err;
                         if(student) {
                             newUser._student = student;
-                            newUser.usertypes = ['','','student',''];
+                            newUser.usertypes.set(2, 'student');
                             newUser.save();
                         }
                     });
@@ -138,7 +138,7 @@ module.exports = function(app, passport, keys) {
                         if(err) throw err;
                         if(ta) {
                             newUser._ta = ta;
-                            newUser.usertypes = ['','','','ta'];
+                            newUser.usertypes.set(3, 'ta');
                             newUser.save();
                         }
                     });

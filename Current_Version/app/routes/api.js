@@ -422,6 +422,23 @@ module.exports = function(router, keys) {
         });
     });
 
+    router.post('/forceSubmit', function(req, res) {
+        var ids = [];
+        req.body.documents.forEach(function(document) {
+            ids.push(document.id);
+        });
+        Document.find({_id: {$in: ids}}).exec(function(err, documents){
+            if(err) throw err;
+            if(documents) {
+                documents.forEach(function(document){
+                    document.status = 'submitted';
+                    document.save();
+                });
+                res.json({success: true, message: 'documents updated'});
+            }
+        });
+    });
+
     router.post('/addAnnouncement', function(req, res) {
         var announcement = new Announcement();
         announcement.description = req.body.text;

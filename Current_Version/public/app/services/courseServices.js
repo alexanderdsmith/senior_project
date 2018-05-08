@@ -51,5 +51,11 @@ angular.module('courseServices', [])
         });
     };
 
+    courseFactory.forceSubmit = function(assn) {
+        return $http.post('/api/forceSubmit', assn).then(function(data) {
+            return data;
+        });
+    };
+
     return courseFactory;
 }]);

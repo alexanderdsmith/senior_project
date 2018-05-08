@@ -9,10 +9,6 @@ var AssignmentSchema = new Schema({
         required: true
     },
     timestamp: Date,
-    _instructors: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Instructor'
-    }],
     _submissions: [{
         type: Schema.Types.ObjectId,
         ref: 'Document'
