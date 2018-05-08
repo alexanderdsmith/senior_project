@@ -8,6 +8,8 @@ angular.module('documentControllers', ['documentServices'])
     app.dirty = false;
     var windowListener = false;
 
+    var submitFlag = 0; //changes to 1 when click submit button
+
 
     function backToCourse() {
         if (app.errorMessage) {
@@ -120,6 +122,9 @@ angular.module('documentControllers', ['documentServices'])
                             app.errorMessage = data.data.message;
                         }
                     });
+                }
+                else{
+                    submitFlag = 0; //submit cancelled, reset flag
                 }
             }
         });
@@ -346,7 +351,6 @@ angular.module('documentControllers', ['documentServices'])
 
 
         var eh = cy.edgehandles(edgehandle_values);
-        var drawMode = 1; //default for drawMode on
 
 
         /****************************************************/
@@ -429,7 +433,9 @@ angular.module('documentControllers', ['documentServices'])
                 { type: 'break'},
                 { type: 'button', id: 'autofit', text: 'Auto-Fit'},
                 { type: 'button', id: 'enableDraw', text: 'Enable Drawing', disabled: true},
-                { type: 'button', id: 'disableDraw', text: 'Disable Drawing'}
+                { type: 'button', id: 'disableDraw', text: 'Disable Drawing'},
+                { type: 'break'},
+                { type: 'button', id: 'submit', text: 'Submit Model'}
             ],
             //onClick: function (event) {
             //    console.log('Target: '+ event.target, event);
@@ -445,7 +451,7 @@ angular.module('documentControllers', ['documentServices'])
             eh.disable();
             cy.autoungrabify(true);
             cy.autounselectify(true);
-            tb.disable("addNode", "addEdge", "editLabel", "delete", "save", "undo", "redo", "enableDraw", "disableDraw");
+            tb.disable("addNode", "addEdge", "editLabel", "delete", "save", "undo", "redo", "enableDraw", "disableDraw", "submit");
         }
 
 
@@ -577,6 +583,10 @@ angular.module('documentControllers', ['documentServices'])
                         cy.remove('node.eh-handle');
                         tb.disable("disableDraw");
                         tb.enable("enableDraw");
+                        break;
+                    case ("submit"):
+                        submitFlag = 1;
+                        saveGraph(); //saveGraph function with flag set to 1
                         break;
                     //case ("item9"): // Print Undo stack
                     //    for (var i = 0; i < undoStack.length; i++) {
@@ -764,6 +774,10 @@ angular.module('documentControllers', ['documentServices'])
 
             //Sending graph data to controller through updateGraph function
             updateGraph({ elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
+
+            if(submitFlag){ //if submit button is clicked, call submitDoc controller function
+                submitDoc({ elements: JSON.stringify(cy.elements().jsons()), undoStack: undoStackJSON });
+            }
 
 
             //Handle Dirty bit
@@ -954,6 +968,7 @@ angular.module('documentControllers', ['documentServices'])
             // Get selected nodes and select their connected edges
             var selectedNodes = cy.$('node:selected');
             var connectedEdges = selectedNodes.connectedEdges();
+            console.log(connectedEdges);
             connectedEdges.select();
 
             // Get and remove all selected elements
