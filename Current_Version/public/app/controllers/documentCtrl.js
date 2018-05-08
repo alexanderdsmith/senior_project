@@ -1010,7 +1010,7 @@ angular.module('documentControllers', ['documentServices'])
             console.log("Document Saved!");
         }*/
 
-    };
+    }
 
 }]);
 
