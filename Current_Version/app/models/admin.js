@@ -5,6 +5,9 @@ var AdminSchema = new Schema({
     username: {
         type: String,
         required: true
+    },
+    givenname: {
+        type: String
     }
 });
 

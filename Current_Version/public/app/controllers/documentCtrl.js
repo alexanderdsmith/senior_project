@@ -981,10 +981,6 @@ angular.module('documentControllers', ['documentServices'])
             // HANDLE DIRTY BIT
             setDirty();
         }
-
-
-
-
     }
 
 }]);

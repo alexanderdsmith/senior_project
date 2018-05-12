@@ -56,7 +56,29 @@ angular.module('profileController', ['authServices', 'profileServices'])
             else {
                 app.errorMessage = data.data.message;
             }
-        })
+        });
     };
+
+    this.deleteUser = function(cid, id, type) {
+        Profile.deleteUser({cid: cid, id: id, type: type}).then(function(data) {
+            if(data.data.success === true) {
+                app.successMessage = data.data.message;
+                reloadRoute();
+            } else {
+                app.errorMessage = data.data.message;
+            }
+        });
+    };
+
+    this.addUser = function(cid, username, type) {
+        Profile.addUser({cid: cid, username: username, type: type}).then(function(data) {
+            if(data.data.success === true) {
+                app.successMessage = data.data.message;
+                reloadRoute();
+            } else {
+                app.errorMessage = data.data.message;
+            }
+        })
+    }
 
 }]);

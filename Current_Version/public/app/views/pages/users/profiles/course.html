@@ -9,7 +9,8 @@
         </div>
         <table class="table table-bordered">
             <tr ng-repeat="instructor in course.course_payload.instructors">
-                <td>{{instructor.username}}</td>
+                <td ng-show="!instructor.givenname">{{instructor.username}}</td>
+                <td ng-show="instructor.givenname" data-toggle="tooltip" data-placement="top" title="{{instructor.username}}">{{instructor.givenname}}</td>
             </tr>
         </table>
     </div>
@@ -20,7 +21,8 @@
         </div>
         <table class="table table-bordered">
             <tr ng-repeat="ta in course.course_payload.tas">
-                <td>{{ta.username}}</td>
+                <td ng-show="!ta.givenname">{{ta.username}}</td>
+                <td ng-show="ta.givenname" data-toggle="tooltip" data-placement="top" title="{{ta.username}}">{{ta.givenname}}</td>
             </tr>
         </table>
     </div>
@@ -31,7 +33,8 @@
         </div>
         <table class="table table-bordered">
             <tr ng-repeat="student in course.course_payload.students">
-                <td>{{student.username}}</td>
+                <td ng-show="!student.givenname">{{student.username}}</td>
+                <td ng-show="student.givenname" data-toggle="tooltip" data-placement="top" title="{{student.username}}">{{student.givenname}}</td>
             </tr>
         </table>
     </div>
@@ -67,7 +70,7 @@
                                     <div class="modal-body">
                                         <form ng-submit="course.editAnnouncement(announcement.id, description)">
                                             <div class="form-group">
-                                                <label for="assignmentDescription" class="control-label">Assignment Description</label>
+                                                <label for="assignmentDescription" class="control-label">Announcement Description</label>
                                                 <textarea name="description" ng-value="announcement.description" class="form-control" id="editAnnouncementDescription" ng-model="description"></textarea>
                                             </div>
                                             <button type="submit" class="btn btn-primary">Edit Announcement</button>

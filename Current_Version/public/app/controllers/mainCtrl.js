@@ -24,6 +24,7 @@ angular.module('mainController', ['authServices', 'profileServices'])
                 Profile.getProfileInfo({ user_info: promise.$$state.value }).then(function (dataPayload) {
                     app.profile_payload = dataPayload;
                     app.usertypes = dataPayload.data.user.usertypes;
+                    console.log(app.profile_payload.data.admin_profile);
                 });
             });
 

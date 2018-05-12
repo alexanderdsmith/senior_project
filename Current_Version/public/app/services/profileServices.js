@@ -28,5 +28,17 @@ angular.module('profileServices', [])
         });
     };
 
+    profileFactory.deleteUser = function(id) {
+        return $http.post('/api/deleteUser', id).then(function(data) {
+            return data;
+        });
+    };
+
+    profileFactory.addUser = function(id) {
+        return $http.post('/api/addUser', id).then(function(data) {
+            return data;
+        });
+    };
+
     return profileFactory;
 }]);

@@ -58,6 +58,8 @@ module.exports = function(app, passport, keys) {
                     Admin.findOne({username: user.username}).then(function (admin) {
                         if(err) throw err;
                         if (admin) {
+                            admin.givenname = user.givenname;
+                            admin.save();
                             user.usertypes.set(0, 'admin');
                             user._admin = admin;
                             user.save();
@@ -69,6 +71,8 @@ module.exports = function(app, passport, keys) {
                     Instructor.findOne({username: user.username}).exec(function (err, instructor) {
                         if(err) throw err;
                         if (instructor) {
+                            instructor.givenname = user.givenname;
+                            instructor.save();
                             user.usertypes.set(1, 'instructor');
                             user._instructor = instructor;
                             user.save();
@@ -80,6 +84,8 @@ module.exports = function(app, passport, keys) {
                     Student.findOne({username: user.username}).exec(function (err, student) {
                         if(err) throw err;
                         if (student) {
+                            student.givenname = user.givenname;
+                            student.save();
                             user.usertypes.set(2, 'student');
                             user._student = student;
                             user.save();
@@ -91,6 +97,8 @@ module.exports = function(app, passport, keys) {
                     Ta.findOne({username: user.username}).then(function (ta) {
                         if(err) throw err;
                         if (ta) {
+                            ta.givenname = user.givenname;
+                            ta.save();
                             user.usertypes.set(3, 'ta');
                             user._ta = ta;
                             user.save();
@@ -113,6 +121,8 @@ module.exports = function(app, passport, keys) {
                     Admin.findOne({ username: newUser.username }).exec(function(err, admin) {
                         if(err) throw err;
                         if(admin) {
+                            admin.givenname = newUser.givenname;
+                            admin.save();
                             newUser._admin = admin;
                             newUser.usertypes.set(0, 'admin');
                             newUser.save();
@@ -121,6 +131,8 @@ module.exports = function(app, passport, keys) {
                     Instructor.findOne({ username: newUser.username }).exec(function(err, instructor) {
                         if(err) throw err;
                         if(instructor) {
+                            instructor.givenname = newUser.givenname;
+                            instructor.save();
                             newUser._instructor = instructor;
                             newUser.usertypes.set(1, 'instructor');
                             newUser.save();
@@ -129,6 +141,8 @@ module.exports = function(app, passport, keys) {
                     Student.findOne({ username: newUser.username }).exec(function(err, student) {
                         if(err) throw err;
                         if(student) {
+                            student.givenname = newUser.givenname;
+                            student.save();
                             newUser._student = student;
                             newUser.usertypes.set(2, 'student');
                             newUser.save();
@@ -137,6 +151,8 @@ module.exports = function(app, passport, keys) {
                     Ta.findOne({ username: newUser.username }).exec(function(err, ta) {
                         if(err) throw err;
                         if(ta) {
+                            ta.givenname = newUser.givenname;
+                            ta.save();
                             newUser._ta = ta;
                             newUser.usertypes.set(3, 'ta');
                             newUser.save();

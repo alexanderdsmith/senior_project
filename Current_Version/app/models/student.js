@@ -2,6 +2,9 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
 var StudentSchema = new Schema({
+    givenname: {
+        type: String
+    },
     username: {
         type: String,
         required: true

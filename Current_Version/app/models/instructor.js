@@ -6,6 +6,9 @@ var InstructorSchema = new Schema({
         type: String,
         required: true
     },
+    givenname: {
+        type: String
+    },
     _courses : [{
         type : Schema.Types.ObjectId,
         ref  : 'Course'

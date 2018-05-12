@@ -15,10 +15,10 @@
             <tr ng-repeat="course in main.profile_payload.data.admin_profile.course_list">
                 <td>{{ course.title }}
 
-                    <button type="button" style="float: right; background: lightblue;" data-toggle="modal" data-target="#EditCourseModal{{course.id}}"><b>=</b></button>
+                    <button type="button" style="float: right; background: lightblue;" data-toggle="modal" data-target="#EditCourseModal{{course._id}}"><b>=</b></button>
 
                     <div>
-                        <div class="modal fade" id="EditCourseModal{{course.id}}" tabindex="-1" role="dialog" aria-labelledby="EditCourseModalLabel{{course.id}}">
+                        <div class="modal fade" id="EditCourseModal{{course._id}}" tabindex="-1" role="dialog" aria-labelledby="EditCourseModalLabel{{course._id}}">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -27,6 +27,64 @@
                                     </div>
                                     <div class="modal-body">
 
+                                        <h3>Add Users:</h3>
+                                        <form ng-submit="profile.addUser(course._id, username, type)">
+                                            <div class="form-group">
+                                                <label for="newUserUsername" class="control-label">New User's Username</label>
+                                                <input name="username" class="form-control" id="newUserUsername" ng-model="username">
+                                                <label for="newUserType" class="control-label">New User's Type</label>
+                                                <input name="type" class="form-control" id="newUserType" ng-model="type">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Add User</button>
+                                        </form>
+
+                                        <hr/>
+
+                                        <div class="panel panel-default">
+
+                                            <div class="panel-heading" style="text-align: center;">
+                                                <strong>Instructors in {{course.title}}</strong>
+                                            </div>
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td><strong>Instructor Username</strong></td>
+                                                </tr>
+                                                <tr ng-repeat="instructor in course._instructors">
+                                                    <td>{{instructor.username}}
+                                                        <button type="button" style="float: right; background: lightcoral;" ng-click="profile.deleteUser(course._id, instructor._id, 'instructor')"><b>&times;</b></button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <div class="panel-heading" style="text-align: center;">
+                                                <strong>TA's in {{course.title}}</strong>
+                                            </div>
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td><strong>TA Username</strong></td>
+                                                </tr>
+                                                <tr ng-repeat="ta in course._tas">
+                                                    <td>{{ta.username}}
+                                                        <button type="button" style="float: right; background: lightcoral;" ng-click="profile.deleteUser(course._id, ta._id, 'ta')"><b>&times;</b></button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <div class="panel-heading" style="text-align: center;">
+                                                <strong>Students in {{course.title}}</strong>
+                                            </div>
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <td><strong>Student Username</strong></td>
+                                                </tr>
+                                                <tr ng-repeat="student in course._students">
+                                                    <td>{{student.username}}
+                                                        <button type="button" style="float: right; background: lightcoral;" ng-click="profile.deleteUser(course._id, student._id, 'student')"><b>&times;</b></button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger" ng-click="profile.deleteCourse(course._id)">Delete</button>

@@ -190,7 +190,16 @@ module.exports = function(router, keys) {
             }
         };
 
-        Course.find({}).exec(function(err, courses) {
+        Course.find({}).populate([{
+            path: '_instructors',
+            model: 'Instructor'
+        }, {
+            path: '_students',
+            model: 'Student'
+        }, {
+            path: '_tas',
+            model: 'Ta'
+        }]).exec(function(err, courses) {
             if(err) throw err;
             if(courses) {
                 courses.forEach(function (course) {
@@ -383,7 +392,8 @@ module.exports = function(router, keys) {
                     course._instructors.forEach(function (instructor) {
                         course_payload.instructors.push({
                             id: instructor._id,
-                            username: instructor.username
+                            username: instructor.username,
+                            givenname: instructor.givenname
                         });
                     });
                 }
@@ -392,7 +402,8 @@ module.exports = function(router, keys) {
                     course._students.forEach(function (student) {
                         course_payload.students.push({
                             id: student._id,
-                            username: student.username
+                            username: student.username,
+                            givenname: student.givenname
                         });
                     });
                 }
@@ -401,7 +412,8 @@ module.exports = function(router, keys) {
                     course._tas.forEach(function (ta) {
                         course_payload.tas.push({
                             id: ta._id,
-                            username: ta.username
+                            username: ta.username,
+                            givenname: ta.givenname
                         });
                     });
                 }
@@ -420,6 +432,186 @@ module.exports = function(router, keys) {
                 res.json({success: false, message: 'Course deletion failed'});
             }
         });
+    });
+
+    router.post('/addUser', function(req, res) {
+        Course.findById(req.body.cid).exec(function(err, course) {
+            switch(req.body.type) {
+                case 'admin': {
+                    Admin.findOne({username: req.body.username}).exec(function (err, admin) {
+                        if (err) throw err;
+                        if (admin) {
+
+                        }
+                         else {
+                            var newAdmin = new Admin();
+                            newAdmin.username = req.body.username;
+                            newAdmin.save();
+                        }
+                        res.send({success: true, message: 'Admin successfully added.'});
+                    });
+                    break;
+                }
+                case 'student' || '' || null: {
+                    Student.findOne({username: req.body.username}).exec(function (err, student) {
+                        if (err) throw err;
+                        if (student) {
+                            student._courses.push(course);
+                            course._students.push(student);
+                            student.save();
+                            course.save();
+                        } else {
+                            var newStudent = new Student();
+                            newStudent.username = req.body.username;
+                            newStudent._courses = [course];
+                            newStudent.save();
+                            course._students.push(newStudent);
+                            course.save();
+                        }
+                    });
+                    res.send({success: true, message: 'Student successfully added.'});
+                    break;
+                }
+                case 'ta' : {
+                    Ta.findOne({username: req.body.username}).exec(function (err, ta) {
+                        if (err) throw err;
+                        if (ta) {
+                            ta._courses.push(course);
+                            course._tas.push(ta);
+                            ta.save();
+                            course.save();
+                        } else {
+                            var newTa = new Ta();
+                            newTa.username = req.body.username;
+                            newTa._courses = [course];
+                            newTa.save();
+                            course._tas.push(newTa);
+                            course.save();
+                        }
+                    });
+                    res.send({success: true, message: 'TA successfully added.'});
+                    break;
+                }
+                case 'instructor' : {
+                    Instructor.findOne({username: req.body.username}).exec(function (err, instructor) {
+                        if (err) throw err;
+                        if (instructor) {
+                            instructor._courses.push(course);
+                            course._instructors.push(instructor);
+                            instructor.save();
+                            course.save();
+                        } else {
+                            var newInstructor = new Instructor();
+                            newInstructor.username = req.body.username;
+                            newInstructor._courses = [course];
+                            newInstructor.save();
+                            course._instructors.push(newInstructor);
+                            course.save();
+                        }
+                    });
+                    res.send({success: true, message: 'Instructor successfully added.'});
+                    break;
+                }
+                default: {
+                    console.log(req.body.username + ' was not correctly formatted!\n' + req.body.type + ' is not a valid type.');
+                    res.json({success: false, message: 'Invalid format'});
+                    break;
+                }
+            }
+        });
+    });
+
+    /** Removing users from courses currently does not work. There is a substantial bug that will be too difficult **/
+    /** to remove before this deliverable. This in on target to be fixed over the summer before Fall Beta Testing  **/
+    router.post('/deleteUser', function(req, res) {
+        console.log(req.body);
+        switch(req.body.type) {
+            case 'instructor': {
+                Instructor.findById(req.body.id).exec(function(err, instructor) {
+                    if(err) throw err;
+                    if(instructor) {
+                        var c = instructor._courses.splice(instructor._courses.indexOf(req.body.cid.toString()), 1);
+                        if(c) {
+                            instructor.save();
+                            Course.findById(c).exec(function(course) {
+                                if(err) throw err;
+                                if(course) {
+                                    course._instructors.splice(course._instructors.indexOf(instructor._id.toString()), 1);
+                                    course.save();
+                                    res.json({success: true, message: 'Instructor successfully removed'});
+                                } else {
+                                    res.json({success: false, message: 'Instructor failed to be removed'});
+                                }
+                            });
+                        } else {
+                            res.json({success: false, message: 'Instructor failed to be removed'});
+                        }
+                    } else {
+                        res.json({success: false, message: 'Instructor failed to be removed'});
+                    }
+                });
+                break;
+            }
+
+            case 'student': {
+                Student.findById(req.body.id).exec(function(err, student) {
+                    if(err) throw err;
+                    if(student) {
+                        var c = student._courses.splice(student._courses.indexOf(req.body.cid.toString()), 1);
+                        if(c) {
+                            student.save();
+                            Course.findById(c).exec(function(course) {
+                                if(err) throw err;
+                                if(course) {
+                                    course._students.splice(course._students.indexOf(student._id.toString()), 1);
+                                    course.save();
+                                    res.json({success: true, message: 'Student successfully removed'});
+                                } else {
+                                    res.json({success: false, message: 'Student failed to be removed'});
+                                }
+                            });
+                        } else {
+                            res.json({success: false, message: 'Student failed to be removed'});
+                        }
+                    } else {
+                        res.json({success: false, message: 'Student failed to be removed'});
+                    }
+                });
+                break;
+            }
+
+            case 'ta': {
+                Ta.findById(req.body.id).exec(function(err, ta) {
+                    if(err) throw err;
+                    if(ta) {
+                        var c = ta._courses.splice(ta._courses.indexOf(req.body.cid.toString()), 1);
+                        if(c) {
+                            console.log(c[0]);
+                            ta.save();
+                            Course.findById(c[0]).exec(function(course) {
+                                if(err) throw err;
+                                if(course) {
+                                    console.log(course);
+                                    course._tas.splice(course._tas.indexOf(ta._id.toString()), 1);
+                                    course.save();
+                                    res.json({success: true, message: 'TA successfully removed'});
+                                } else {
+                                    console.log('failed1');
+                                    res.json({success: false, message: 'TA failed to be removed'});
+                                }
+                            });
+                        } else {
+                            console.log('failed2');
+                            res.json({success: false, message: 'TA failed to be removed'});
+                        }
+                    } else {
+                        console.log('failed3');
+                        res.json({success: false, message: 'TA failed to be removed'});
+                    }
+                });
+                break;
+            }
+        }
     });
 
     router.post('/forceSubmit', function(req, res) {
