@@ -41,6 +41,8 @@ your server file the application crashed. If the app does crash, there is likely
 in config.json, your database is not running correctly, or you do not have an internet connection (if utilizing a remote
 database).
 
+To view the running environment on a local machine, go to localhost:8080 in a web browser.
+
 //////////////////////////////// HOW TO CODE  ////////////////////////////////
 
 This project is based on a core understanding of the MEAN Stack, and it is recommended that at least one member of the
@@ -79,5 +81,5 @@ Interface/Front-end: AngularJS v1.6.8
 Development IDE:        IntelliJ IDEA Ultimate
 Local host information: Host - 127.0.0.1, Port - 8080
 Test server for Mongo:  Use mLab for a simple testing database
-Research base:          All research involved brute force Google searches. To spare new users time, we included all
+Research base:          All research involved brute force Google searches. To spare new users time, we included many
                         articles and papers used to research under /documentation/articles
