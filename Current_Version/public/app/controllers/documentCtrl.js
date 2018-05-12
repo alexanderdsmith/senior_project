@@ -6,10 +6,10 @@ angular.module('documentControllers', ['documentServices'])
     app.title = app.url.title;
     app.description = app.url.description.replace(/%2C/g, '').replace(/%3A/g, ':');
     console.log(app.description);
-    app.dirty = false;
-    var windowListener = false;
+    app.dirty = false; //dirty flag set to true when there are unsaved changes
+    var windowListener = false; //flag for checking if windowListener was already added
 
-    var submitFlag = 0; //changes to 1 when click submit button
+    var submitFlag = 0; //changes to 1 when click submit button in toolbar
 
 
     function backToCourse() {
@@ -23,6 +23,7 @@ angular.module('documentControllers', ['documentServices'])
 
     }
 
+    //Getting and loading the document
     if(app.url !== null && app.url !== undefined) {
         Documents.getDocument({ id: app.url.id }).then(function(data) {
             app.document = data.data;
@@ -32,24 +33,15 @@ angular.module('documentControllers', ['documentServices'])
             app.status = app.document.status;
             app.submitTime = app.document.submitTime;
             app.isReadOnly = app.document.status !== 'unsubmitted';
-            loadCytoscape(app.isReadOnly, app.document.graph, setDirtyBit);
+            loadCytoscape(app.isReadOnly, app.document.graph, setDirtyBit); //calling loadCytoscape with the graph data
         });
     } else {
         app.document = { errorMessage: "Document not found." };
     }
 
-    /*window.onload = function() {
-        window.addEventListener("beforeunload", function (e) {
-            if(!app.dirty){
-                return undefined;
-            }
-            var confirmationMessage = "All unsaved changes will be lost";
-
-            (e || window.event).returnValue = confirmationMessage;
-            return confirmationMessage;
-        });
-    };*/
-
+    
+    //confirmFunc used to confirm leaving page without saving graph
+    // it is added to an event listener on the window in the setDirtyBit function
     var confirmFunc = function(e) {
         var confirmationMessage = "All unsaved changes will be lost";
 
@@ -87,6 +79,8 @@ angular.module('documentControllers', ['documentServices'])
         app.dirty = dirty;
     }
 
+
+    //updating feedback by sending input feedback and grade data to documentServices
     this.updateFeedback = function() {
         var feedback = prompt("Please leave feedback: ", "Feedback");
         if(feedback === '')
@@ -108,6 +102,9 @@ angular.module('documentControllers', ['documentServices'])
         });
     };
 
+    //submitDoc function gets called in cytoscape function after clicking submit button,
+    // saves graphData then
+    // submits document through documentServices after confirmation
     function submitDoc(graphData) {
         graphData.doc_id = app.url.id;
 
@@ -131,6 +128,8 @@ angular.module('documentControllers', ['documentServices'])
         });
     }
 
+    //updateDocument function gets called in cytoscape function,
+    // saves graphData through documentServices
     function updateDocument(graphData) {
         graphData.doc_id = app.url.id;
 
@@ -146,6 +145,7 @@ angular.module('documentControllers', ['documentServices'])
 
     }
 
+    //updating title by sending input title to documentServices
     this.updateTitle = function() {
         var newTitle = prompt("Enter a Title", "");
         if(newTitle === '') {
@@ -155,7 +155,7 @@ angular.module('documentControllers', ['documentServices'])
 
         this.title = newTitle;
 
-        //then passing the data to factory, interfaces with the backend
+        //then passing the data to documentServices, interfaces with the backend
         Documents.updateTitle(app.document, newTitle).then(function(data) {
             if(data.data.success === true) {
                 app.successMessage = data.data.message;
@@ -165,18 +165,14 @@ angular.module('documentControllers', ['documentServices'])
         });
     };
 
-    /*this.fetchDocument = function(id, ){
-
-    }
-    */
 
 
-
-    /*function loadCytoscape(readOnly, docData) {*/
+    //loadCytoscape function called in Documents.getDocument
     function loadCytoscape(readOnly, docData, setDirtyBit) {
 
+        //cytoscape function
         var cy = cytoscape({
-            container: document.getElementById('cy'),
+            container: document.getElementById('cy'), //container to render the cytoscape instance in
             style: [
                 {       // styling for nodes
                     selector: 'node',
@@ -185,12 +181,10 @@ angular.module('documentControllers', ['documentServices'])
                         "text-valign": "center",
                         "text-halign": "center",
                         'label': 'data(label)',
-                        //'padding': 5,
                         'width': 'data(width)',
                         'color': '#ffffff',
                         'text-outline-width': 1.5,
                         'text-outline-color': '#1f1f1f'
-                        //'padding': 10px
                     }
                 },
                 {       // styling for edges
@@ -218,31 +212,11 @@ angular.module('documentControllers', ['documentServices'])
                     //Selector for the source node
                     selector: '.eh-source',
                     style: {
-                        'border-width': 2//,
-                        //'border-color': 'red'
+                        'border-width': 2
                     }
-                /*},
-                {
-                    selector: '.eh-preview',
-                    style: {
-                        'background-color': 'red',
-                        'line-color': 'red',
-                        'target-arrow-color': 'red',
-                        'source-arrow-color': 'red'
-                    }*/
                 }],
 
-            elements: [
-                /*{ data: { id: 'a' } },
-                { data: { id: 'b' } },
-                { data: { id: 'c'} },
-                {
-                    data: {
-                        id: 'ab',
-                        source: 'a',
-                        target: 'b'
-                    }
-                }*/],
+            elements: [],
             zoom: 1.5,
             maxZoom: 3.5,
             minZoom: 0.7
@@ -251,6 +225,8 @@ angular.module('documentControllers', ['documentServices'])
         var graph = document.getElementById("cy");
 
         var undoStack = new Array();
+
+
 
         /**************************/
         /***** GET TEXT WIDTH *****/
@@ -277,7 +253,9 @@ angular.module('documentControllers', ['documentServices'])
             }
         }
 
-        // for edge handles, the values of each option are outlined below:
+        // for edge handles, the values of each option are outlined below,
+        // changed complete function to add the edge with the addEdge function
+        // once edgehandle is done
         var edgehandle_values = {
             preview: true, // whether to show added edges preview before releasing selection
             hoverDelay: 150, // time spent hovering over a target node before it is considered selected
@@ -351,12 +329,18 @@ angular.module('documentControllers', ['documentServices'])
         };
 
 
+        //Initializing edgehandles extenstion for cytoscape (on the cytoscape instance)
         var eh = cy.edgehandles(edgehandle_values);
+
+
+
 
 
         /****************************************************/
         /***** HANDLE GRAY-OUT OF EDIT LABEL AND DELETE *****/
         /****************************************************/
+
+        //gray out editLabel and delete when no node or edge is selected
         cy.on("select", toolbarSelectHandler);
         cy.on("unselect", toolbarUnselectHandler);
 
@@ -371,6 +355,34 @@ angular.module('documentControllers', ['documentServices'])
         }
 
 
+        /*********************************/
+        /***** DOUBLE CLICK LISTENER *****/
+        /*********************************/
+        // used for editLabel
+        var tappedBefore;
+        var tappedTimeout;
+        //creating doubleTap trigger
+        cy.on('tap', function(event) {
+            var tappedNow = event.target;
+            if (tappedTimeout && tappedBefore) {
+                clearTimeout(tappedTimeout);
+            }
+            if(tappedBefore === tappedNow) {
+                tappedNow.trigger('doubleTap');
+                tappedBefore = null;
+            }
+            else {
+                tappedTimeout = setTimeout(function(){ tappedBefore = null; }, 300);
+                tappedBefore = tappedNow;
+            }
+        });
+
+        if (!readOnly) {
+            cy.on('doubleTap', 'node', editLabel_ListenerDBL); //once double clicked, edit node label
+            cy.on('doubleTap', 'edge', editLabel_ListenerDBL); //once double clicked, edit edge label
+        }
+
+
 
 
 
@@ -380,6 +392,7 @@ angular.module('documentControllers', ['documentServices'])
         function addNode_Listener(event) {
             // if the click was on the canvas, add node at the click position
             if (!(event.target.length > 0)) {
+                console.log(event.renderedPosition.x);
                 addNode(event.renderedPosition.x, event.renderedPosition.y);
             }
         }
@@ -413,12 +426,26 @@ angular.module('documentControllers', ['documentServices'])
 
 
 
+        // used for editing labels with double click
+        function editLabel_ListenerDBL(event) {
+            var targ = event.target;
+            editLabel(targ);
+        }
 
+
+
+        /*******************/
+        /***** TOOLBAR *****/
+        /*******************/
+        // w2ui toolbar used to handle graph functionality
+
+        // destroy the toolbar before recreating it
+        // prevents w2ui error that occurs if you try to create toolbar twice
         if(w2ui.hasOwnProperty('toolbar')){
             w2ui['toolbar'].destroy();
         }
 
-        //$(function () {
+        //creating the toolbar and the buttons
         $('#toolbar').w2toolbar({
             name: 'toolbar',
             items: [
@@ -437,18 +464,14 @@ angular.module('documentControllers', ['documentServices'])
                 { type: 'button', id: 'disableDraw', text: 'Disable Drawing'},
                 { type: 'break'},
                 { type: 'button', id: 'submit', text: 'Submit Model'}
-            ],
-            //onClick: function (event) {
-            //    console.log('Target: '+ event.target, event);
-            //}
+            ]
         });
-        //});
 
         var tb = w2ui['toolbar'];
         var items = tb['items'];
 
 
-        if(readOnly){
+        if(readOnly){ //when submitted
             eh.disable();
             cy.autoungrabify(true);
             cy.autounselectify(true);
@@ -464,7 +487,8 @@ angular.module('documentControllers', ['documentServices'])
         // increment functions are called whenever a node/edge is created, so
         // there is never a collision between a deleted item on the undo stack
         // and an item created later on (e.g. whenever you create a node it is
-        // always a higher ID than any other node that has been created so far)
+        // always a higher ID than any other node that has been created so far).
+        // Starting ID at 0, so first created node or edge will be 1.
 
         var globalNodeID = "n0";
         var globalEdgeID = "e0";
@@ -481,30 +505,11 @@ angular.module('documentControllers', ['documentServices'])
             globalEdgeID = "e" + num.toString();
         }
 
-        /*var globalNodeID = 1//"";
-        var globalEdgeID = 1//"";
-
-        function incrementNodeID() {
-            var num = globalNodeID;
-            num++;
-            globalNodeID = num;
-            //var num = parseInt(globalNodeID.substring(1));
-            //num++;
-            //globalNodeID = "n" + num.toString();
-        }
-
-        function incrementEdgeID() {
-            var num = globalEdgeID;
-            num++;
-            globalEdgeID = num;
-            //var num = parseInt(globalEdgeID.substring(1));
-            //num++;
-            //globalEdgeID = "e" + num.toString();
-        }*/
 
         /**************************/
         /***** GET TIME STAMP *****/
         /**************************/
+        // Time stamp for added element
         function getTimeStamp() {
             var d = new Date(Date.now());
             var t = (d.getMonth()+1) + "-" + d.getDate() + "-" + d.getFullYear() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
@@ -570,14 +575,13 @@ angular.module('documentControllers', ['documentServices'])
                     case ("autofit"): // Fit
                         cy.fit(cy.$('node'), 100);
                         break;
-                    case ("enableDraw"):
-                        eh.enable(); //enable edge handles (drawing edges)
-                        //eh.enableDrawMode();
+                    case ("enableDraw"): //Enable edgehandles (arrow drawing)
+                        eh.enable(); //enable edge handles (drawing edges)\
                         tb.disable("enableDraw");
                         tb.disable("addEdge");
                         tb.enable("disableDraw");
                         break;
-                    case ("disableDraw"):
+                    case ("disableDraw"): //Disable edgehandles (arrow drawing)
                         //console.log("Disabling drawing edges");
                         tb.enable("addEdge");
                         eh.disable(); //disable edge handles (disable drawing edges)
@@ -589,11 +593,6 @@ angular.module('documentControllers', ['documentServices'])
                         submitFlag = 1;
                         saveGraph(); //saveGraph function with flag set to 1
                         break;
-                    //case ("item9"): // Print Undo stack
-                    //    for (var i = 0; i < undoStack.length; i++) {
-                    //        console.log(undoStack[i]);
-                    //    }
-                    //    break;
                 }
             }
             else { // if unchecking an item
@@ -613,8 +612,9 @@ angular.module('documentControllers', ['documentServices'])
         /**********************/
         /***** LOAD GRAPH *****/
         /**********************/
-        //loadGraph(docArg.graph);
-        //loadGraph(graphData);
+
+        // calling loadGraph to automatically load graph data, from docData
+        // that was passed from loadCytoscape
         loadGraph(docData);
         function loadGraph(graph) {
             // HANDLE NODES AND EDGES //
@@ -694,7 +694,11 @@ angular.module('documentControllers', ['documentServices'])
 
 
 
-
+        /*************************/
+        /***** HANDLE DIRTY ******/
+        /*************************/
+        // used to check if any changes have been made for the purpose of graying-out
+        // the "save" button and giving warnings when leaving the page
         var dirty;
         setClean();
 
@@ -715,12 +719,7 @@ angular.module('documentControllers', ['documentServices'])
         cy.on('drag', 'node', setDirty); //set dirty bit if node is dragged
 
 
-        /*function updateGraph(elements, undoStack) {
-            this.saveDocument(elements, undoStack);//take controller function
-
-        }*/
-
-
+        //updateGraph gets called in saveGraph function below
         updateGraph = function(data) {
             console.log("Updating now inside cytoscape function");
             var graphData = {
@@ -768,7 +767,7 @@ angular.module('documentControllers', ['documentServices'])
                     undoStackJSON[i].oldLabel = undoStack[i].oldLabel;
                 }
 
-                undoStackJSON[i] = JSON.stringify(undoStackJSON[i]); //stringify JSON
+                undoStackJSON[i] = JSON.stringify(undoStackJSON[i]);
             }
 
 
@@ -819,7 +818,7 @@ angular.module('documentControllers', ['documentServices'])
                     cy.remove(targ);
                     break;
                 case ("editLabel"):
-                    handleWidth(targ, lab);
+                    handleWidth(targ, lab); //for resizing element
                     targ.json({ data: {label: lab } });
                     break;
                 case ("deleteSelected"):
@@ -869,7 +868,7 @@ angular.module('documentControllers', ['documentServices'])
                     cy.add(targ);
                     break;
                 case ("editLabel"):
-                    handleWidth(targ, lab);
+                    handleWidth(targ, lab); //for resizing element
                     targ.json({ data: { label: lab } });
                     break;
                 case ("deleteSelected"):
@@ -890,12 +889,10 @@ angular.module('documentControllers', ['documentServices'])
 
             cy.add({
                 group: "nodes",
-                //data: { id: 100, label: "", width: 60 },
                 data: {id: globalNodeID, label: "", width: 60},
                 renderedPosition: {x: posX, y: posY}
             });
             var node = cy.getElementById(globalNodeID);
-            //var node = cy.getElementById(100);
 
             // UNDO INFO
             lastEvent = { type: "addNode", target: node, time: getTimeStamp() };
@@ -913,16 +910,12 @@ angular.module('documentControllers', ['documentServices'])
 
         /***** ADD EDGE *****/
         function addEdge(src, dst) {
-            //console.log(cy.edges().length);
-            //console.log(globalEdgeID);
             incrementEdgeID();
             cy.add({
                 group: "edges",
-                //data: { id: 50, source: src, target: dst, label: "" }
                 data: {id: globalEdgeID, source: src, target: dst, label: ""}
             });
             var edge = cy.getElementById(globalEdgeID);
-            //var edge = cy.getElementById(50);
 
             // UNDO INFO
             lastEvent = { type: "addEdge", target : edge, time: getTimeStamp() };
@@ -947,11 +940,11 @@ angular.module('documentControllers', ['documentServices'])
                 return;
             }
             else { // If not cancelled
-                handleWidth(target, newLabel);
+                handleWidth(target, newLabel); //for resizing element
                 target.json({data: {label: newLabel}});
 
                 // UNDO INFO
-                lastEvent = { type: "editLabel", target: target, oldLabel: oldLabel, time: getTimeStamp() };//, oldLabel: oldLabel };
+                lastEvent = { type: "editLabel", target: target, oldLabel: oldLabel, time: getTimeStamp() };
                 undoStack.push(lastEvent);
                 tb.enable("undo"); // enable "undo" button on toolbar
 
@@ -969,7 +962,6 @@ angular.module('documentControllers', ['documentServices'])
             // Get selected nodes and select their connected edges
             var selectedNodes = cy.$('node:selected');
             var connectedEdges = selectedNodes.connectedEdges();
-            console.log(connectedEdges);
             connectedEdges.select();
 
             // Get and remove all selected elements
@@ -992,23 +984,6 @@ angular.module('documentControllers', ['documentServices'])
 
 
 
-        /*function saveGraph() {
-            var document = {
-                title: this.title,
-                elements: cy.elements
-            };
-
-            documents.saveDocument(document).then(function(data) {
-                if (data.data.success === true) {
-                    app.successMessage = data.data.message;
-                }
-                else {
-                    app.errorMessage = data.data.message;
-                }
-            });
-
-            console.log("Document Saved!");
-        }*/
 
     }
 
